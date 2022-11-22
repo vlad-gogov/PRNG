@@ -20,6 +20,7 @@ if(WIN32)
     option(gtest_force_shared_crt "" TRUE)
 endif()
 
+add_subdirectory(generators)
 add_subdirectory(thirdparty)
 
 if(ENABLE_TESTS)
