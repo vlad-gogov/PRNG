@@ -1,9 +1,9 @@
 #pragma once
 
-#include <iostream>
+#include "linear_generator.hpp"
 
 template <class UIntType, UIntType a, UIntType c, UIntType m>
-class LinearCongruentialGenerator {
+class LinearCongruentialGenerator : LinearGenerator<UIntType> {
 
     UIntType _seed;
 
@@ -34,18 +34,18 @@ class LinearCongruentialGenerator {
 
     void discard(std::uint_fast64_t z) {
         for (std::uint_fast64_t i = 0; i < z; ++i) {
-            this->operator();
+            this->operator()();
         }
     }
 
-    static constexpr UIntType min() {
+    UIntType min() {
         if (c == 0) {
-            return 1U;
+            return static_cast<UIntType>(1);
         }
-        return 0U;
+        return static_cast<UIntType>(0);
     }
 
-    static constexpr UIntType max() {
+    UIntType max() {
         return m - static_cast<UIntType>(1);
     }
 };
