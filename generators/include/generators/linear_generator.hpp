@@ -9,8 +9,7 @@ class LinearGenerator : Generator<Type> {
 
     Type _seed;
 
-public:
-
+  public:
     virtual void seed(Type seed) = 0;
     virtual void discard(std::uint_fast64_t z) = 0;
 };

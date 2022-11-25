@@ -30,7 +30,7 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
     void seed(UIntType seed) {
         _seed = seed;
     }
-    
+
     UIntType operator()() noexcept {
         return (_seed = (a * _seed + c) % m);
     }

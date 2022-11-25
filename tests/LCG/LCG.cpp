@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "generators/linear_congruential_generator.hpp"
 #include "generators/base_error.hpp"
+#include "generators/linear_congruential_generator.hpp"
 
 #include <random>
 
@@ -13,7 +13,6 @@ TEST(LCG, can_generator_correct_seq_1) {
     LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> second;
     ASSERT_EQ(first(), second());
 }
-
 
 TEST(LCG, can_generator_correct_seq_2) {
     constexpr std::uint_fast32_t a = 16807U;
@@ -78,7 +77,6 @@ TEST(LCG, can_throw_exception_incorrect_type_ushort) {
     }
     SUCCEED();
 }
-
 
 TEST(LCG, can_throw_exception_incorrect_type_ulong) {
     constexpr std::uint_fast32_t a = 10U;
