@@ -3,7 +3,9 @@
 #include "generators/base_error.hpp"
 #include "generators/linear_congruential_generator.hpp"
 
+#include <iostream>
 #include <random>
+
 
 TEST(LCG, can_generator_correct_seq_1) {
     constexpr std::uint_fast32_t a = 16807U;

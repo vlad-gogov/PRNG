@@ -3,6 +3,7 @@
 #include "base_error.hpp"
 #include "linear_generator.hpp"
 
+#include <iostream>
 #include <type_traits>
 
 template <class UIntType, UIntType a, UIntType c, UIntType m>
