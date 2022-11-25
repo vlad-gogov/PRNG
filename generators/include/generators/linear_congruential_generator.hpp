@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base_error.hpp"
 #include "linear_generator.hpp"
 
 template <class UIntType, UIntType a, UIntType c, UIntType m>
@@ -10,16 +11,16 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
   public:
     explicit LinearCongruentialGenerator(UIntType seed = 1U) {
         if (m <= 0) {
-            throw "Incorrect modulus";
+            throw BaseError("Incorrect modulus");
         }
         if (a <= 0 || a >= m) {
-            throw "Incorrect multiplier";
+            throw BaseError("Incorrect multiplier");
         }
         if (c < 0 || c >= m) {
-            throw "Incorrect increment";
+            throw BaseError("Incorrect increment");
         }
         if (seed < 0 || seed >= m) {
-            throw "Incorrect seed";
+            throw BaseError("Incorrect seed");
         }
         _seed = seed;
     }
