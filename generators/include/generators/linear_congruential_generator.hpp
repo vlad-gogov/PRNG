@@ -3,6 +3,8 @@
 #include "base_error.hpp"
 #include "linear_generator.hpp"
 
+#include <type_traits>
+
 template <class UIntType, UIntType a, UIntType c, UIntType m>
 class LinearCongruentialGenerator : LinearGenerator<UIntType> {
 
@@ -10,16 +12,16 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
 
   public:
     explicit LinearCongruentialGenerator(UIntType seed = 1U) {
-        if (m <= 0) {
-            throw BaseError("Incorrect modulus");
+        if (std::is_floating_point_v<UIntType> || std::is_signed_v<UIntType>) {
+            throw BaseError("LCG can work with unsigned integers");
         }
-        if (a <= 0 || a >= m) {
+        if (a >= m) {
             throw BaseError("Incorrect multiplier");
         }
-        if (c < 0 || c >= m) {
+        if (c >= m) {
             throw BaseError("Incorrect increment");
         }
-        if (seed < 0 || seed >= m) {
+        if (seed >= m) {
             throw BaseError("Incorrect seed");
         }
         _seed = seed;

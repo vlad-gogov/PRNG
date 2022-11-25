@@ -33,78 +33,128 @@ TEST(LCG, can_generator_correct_seq_3) {
     ASSERT_EQ(first(), second());
 }
 
-TEST(LCG, can_throw_exception_modulus) {
+TEST(LCG, can_throw_exception_incorrect_type_int) {
     constexpr std::int_fast64_t a = 10;
     constexpr std::int_fast64_t c = 5;
     constexpr std::int_fast64_t m = -1;
     try {
         LinearCongruentialGenerator<std::int_fast64_t, a, c, m> first;
     } catch (const BaseError &error) {
+        EXPECT_STREQ(error.what(), "LCG can work with unsigned integers");
+    }
+}
+
+TEST(LCG, can_throw_exception_incorrect_type_char) {
+    constexpr char32_t a = 10;
+    constexpr char32_t c = 5;
+    constexpr char32_t m = -1;
+    try {
+        LinearCongruentialGenerator<char32_t, a, c, m> first;
+    } catch (const BaseError &error) {
+        EXPECT_STREQ(error.what(), "LCG can work with unsigned integers");
+    }
+}
+
+TEST(LCG, can_throw_exception_incorrect_type_uchart) {
+    constexpr std::uint_fast8_t a = 10U;
+    constexpr std::uint_fast8_t c = 5U;
+    constexpr std::uint_fast8_t m = 128U;
+    try {
+        LinearCongruentialGenerator<uint_fast8_t, a, c, m> first;
+    } catch (const BaseError &error) {
+        FAIL();
+    }
+    SUCCEED();
+}
+
+TEST(LCG, can_throw_exception_incorrect_type_ushort) {
+    constexpr std::uint_fast16_t a = 10U;
+    constexpr std::uint_fast16_t c = 5U;
+    constexpr std::uint_fast16_t m = 2 << 31 - 1;
+    try {
+        LinearCongruentialGenerator<uint_fast16_t, a, c, m> first;
+    } catch (const BaseError &error) {
+        FAIL();
+    }
+    SUCCEED();
+}
+
+
+TEST(LCG, can_throw_exception_incorrect_type_ulong) {
+    constexpr std::uint_fast32_t a = 10U;
+    constexpr std::uint_fast32_t c = 5U;
+    constexpr std::uint_fast32_t m = 2 << 31 - 1;
+    try {
+        LinearCongruentialGenerator<uint_fast32_t, a, c, m> first;
+    } catch (const BaseError &error) {
+        FAIL();
+    }
+    SUCCEED();
+}
+
+TEST(LCG, can_throw_exception_incorrect_type_ulonglong) {
+    constexpr std::uint_fast64_t a = 10U;
+    constexpr std::uint_fast64_t c = 5U;
+    constexpr std::uint_fast64_t m = 2 << 31 - 1;
+    try {
+        LinearCongruentialGenerator<uint_fast64_t, a, c, m> first;
+    } catch (const BaseError &error) {
+        FAIL();
+    }
+    SUCCEED();
+}
+
+TEST(LCG, can_throw_exception_incorrect_type_6) {
+    constexpr std::uint_fast16_t a = 10U;
+    constexpr std::uint_fast16_t c = 5U;
+    constexpr std::uint_fast16_t m = 2 << 31 - 1;
+    try {
+        LinearCongruentialGenerator<uint_fast16_t, a, c, m> first;
+    } catch (const BaseError &error) {
+        FAIL();
+    }
+    SUCCEED();
+}
+
+TEST(LCG, can_throw_exception_modulus) {
+    constexpr std::uint_fast64_t a = 10;
+    constexpr std::uint_fast64_t c = 5;
+    constexpr std::uint_fast64_t m = -1;
+    try {
+        LinearCongruentialGenerator<std::uint_fast64_t, a, c, m> first;
+    } catch (const BaseError &error) {
         EXPECT_STREQ(error.what(), "Incorrect modulus");
     }
 }
 
-TEST(LCG, can_throw_exception_multiplier_less_zero) {
-    constexpr std::int_fast64_t a = -1;
-    constexpr std::int_fast64_t c = 5;
-    constexpr std::int_fast64_t m = 2 << 16 - 1;
-    try {
-        LinearCongruentialGenerator<std::int_fast64_t, a, c, m> first;
-    } catch (const BaseError &error) {
-        EXPECT_STREQ(error.what(), "Incorrect multiplier");
-    }
-}
-
 TEST(LCG, can_throw_exception_multiplier_more_modulus) {
-    constexpr std::int_fast64_t a = 2 << 16 + 1;
-    constexpr std::int_fast64_t c = 5;
-    constexpr std::int_fast64_t m = 2 << 16 - 1;
+    constexpr std::uint_fast64_t a = 2 << 16 + 1;
+    constexpr std::uint_fast64_t c = 5;
+    constexpr std::uint_fast64_t m = 2 << 16 - 1;
     try {
-        LinearCongruentialGenerator<std::int_fast64_t, a, c, m> first;
+        LinearCongruentialGenerator<std::uint_fast64_t, a, c, m> first;
     } catch (const BaseError &error) {
         EXPECT_STREQ(error.what(), "Incorrect multiplier");
-    }
-}
-
-TEST(LCG, can_throw_exception_increment_less_zero) {
-    constexpr std::int_fast64_t a = 10;
-    constexpr std::int_fast64_t c = -5;
-    constexpr std::int_fast64_t m = 2 << 16 - 1;
-    try {
-        LinearCongruentialGenerator<std::int_fast64_t, a, c, m> first;
-    } catch (const BaseError &error) {
-        EXPECT_STREQ(error.what(), "Incorrect increment");
     }
 }
 
 TEST(LCG, can_throw_exception_increment_more_modulus) {
-    constexpr std::int_fast64_t a = 10;
-    constexpr std::int_fast64_t c = 2 << 16 + 1;
-    constexpr std::int_fast64_t m = 2 << 16 - 1;
+    constexpr std::uint_fast64_t a = 10;
+    constexpr std::uint_fast64_t c = 2 << 16 + 1;
+    constexpr std::uint_fast64_t m = 2 << 16 - 1;
     try {
-        LinearCongruentialGenerator<std::int_fast64_t, a, c, m> first;
+        LinearCongruentialGenerator<std::uint_fast64_t, a, c, m> first;
     } catch (const BaseError &error) {
         EXPECT_STREQ(error.what(), "Incorrect increment");
     }
 }
 
-TEST(LCG, can_throw_exception_seed_less_zero) {
-    constexpr std::int_fast64_t a = 10;
-    constexpr std::int_fast64_t c = 10;
-    constexpr std::int_fast64_t m = 2 << 16 - 1;
-    try {
-        LinearCongruentialGenerator<std::int_fast64_t, a, c, m> first(-1);
-    } catch (const BaseError &error) {
-        EXPECT_STREQ(error.what(), "Incorrect seed");
-    }
-}
-
 TEST(LCG, can_throw_exception_seed_more_modules) {
-    constexpr std::int_fast64_t a = 10;
-    constexpr std::int_fast64_t c = 10;
-    constexpr std::int_fast64_t m = 2 << 16 - 1;
+    constexpr std::uint_fast64_t a = 10;
+    constexpr std::uint_fast64_t c = 10;
+    constexpr std::uint_fast64_t m = 2 << 16 - 1;
     try {
-        LinearCongruentialGenerator<std::int_fast64_t, a, c, m> first(2 << 16 + 1);
+        LinearCongruentialGenerator<std::uint_fast64_t, a, c, m> first(2 << 16 + 1);
     } catch (const BaseError &error) {
         EXPECT_STREQ(error.what(), "Incorrect seed");
     }
