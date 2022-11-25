@@ -6,7 +6,6 @@
 #include <iostream>
 #include <random>
 
-
 TEST(LCG, can_generator_correct_seq_1) {
     constexpr std::uint_fast32_t a = 16807U;
     constexpr std::uint_fast32_t c = 0U;
