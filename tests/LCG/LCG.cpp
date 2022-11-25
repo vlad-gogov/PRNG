@@ -184,6 +184,7 @@ TEST(LCG, correct_work_discard_1) {
     std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
     LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
     correct_generator.discard(z);
+    std::cout << "OUR:" << std::endl;
     our_generator.discard(z);
     ASSERT_EQ(correct_generator(), our_generator());
 }
@@ -204,10 +205,11 @@ TEST(LCG, correct_work_discard_3) {
     constexpr std::uint_fast32_t a = 16807U;
     constexpr std::uint_fast32_t c = 0U;
     constexpr std::uint_fast32_t m = 2 << 31 - 1;
-    constexpr std::uint_fast32_t z = 100U;
+    constexpr std::uint_fast32_t z = 10U;
     std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
     LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
     correct_generator.discard(z);
+    std::cout << "OUR:" << std::endl;
     our_generator.discard(z);
     ASSERT_EQ(correct_generator(), our_generator());
 }

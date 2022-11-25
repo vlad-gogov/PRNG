@@ -37,7 +37,7 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
 
     void discard(std::uint_fast64_t z) {
         for (; 0 < z; --z) {
-            this->operator()();
+            std::cout << this->operator()() << std::endl;
         }
     }
 
