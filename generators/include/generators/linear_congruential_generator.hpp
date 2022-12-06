@@ -3,6 +3,7 @@
 #include "base_error.hpp"
 #include "linear_generator.hpp"
 
+#include <climits>
 #include <iostream>
 #include <type_traits>
 
