@@ -2,17 +2,19 @@
 
 #include <deque>
 #include <limits>
+#include <random>
 #include "linear_generator.hpp"
 
-template <class UIntType, UIntType j, UIntType k, UIntType m>
+template <class UIntType, UIntType m, UIntType j, UIntType k>
 class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
 
-    std::deque<UIntType> _seed;
+    std::deque<UIntType> _seed_deque;
+    UIntType _seed;
     char _carry;
 
   public:
-    explicit LaggedFibonacciGenerator(UIntType seed_word) {
-        if (m <= 0 | m > numeric_limits<UIntType>::digits) {
+    explicit LaggedFibonacciGenerator(UIntType seed_word = 16807U) {
+        if (m <= 0 | m > std::numeric_limits<UIntType>::digits) {
             throw "Incorrect modulus";
         }
         if (k <= 0) {
@@ -21,26 +23,27 @@ class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
         if (j <= 0 || j >= k) {
             throw "Incorrect short lag value";
         }
-        if (seed < 0) {
+        if (seed_word < 0) {
             throw "Incorrect seed value";
         }
-        std::linear_congruential_engine<std::uint_fast32_t, seed_word, 5U, (2 << 31) - 1> seed_generator(seed_word);
+        std::linear_congruential_engine<std::uint_fast32_t, 19780503, 0, 2147483647> seed_generator(seed_word);
         for (std::uint_fast64_t i = 0; i < k; ++i) {
-            _seed.append(seed_generator());
+            _seed_deque.push_front(seed_generator());
         }
         _carry = 0;
+        _seed = seed_word;
     }
 
-    void seed(std::deque<UIntType> seed) {
+    void seed(UIntType seed) {
         _seed = seed;
     }
     
     UIntType operator()() noexcept {
-        UIntType new_element = _seed[k - 1] - _seed[j - 1] - _carry;
+        UIntType new_element = _seed_deque[k - 1] - _seed_deque[j - 1] - _carry;
         new_element % 2 ? (_carry = 1) : (_carry = 0);
-        UIntType new_element = new_element % m;
-        _seed.erase(_seed.end());
-        _seed.insert(_seed.begin(), new_element);
+        new_element = new_element % (2 << (m - 2));
+        _seed_deque.pop_back();
+        _seed_deque.push_front(new_element);
         return new_element;
     }
 
@@ -51,13 +54,10 @@ class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
     }
 
     UIntType min() {
-        if (c == 0) {
-            return static_cast<UIntType>(1);
-        }
         return static_cast<UIntType>(0);
     }
 
     UIntType max() {
-        return (2 << m) - static_cast<UIntType>(1);
+        return std::numeric_limits<UIntType>::max();
     }
 };
