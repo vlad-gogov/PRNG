@@ -1,6 +1,11 @@
 #pragma once
 
+#include "base_error.hpp"
 #include "linear_generator.hpp"
+
+#include <climits>
+#include <iostream>
+#include <type_traits>
 
 template <class UIntType, UIntType a, UIntType c, UIntType m>
 class LinearCongruentialGenerator : LinearGenerator<UIntType> {
@@ -9,17 +14,17 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
 
   public:
     explicit LinearCongruentialGenerator(UIntType seed = 1U) {
-        if (m <= 0) {
-            throw "Incorrect modulus";
+        if (std::is_floating_point_v<UIntType> || std::is_signed_v<UIntType>) {
+            throw BaseError("LCG can work with unsigned integers");
         }
-        if (a <= 0 || a >= m) {
-            throw "Incorrect multiplier";
+        if (a >= m) {
+            throw BaseError("Incorrect multiplier");
         }
-        if (c < 0 || c >= m) {
-            throw "Incorrect increment";
+        if (c >= m) {
+            throw BaseError("Incorrect increment");
         }
-        if (seed < 0 || seed >= m) {
-            throw "Incorrect seed";
+        if (seed >= m) {
+            throw BaseError("Incorrect seed");
         }
         _seed = seed;
     }
@@ -27,13 +32,27 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
     void seed(UIntType seed) {
         _seed = seed;
     }
-    
+
     UIntType operator()() noexcept {
-        return (_seed = (a * _seed + c) % m);
+        if (a == 0) {
+            _seed = static_cast<UIntType>(c);
+        } else if (m == 0) {
+            _seed = static_cast<UIntType>(static_cast<UIntType>(a * _seed) + c);
+        } else if (c <= UINT_MAX && static_cast<UIntType>(m - 1) <= (UINT_MAX - c) / a) {
+            const auto mul =
+                static_cast<unsigned int>(_seed) * static_cast<unsigned int>(a) + static_cast<unsigned int>(c);
+            _seed = static_cast<UIntType>(mul % m);
+        } else if (c <= ULLONG_MAX && static_cast<UIntType>(m - 1) <= (ULLONG_MAX - c) / a) {
+            const auto mul = static_cast<unsigned long long>(_seed) * a + c;
+            _seed = static_cast<UIntType>(mul % m);
+        } else {
+            _seed = static_cast<UIntType>(((a * _seed) + c) % m);
+        }
+        return _seed;
     }
 
     void discard(std::uint_fast64_t z) {
-        for (std::uint_fast64_t i = 0; i < z; ++i) {
+        for (; 0 < z; --z) {
             this->operator()();
         }
     }
