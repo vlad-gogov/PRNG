@@ -46,8 +46,7 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
             const auto mul = static_cast<unsigned long long>(_seed) * a + c;
             _seed = static_cast<UIntType>(mul % m);
         } else {
-            _seed = static_cast<UIntType>(static_cast<UIntType>(static_cast<UIntType>(a) * _seed) + c);
-            _seed = static_cast<UIntType>(_seed % m);
+            _seed = static_cast<UIntType>(((a * _seed) + c) % m);
         }
         return _seed;
     }
