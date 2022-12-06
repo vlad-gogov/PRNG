@@ -33,12 +33,26 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
     }
 
     UIntType operator()() noexcept {
-        return (_seed = (a * _seed + c) % m);
+        if (a == 0) {
+            _seed = static_cast<UIntType>(c);
+        } else if (m == 0) {
+            _seed = static_cast<UIntType>(static_cast<UIntType>(a * _seed) + c);
+        } else if (c <= UINT_MAX && static_cast<UIntType>(m - 1) <= (UINT_MAX - c) / a) {
+            const auto mul = static_cast<unsigned int>(_seed) * static_cast<unsigned int>(a) + static_cast<unsigned int>(c);
+            _seed = static_cast<UIntType>(mul % m);
+        } else if (c <= ULLONG_MAX && static_cast<UIntType>(m - 1) <= (ULLONG_MAX - c) / a) {
+            const auto mul = static_cast<unsigned long long>(_seed) * a + c;
+            _seed = static_cast<UIntType>(mul % m);
+        } else {
+            _seed = static_cast<UIntType>(static_cast<UIntType>(static_cast<UIntType>(a) * _seed) + c);
+            _seed = static_cast<UIntType>(_seed % m);
+        }
+        return _seed;
     }
 
     void discard(std::uint_fast64_t z) {
         for (; 0 < z; --z) {
-            std::cout << this->operator()() << std::endl;
+            this->operator()();
         }
     }
 
