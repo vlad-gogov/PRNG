@@ -1,6 +1,6 @@
 #pragma once
 
-#include <deque>
+#include <list>
 #include <limits>
 #include <random>
 #include "linear_generator.hpp"
@@ -8,13 +8,11 @@
 template <class UIntType, UIntType m, UIntType j, UIntType k>
 class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
 
-    std::deque<UIntType> _seed_deque;
-    UIntType _seed;
-    char _carry;
+    std::list<UIntType> vals;
 
   public:
     explicit LaggedFibonacciGenerator(UIntType seed_word = 16807U) {
-        if (m <= 0 | m > std::numeric_limits<UIntType>::digits) {
+        if (m <= 0 | m > std::numeric_limits<UIntType>::max()) {
             throw "Incorrect modulus";
         }
         if (k <= 0) {
@@ -26,24 +24,22 @@ class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
         if (seed_word < 0) {
             throw "Incorrect seed value";
         }
-        std::linear_congruential_engine<std::uint_fast32_t, 19780503, 0, 2147483647> seed_generator(seed_word);
-        for (std::uint_fast64_t i = 0; i < k; ++i) {
-            _seed_deque.push_front(seed_generator());
+        std::linear_congruential_engine<std::uint_fast32_t, 19780503, 0, m> seed_generator(seed_word);
+        vals = new list<UIntType>();
+        for (std::uint_fast64_t i = 0; i < k + 1; ++i)
+            vals.push_back(seed_generator());
+        if (vals[0] % 2 == 0)
+        {
+            if (vals[0] == 0)
+                vals[0]++;
+            vals[0]--;
         }
-        _carry = 0;
-        _seed = seed_word;
-    }
-
-    void seed(UIntType seed) {
-        _seed = seed;
     }
     
     UIntType operator()() noexcept {
-        UIntType new_element = _seed_deque[k - 1] - _seed_deque[j - 1] - _carry;
-        new_element % 2 ? (_carry = 1) : (_carry = 0);
-        new_element = new_element % (2 << (m - 2));
-        _seed_deque.pop_back();
-        _seed_deque.push_front(new_element);
+        UIntType new_element = ((vals[0] % m) + (vals[k - j] % m)) % m;
+        vals.insert(k + 1, new_element);
+        vals.erase(0);
         return new_element;
     }
 
