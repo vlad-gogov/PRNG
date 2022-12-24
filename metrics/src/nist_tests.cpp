@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <utility>
 
-
 #include "metrics/nist_tests.hpp"
 
 std::map<std::pair<std::int64_t, std::int64_t>, std::vector<double>> PI = {
