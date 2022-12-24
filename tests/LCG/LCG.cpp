@@ -8,26 +8,26 @@
 #include <random>
 
 TEST(LCG, can_generator_correct_seq_1) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     ASSERT_EQ(correct_generator(), our_generator());
 }
 
 TEST(LCG, can_generator_correct_seq_2) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
-    std::uint_fast32_t count_number = 5;
-    std::vector<std::uint_fast32_t> correct_number;
-    std::vector<std::uint_fast32_t> our_number;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
+    std::uint32_t count_number = 5;
+    std::vector<std::uint32_t> correct_number;
+    std::vector<std::uint32_t> our_number;
     correct_number.reserve(count_number);
     our_number.reserve(count_number);
-    for (std::uint_fast32_t i = 0; i < count_number; ++i) {
+    for (std::uint32_t i = 0; i < count_number; ++i) {
         correct_number.push_back(correct_generator());
         our_number.push_back(our_generator());
     }
@@ -35,17 +35,17 @@ TEST(LCG, can_generator_correct_seq_2) {
 }
 
 TEST(LCG, can_generator_correct_seq_3) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
-    std::uint_fast32_t count_number = 10;
-    std::vector<std::uint_fast32_t> correct_number;
-    std::vector<std::uint_fast32_t> our_number;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
+    std::uint32_t count_number = 10;
+    std::vector<std::uint32_t> correct_number;
+    std::vector<std::uint32_t> our_number;
     correct_number.reserve(count_number);
     our_number.reserve(count_number);
-    for (std::uint_fast32_t i = 0; i < count_number; ++i) {
+    for (std::uint32_t i = 0; i < count_number; ++i) {
         correct_number.push_back(correct_generator());
         our_number.push_back(our_generator());
     }
@@ -53,26 +53,26 @@ TEST(LCG, can_generator_correct_seq_3) {
 }
 
 TEST(LCG, can_generator_correct_seq_4) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 5U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 5U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     ASSERT_EQ(correct_generator(), our_generator());
 }
 
 TEST(LCG, can_generator_correct_seq_5) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 5U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
-    std::uint_fast32_t count_number = 5;
-    std::vector<std::uint_fast32_t> correct_number;
-    std::vector<std::uint_fast32_t> our_number;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 5U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
+    std::uint32_t count_number = 5;
+    std::vector<std::uint32_t> correct_number;
+    std::vector<std::uint32_t> our_number;
     correct_number.reserve(count_number);
     our_number.reserve(count_number);
-    for (std::uint_fast32_t i = 0; i < count_number; ++i) {
+    for (std::uint32_t i = 0; i < count_number; ++i) {
         correct_number.push_back(correct_generator());
         our_number.push_back(our_generator());
     }
@@ -80,17 +80,17 @@ TEST(LCG, can_generator_correct_seq_5) {
 }
 
 TEST(LCG, can_generator_correct_seq_6) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 5U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
-    std::uint_fast32_t count_number = 15;
-    std::vector<std::uint_fast32_t> correct_number;
-    std::vector<std::uint_fast32_t> our_number;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 5U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
+    std::uint32_t count_number = 15;
+    std::vector<std::uint32_t> correct_number;
+    std::vector<std::uint32_t> our_number;
     correct_number.reserve(count_number);
     our_number.reserve(count_number);
-    for (std::uint_fast32_t i = 0; i < count_number; ++i) {
+    for (std::uint32_t i = 0; i < count_number; ++i) {
         correct_number.push_back(correct_generator());
         our_number.push_back(our_generator());
     }
@@ -98,17 +98,17 @@ TEST(LCG, can_generator_correct_seq_6) {
 }
 
 TEST(LCG, can_generator_correct_seq_7) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 5U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
-    std::uint_fast32_t count_number = 200;
-    std::vector<std::uint_fast32_t> correct_number;
-    std::vector<std::uint_fast32_t> our_number;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 5U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
+    std::uint32_t count_number = 200;
+    std::vector<std::uint32_t> correct_number;
+    std::vector<std::uint32_t> our_number;
     correct_number.reserve(count_number);
     our_number.reserve(count_number);
-    for (std::uint_fast32_t i = 0; i < count_number; ++i) {
+    for (std::uint32_t i = 0; i < count_number; ++i) {
         correct_number.push_back(correct_generator());
         our_number.push_back(our_generator());
     }
@@ -162,11 +162,11 @@ TEST(LCG, can_throw_exception_incorrect_type_ushort) {
 }
 
 TEST(LCG, can_throw_exception_incorrect_type_ulong) {
-    constexpr std::uint_fast32_t a = 10U;
-    constexpr std::uint_fast32_t c = 5U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
+    constexpr std::uint32_t a = 10U;
+    constexpr std::uint32_t c = 5U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
     try {
-        LinearCongruentialGenerator<uint_fast32_t, a, c, m> correct_generator;
+        LinearCongruentialGenerator<uint32_t, a, c, m> correct_generator;
     } catch (const BaseError &error) {
         FAIL();
     }
@@ -242,78 +242,78 @@ TEST(LCG, can_throw_exception_seed_more_modules) {
 }
 
 TEST(LCG, can_get_correct_min_if_modulus_not_zero) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 5U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 5U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     ASSERT_EQ(correct_generator.min(), our_generator.min());
 }
 
 TEST(LCG, can_get_correct_min_if_modulus_zero) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     ASSERT_EQ(correct_generator.min(), our_generator.min());
 }
 
 TEST(LCG, correct_work_discard_1) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    constexpr std::uint_fast32_t z = 5U;
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    constexpr std::uint32_t z = 5U;
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     correct_generator.discard(z);
     our_generator.discard(z);
     ASSERT_EQ(correct_generator(), our_generator());
 }
 
 TEST(LCG, correct_work_discard_2) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    constexpr std::uint_fast32_t z = 0U;
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    constexpr std::uint32_t z = 0U;
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     correct_generator.discard(z);
     our_generator.discard(z);
     ASSERT_EQ(correct_generator(), our_generator());
 }
 
 TEST(LCG, correct_work_discard_3) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    constexpr std::uint_fast32_t z = 10U;
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    constexpr std::uint32_t z = 10U;
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     correct_generator.discard(z);
     our_generator.discard(z);
     ASSERT_EQ(correct_generator(), our_generator());
 }
 
 TEST(LCG, correct_work_set_seed_1) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    constexpr std::uint_fast32_t seed = 100U;
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    constexpr std::uint32_t seed = 100U;
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     correct_generator.seed(seed);
     our_generator.seed(seed);
     ASSERT_EQ(correct_generator(), our_generator());
 }
 
 TEST(LCG, correct_work_set_seed_2) {
-    constexpr std::uint_fast32_t a = 16807U;
-    constexpr std::uint_fast32_t c = 0U;
-    constexpr std::uint_fast32_t m = std::numeric_limits<std::uint_fast32_t>::max();
-    constexpr std::uint_fast32_t seed = 54321U;
-    std::linear_congruential_engine<std::uint_fast32_t, a, c, m> correct_generator;
-    LinearCongruentialGenerator<std::uint_fast32_t, a, c, m> our_generator;
+    constexpr std::uint32_t a = 16807U;
+    constexpr std::uint32_t c = 0U;
+    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
+    constexpr std::uint32_t seed = 54321U;
+    std::linear_congruential_engine<std::uint32_t, a, c, m> correct_generator;
+    LinearCongruentialGenerator<std::uint32_t, a, c, m> our_generator;
     correct_generator.seed(seed);
     our_generator.seed(seed);
     ASSERT_EQ(correct_generator(), our_generator());
