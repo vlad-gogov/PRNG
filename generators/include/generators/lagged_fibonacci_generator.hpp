@@ -24,7 +24,7 @@ class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
         if (seed_word < 0) {
             throw "Incorrect seed value";
         }
-        std::linear_congruential_engine<std::uint_fast32_t, 19780503, 0, m> seed_generator(seed_word);
+        std::linear_congruential_engine<std::uint32_t, 19780503, 0, m> seed_generator(seed_word);
         vals = new list<UIntType>();
         for (std::uint_fast64_t i = 0; i < k + 1; ++i)
             vals.push_back(seed_generator());
