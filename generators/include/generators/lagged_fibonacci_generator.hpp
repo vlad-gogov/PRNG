@@ -1,9 +1,9 @@
 #pragma once
 
-#include <list>
-#include <limits>
-#include <random>
 #include "linear_generator.hpp"
+#include <limits>
+#include <list>
+#include <random>
 
 template <class UIntType, UIntType m, UIntType j, UIntType k>
 class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
@@ -28,14 +28,13 @@ class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
         vals = new list<UIntType>();
         for (std::uint_fast64_t i = 0; i < k + 1; ++i)
             vals.push_back(seed_generator());
-        if (vals[0] % 2 == 0)
-        {
+        if (vals[0] % 2 == 0) {
             if (vals[0] == 0)
                 vals[0]++;
             vals[0]--;
         }
     }
-    
+
     UIntType operator()() noexcept {
         UIntType new_element = ((vals[0] % m) + (vals[k - j] % m)) % m;
         vals.insert(k + 1, new_element);
