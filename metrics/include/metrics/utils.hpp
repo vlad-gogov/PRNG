@@ -39,4 +39,6 @@ seq_bytes convert_numbers_to_seq_bytes(const std::vector<UIntType> &numbers) {
     return result;
 }
 
+size_t get_max_run(const seq_bytes &seq, size_t left_border = 0U, size_t right_border = 0U);
+
 } // namespace utils

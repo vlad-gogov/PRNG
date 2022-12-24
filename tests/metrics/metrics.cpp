@@ -70,6 +70,57 @@ TEST(utils, can_convert_numbers_to_seq_bytes_3) {
     ASSERT_EQ(seq, answer);
 }
 
+TEST(utils, can_get_max_run_1) {
+    utils::seq_bytes seq = {1, 1, 0, 0, 1, 1, 0, 0};
+    size_t our_answer = utils::get_max_run(seq);
+    size_t answer = 2;
+    ASSERT_EQ(our_answer, answer);
+}
+
+TEST(utils, can_get_max_run_2) {
+    utils::seq_bytes seq = {0, 1, 1, 0, 1, 1, 0, 0};
+    size_t our_answer = utils::get_max_run(seq);
+    size_t answer = 2;
+    ASSERT_EQ(our_answer, answer);
+}
+
+TEST(utils, can_get_max_run_3) {
+    utils::seq_bytes seq = {1, 1, 1, 0, 0, 0, 0, 0};
+    size_t our_answer = utils::get_max_run(seq);
+    size_t answer = 3;
+    ASSERT_EQ(our_answer, answer);
+}
+
+TEST(utils, can_get_max_run_4) {
+    utils::seq_bytes seq = {0, 1, 0, 1, 0, 0, 0, 1};
+    size_t our_answer = utils::get_max_run(seq);
+    size_t answer = 1;
+    ASSERT_EQ(our_answer, answer);
+}
+
+TEST(utils, can_get_max_run_5) {
+    utils::seq_bytes seq = {1, 0, 0, 0, 0, 0, 0, 0};
+    size_t our_answer = utils::get_max_run(seq);
+    size_t answer = 1;
+    ASSERT_EQ(our_answer, answer);
+}
+
+TEST(utils, can_get_max_run_6) {
+    utils::seq_bytes seq = {1, 1, 0, 1, 0, 1, 1, 1};
+    size_t our_answer = utils::get_max_run(seq);
+    size_t answer = 3;
+    ASSERT_EQ(our_answer, answer);
+}
+
+TEST(utils, can_get_max_run_7) {
+    utils::seq_bytes seq = {0, 0, 0, 0, 0, 0, 1, 0};
+    size_t our_answer = utils::get_max_run(seq);
+    size_t answer = 1;
+    ASSERT_EQ(our_answer, answer);
+}
+
+/*------------------------ NIST ------------------------*/
+
 TEST(nist, frequency_1) {
     utils::seq_bytes bytes = {1, 0, 1, 1, 0, 1, 0, 1, 0, 1};
     double p = nist::frequency_test(bytes);
@@ -120,5 +171,16 @@ TEST(nist, runs_2) {
                               0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0};
     double p = nist::runs_test(bytes);
     double answer = 0.500798;
+    ASSERT_NEAR(p, answer, abs_error);
+}
+
+TEST(nist, longest_run_of_ones_1) {
+    utils::seq_bytes bytes = {1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1,
+                              0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
+                              1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1,
+                              1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0,
+                              1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0};
+    double p = nist::longest_run_of_ones(bytes);
+    double answer = 0.180598;
     ASSERT_NEAR(p, answer, abs_error);
 }
