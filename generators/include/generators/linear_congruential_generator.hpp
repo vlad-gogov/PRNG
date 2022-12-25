@@ -14,15 +14,9 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
 
   public:
     explicit LinearCongruentialGenerator(UIntType seed = 1U) {
-        if (std::is_floating_point_v<UIntType> || std::is_signed_v<UIntType>) {
-            throw BaseError("LCG can work with unsigned integers");
-        }
-        if (a >= m) {
-            throw BaseError("Incorrect multiplier");
-        }
-        if (c >= m) {
-            throw BaseError("Incorrect increment");
-        }
+        static_assert(std::is_integral_v<UIntType> && std::is_unsigned_v<UIntType>);
+        static_assert(a < m, "Incorrect multiplier");
+        static_assert(c < m, "Incorrect increment");
         if (seed >= m) {
             throw BaseError("Incorrect seed");
         }
@@ -51,7 +45,7 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
         return _seed;
     }
 
-    void discard(std::uint_fast64_t z) {
+    void discard(std::uint64_t z) {
         for (; 0 < z; --z) {
             this->operator()();
         }
