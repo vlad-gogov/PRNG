@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(TARGET_NAME "Generators_Tests")
+set(TARGET_NAME "Lcg_tests")
 
 file(GLOB_RECURSE TARGET_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
