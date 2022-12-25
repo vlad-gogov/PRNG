@@ -1,6 +1,7 @@
 #pragma once
 
 #include "linear_generator.hpp"
+#include <deque>
 #include <limits>
 #include <list>
 #include <random>
@@ -8,11 +9,11 @@
 template <class UIntType, UIntType m, UIntType j, UIntType k>
 class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
 
-    std::list<UIntType> vals;
+    std::deque<UIntType> vals;
 
   public:
     explicit LaggedFibonacciGenerator(UIntType seed_word = 16807U) {
-        if (m <= 0 | m > std::numeric_limits<UIntType>::max()) {
+        if (m <= 0 || m > std::numeric_limits<UIntType>::max()) {
             throw "Incorrect modulus";
         }
         if (k <= 0) {
@@ -25,8 +26,7 @@ class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
             throw "Incorrect seed value";
         }
         std::linear_congruential_engine<std::uint32_t, 19780503, 0, m> seed_generator(seed_word);
-        vals = new list<UIntType>();
-        for (std::uint_fast64_t i = 0; i < k + 1; ++i)
+        for (std::uint64_t i = 0; i < k + 1; ++i)
             vals.push_back(seed_generator());
         if (vals[0] % 2 == 0) {
             if (vals[0] == 0)
@@ -37,12 +37,12 @@ class LaggedFibonacciGenerator : LinearGenerator<UIntType> {
 
     UIntType operator()() noexcept {
         UIntType new_element = ((vals[0] % m) + (vals[k - j] % m)) % m;
-        vals.insert(k + 1, new_element);
-        vals.erase(0);
+        vals.push_back(new_element);
+        vals.pop_front();
         return new_element;
     }
 
-    void discard(std::uint_fast64_t z) {
+    void discard(std::uint64_t z) {
         for (; 0 < z; --z) {
             this->operator()();
         }
