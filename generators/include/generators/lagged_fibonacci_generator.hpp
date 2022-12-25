@@ -3,7 +3,6 @@
 #include "linear_generator.hpp"
 #include <deque>
 #include <limits>
-#include <list>
 #include <random>
 
 template <class UIntType, UIntType m, UIntType j, UIntType k>
