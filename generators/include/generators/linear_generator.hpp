@@ -11,5 +11,5 @@ class LinearGenerator : Generator<Type> {
 
   public:
     virtual void seed(Type seed) = 0;
-    virtual void discard(std::uint_fast64_t z) = 0;
+    virtual void discard(std::uint64_t z) = 0;
 };
