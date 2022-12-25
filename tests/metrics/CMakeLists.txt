@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(TARGET_NAME "Lcg_tests")
+set(TARGET_NAME "Metrics_Test")
 
 file(GLOB_RECURSE TARGET_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
@@ -9,11 +9,11 @@ file(GLOB_RECURSE TARGET_SRC
 add_executable(${TARGET_NAME} ${TARGET_SRC})
 
 target_include_directories(${TARGET_NAME} PUBLIC
-    ${CMAKE_SOURCE_DIR}/generators/include
+    ${CMAKE_SOURCE_DIR}/metircs/include
 )
 
 target_link_libraries(${TARGET_NAME} PUBLIC
-    generators
+    metrics
     gtest
     gtest_main
 )
