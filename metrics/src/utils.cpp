@@ -1,6 +1,8 @@
 #include "utils.hpp"
 
 #include <algorithm>
+#include <filesystem>
+#include <fstream>
 
 size_t utils::get_max_run(const seq_bytes &seq, size_t left_border, size_t right_border) {
     if (right_border == 0U) {
@@ -25,7 +27,7 @@ size_t utils::get_max_run(const seq_bytes &seq, size_t left_border, size_t right
     return max_run;
 }
 
-std::vector<std::vector<int>> matrix_from_bytes(const utils::seq_bytes & bytes, int rows, int cols, int offset = 0) {
+std::vector<std::vector<int>> utils::matrix_from_bytes(const utils::seq_bytes &bytes, int rows, int cols, int offset) {
 
     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
     for (size_t row = 0; row < rows; row++) {
@@ -37,7 +39,7 @@ std::vector<std::vector<int>> matrix_from_bytes(const utils::seq_bytes & bytes, 
     return matrix;
 }
 
-int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows) {
+int utils::binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows) {
     int rank = cols;
     for (size_t row = 0; row < rank; row++) {
         if (matrix[row][row]) {
@@ -48,11 +50,10 @@ int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows)
                     }
                 }
             }
-        }
-        else {
+        } else {
             bool reduce = true;
             for (size_t i = row + 1; i < rows; i++) {
-                if (matrix[i][row]){
+                if (matrix[i][row]) {
                     std::swap(matrix[row], matrix[i]);
                     reduce = false;
                     break;
@@ -68,4 +69,23 @@ int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows)
         }
     }
     return rank;
+}
+
+utils::seq_bytes utils::read_bytes_from_file(const std::string path, size_t count) {
+    utils::seq_bytes bytes(count);
+    std::stringstream path_stream;
+    path_stream << std::string(std::filesystem::current_path().parent_path().c_str());
+    path_stream << "/../";
+    path_stream << path;
+    std::ifstream e_file(path_stream.str());
+    size_t index = 0;
+    while (e_file.is_open() && index < 100'000) {
+        char sym = e_file.get();
+        if (sym == '1') {
+            bytes[index++] = 1;
+        } else if (sym == '0') {
+            bytes[index++] = 0;
+        }
+    }
+    return bytes;
 }

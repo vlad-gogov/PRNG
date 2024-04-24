@@ -41,7 +41,10 @@ seq_bytes convert_numbers_to_seq_bytes(const std::vector<UIntType> &numbers) {
 
 size_t get_max_run(const seq_bytes &seq, size_t left_border = 0U, size_t right_border = 0U);
 
-std::vector<std::vector<int>> matrix_from_bytes(const utils::seq_bytes & bytes, int rows, int cols, int offset = 0);
+std::vector<std::vector<int>> matrix_from_bytes(const utils::seq_bytes &bytes, int rows, int cols, int offset = 0);
 
 int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows);
+
+seq_bytes read_bytes_from_file(const std::string path, size_t count);
+
 } // namespace utils
