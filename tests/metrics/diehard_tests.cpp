@@ -44,8 +44,8 @@ TEST(Diehard, birthdays_test_e) {
     int days_bits = 24;
     int num_bdays = 512;
     int tsamples = 100;
-    utils::seq_bytes bytes = utils::read_bytes_from_file("tests/metrics/e.txt", 24 * 512 + 100);
+    utils::seq_bytes bytes = utils::read_bytes_from_file("tests/metrics/random.txt", 24 * 512 + 100);
     double p = diehard::birthdays_test(bytes, days_bits, num_bdays, tsamples);
-    double answer = 0; // Dummy value
+    double answer = 0.1195526;
     ASSERT_NEAR(p, answer, abs_error);
 }

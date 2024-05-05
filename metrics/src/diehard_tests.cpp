@@ -114,15 +114,17 @@ double diehard::birthdays_test(const utils::seq_bytes &bytes, int days_bits, int
     std::vector<double> histogram(kmax, 0.0);
 
     for (size_t sample = 0; sample < tsamples; sample++) {
-        std::vector<unsigned int> uints(num_bdays);
-        for (size_t i = 0; i < bytes.size(); i += days_bits) {
-            std::vector<bool> sub_vec(bytes.begin() + i + sample, bytes.begin() + i + days_bits + sample);
-            std::bitset<32> bits;
-            for (int j = 0; j < days_bits; ++j) {
-                bits[days_bits - 1 - j] = sub_vec[j];
+        std::vector<unsigned int> uints;
+        for (size_t i = 0; i < num_bdays; i++) {
+            std::vector<bool> sub_vec(bytes.begin() + i * days_bits + sample,
+                                      bytes.begin() + i * days_bits + sample + days_bits);
+            std::bitset<32> bday_bitset(0);
+            for (size_t j = 0; j < days_bits; j++) {
+                bday_bitset[days_bits - 1 - j] = sub_vec[j];
             }
-            uints[num_bdays] = bits.to_ulong();
+            uints.push_back(bday_bitset.to_ulong());
         }
+
         std::sort(uints.begin(), uints.end());
 
         // If num_bdays = 512 and days_bits = 24, lambda = 2
@@ -137,16 +139,18 @@ double diehard::birthdays_test(const utils::seq_bytes &bytes, int days_bits, int
 
         // Count how many intervals occur more than once
         int k = 0;
-        for (int i = 1; i < uints.size(); ++i) {
-            if (uints[i] == uints[i - 1]) {
+        for (int i_interval = 1; i_interval < num_bdays; ++i_interval) {
+            if (intervals[i_interval] == intervals[i_interval - 1]) {
                 ++k;
-                while (i < uints.size() && uints[i] == uints[i - 1]) {
-                    i++;
+                while (i_interval < intervals.size() && intervals[i_interval] == intervals[i_interval - 1]) {
+                    i_interval++;
                 }
             }
         }
 
         if (k < kmax) {
+            histogram[k] += 1.0;
+        } else {
             histogram[k] += 1.0;
         }
     }

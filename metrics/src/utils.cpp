@@ -1,7 +1,7 @@
 #include "utils.hpp"
 
-#include <boost/math/special_functions/gamma.hpp>
 #include <algorithm>
+#include <boost/math/special_functions/gamma.hpp>
 #include <filesystem>
 #include <fstream>
 
@@ -91,21 +91,23 @@ utils::seq_bytes utils::read_bytes_from_file(const std::string path, size_t coun
     return bytes;
 }
 
-double utils::chi_square(std::vector<double> trial_vector, std::vector<double> expected_vector, int degrees_of_freedom) {
+double utils::chi_square(std::vector<double> trial_vector, std::vector<double> expected_vector,
+                         int degrees_of_freedom) {
     double chi_sq = 0.0;
     for (size_t i = 0; i < degrees_of_freedom; i++) {
-        double part_chi_sq = (trial_vector[i] - expected_vector[i]) * (trial_vector[i] - expected_vector[i]) / expected_vector[i];
-        chi_sq+= part_chi_sq;
+        double part_chi_sq =
+            (trial_vector[i] - expected_vector[i]) * (trial_vector[i] - expected_vector[i]) / expected_vector[i];
+        chi_sq += part_chi_sq;
     }
     return chi_sq;
 }
 
-
 double utils::p_value(int degrees_of_freedom, double chi_square) {
 
-    return boost::math::gamma_q((double)(degrees_of_freedom)/2.0, chi_square/2.0);
+    return boost::math::gamma_q((double)(degrees_of_freedom) / 2.0, chi_square / 2.0);
 }
 
 double utils::poissonian(int k, double lambda) {
-    return std::pow(lambda, k) * std::exp(-lambda) / boost::math::factorial<double>(k);;
+    return std::pow(lambda, k) * std::exp(-lambda) / boost::math::factorial<double>(k);
+    ;
 }
