@@ -47,4 +47,11 @@ int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows)
 
 seq_bytes read_bytes_from_file(const std::string path, size_t count);
 
+double chi_square(std::vector<double> trial_vector, std::vector<double> expected_vector, int degrees_of_freedom);
+
+double p_value(int degrees_of_freedom, double chi_square);
+
+double poissonian(int k, double lambda);
+
+
 } // namespace utils
