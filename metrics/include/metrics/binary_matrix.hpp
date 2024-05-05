@@ -2,6 +2,7 @@
 #include "metrics/utils.hpp"
 
 class BinaryMatrix {
+
     utils::seq_bytes bytes;
     size_t size;
 
@@ -9,7 +10,7 @@ class BinaryMatrix {
     BinaryMatrix();
     BinaryMatrix(const utils::seq_bytes bytes, size_t size);
 
-    size_t rank_computation() const;
+    size_t compute_rank() const;
 
     void print() const;
 };

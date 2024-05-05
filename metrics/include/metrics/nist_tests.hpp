@@ -27,12 +27,35 @@ double non_overlapping_template_matching(const utils::seq_bytes &bytes, const ut
 bool check_non_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
                                              size_t N = 8);
 
-double overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_, size_t N = 8,
-                                     size_t K = 5);
-bool check_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_, size_t N = 8,
-                                         size_t K = 5);
+double overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_, size_t M = 1032,
+                                     size_t N = 968, size_t K = 5);
+bool check_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
+                                         size_t M = 1032, size_t N = 968, size_t K = 5);
 
-double universal(const utils::seq_bytes &bytes, size_t L, size_t Q);
-bool check_universal(const utils::seq_bytes &bytes, size_t L, size_t Q);
+double universal(const utils::seq_bytes &bytes, size_t L = 0, size_t Q = 0);
+bool check_universal(const utils::seq_bytes &bytes, size_t L = 0, size_t Q = 0);
+
+double linear_complexity(const utils::seq_bytes &bytes, size_t M);
+bool check_linear_complexity(const utils::seq_bytes &bytes, size_t M);
+
+std::pair<double, double> serial_complexity(const utils::seq_bytes &bytes, size_t m);
+bool check_serial_complexity(const utils::seq_bytes &bytes, size_t m);
+
+double approximate_entropy(const utils::seq_bytes &bytes, size_t m);
+bool check_approximate_entropy(const utils::seq_bytes &bytes, size_t m);
+
+enum CumulativeSumsMode {
+    Forward,
+    Reverse,
+};
+
+double cumulative_sums(const utils::seq_bytes &bytes, CumulativeSumsMode mode);
+bool check_cumulative_sums(const utils::seq_bytes &bytes, CumulativeSumsMode mode);
+
+std::vector<double> random_excursions(const utils::seq_bytes &bytes);
+std::vector<bool> check_random_excursions(const utils::seq_bytes &bytes);
+
+std::vector<double> random_excursions_variant(const utils::seq_bytes &bytes);
+std::vector<bool> check_random_excursions_variant(const utils::seq_bytes &bytes);
 
 } // namespace nist

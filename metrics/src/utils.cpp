@@ -37,16 +37,26 @@ seq_bytes read_bytes_from_file(const std::string path, size_t count) {
     path_stream << std::string(std::filesystem::current_path().parent_path().c_str());
     path_stream << "/../";
     path_stream << path;
-    std::ifstream e_file(path_stream.str());
+    std::ifstream e_file(path_stream.str(), std::ios::binary | std::ios::ate | std::ios::in);
     size_t index = 0;
-    while (e_file.is_open() && index < 100'000) {
-        char sym = e_file.get();
-        if (sym == '1') {
-            bytes[index++] = 1;
-        } else if (sym == '0') {
-            bytes[index++] = 0;
+    size_t index_data = 0;
+    if (e_file.is_open()) {
+        auto size = e_file.tellg();
+        std::string str(size, '\0');
+        e_file.seekg(0);
+        if (e_file.read(&str[0], size)) {
+            for (size_t i = 0; index < count && i < str.size(); i++) {
+                if (str[i] == '1') {
+                    bytes[index++] = 1;
+                } else if (str[i] == '0') {
+                    bytes[index++] = 0;
+                }
+            }
         }
+    } else {
+        throw std::runtime_error("Can't open file: " + path);
     }
+    e_file.close();
     return bytes;
 }
 
