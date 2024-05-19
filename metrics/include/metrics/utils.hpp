@@ -53,5 +53,15 @@ double p_value(int degrees_of_freedom, double chi_square);
 
 double poissonian(int k, double lambda);
 
+std::vector<double> doubles_from_bits(const utils::seq_bytes &bytes, int num_doubles);
+
+std::vector<double> random_doubles(int num_doubles);
+
+double kstest(std::vector<double> p_values);
+
+int kperm(const std::vector<int> &v);
+
+uint bits_to_uint(const utils::seq_bytes &bytes, uint offset);
+std::vector<uint> bits_to_vector_uint(const utils::seq_bytes &bytes, int size);
 
 } // namespace utils

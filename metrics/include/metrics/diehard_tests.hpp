@@ -12,4 +12,7 @@ double matrix_test(const utils::seq_bytes &bytes, int rows, int cols, int iterat
 
 double birthdays_test(const utils::seq_bytes &bytes, int days_bits, int num_bdays, int tsamples);
 
+double minimum_distance_test(const utils::seq_bytes &bytes, int n_dims, int num_coordinates, int num_samples);
+
+double overlapping_permutations_test(const utils::seq_bytes &bytes, int num_samples);
 } // namespace diehard
