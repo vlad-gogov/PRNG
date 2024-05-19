@@ -194,8 +194,8 @@ int utils::kperm(const std::vector<int> &v) {
 }
 
 uint utils::bits_to_uint(const utils::seq_bytes &bytes, uint offset) {
-    std::bitset<31> bitset;
-    for (size_t i = 0; i < 31; i++) {
+    std::bitset<32> bitset;
+    for (size_t i = 0; i < 32; i++) {
         bitset[i] = bytes[offset + i];
     }
     return bitset.to_ulong();
