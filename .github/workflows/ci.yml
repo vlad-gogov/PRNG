@@ -37,7 +37,7 @@ jobs:
         make
     - name: Run tests
       run: |
-        export PATH_TO_DIGIT_EXPONENT=${GITHUB_WORKSPACE}/tests/metrics/data.e
+        export PATH_TO_DIGIT_EXPONENT=${{ github.workspace }}/tests/metrics/data.e
         cd build
         ctest --output-on-failure
 
@@ -56,6 +56,6 @@ jobs:
         cmake --build .
     - name: Run tests
       run: |
-        setx PATH_TO_DIGIT_EXPONENT "${GITHUB_WORKSPACE}/tests/metrics/data.e"
+        setx PATH_TO_DIGIT_EXPONENT "${{ github.workspace }}/tests/metrics/data.e"
         cd build
         ctest --output-on-failure
