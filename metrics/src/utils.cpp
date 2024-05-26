@@ -33,6 +33,7 @@ size_t get_max_run(const seq_bytes &seq, size_t left_border, size_t right_border
 
 seq_bytes read_bits_from_exponent(size_t count) {
     std::string path = std::getenv("PATH_TO_DIGIT_EXPONENT");
+    std::cout << path << std::endl;
     std::ifstream e_file(path, std::ios::binary | std::ios::in);
     if (count == 0) {
         e_file.seekg(0, std::ios::end);
