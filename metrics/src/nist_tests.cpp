@@ -15,13 +15,6 @@
 
 constexpr double alpha = 0.01;
 
-std::map<std::pair<size_t, size_t>, std::vector<double>> PI = {
-    {{3, 8}, {0.2148, 0.3672, 0.2305, 0.1875}},
-    {{5, 128}, {0.1174, 0.2430, 0.2493, 0.1752, 0.1027, 0.1124}},
-    {{5, 512}, {0.1170, 0.2460, 0.2523, 0.1755, 0.1027, 0.1124}},
-    {{5, 10000}, {0.1307, 0.2437, 0.2452, 0.1714, 0.1002, 0.1088}},
-    {{6, 10000}, {0.0882, 0.2092, 0.2483, 0.1933, 0.1208, 0.0675, 0.0727}}};
-
 double nist::frequency_test(const utils::seq_bytes &bytes) {
     size_t length_bytes = bytes.size();
     std::int64_t sum = 0;
@@ -33,40 +26,38 @@ double nist::frequency_test(const utils::seq_bytes &bytes) {
         }
     }
     double s_obs = std::abs(sum) / std::sqrt(length_bytes);
-    return std::erfcl(s_obs / std::sqrt(2));
+    return boost::math::erfc(s_obs / std::sqrt(2));
 }
 
 bool nist::check_frequency_test(const utils::seq_bytes &bytes) {
     return nist::frequency_test(bytes) >= alpha;
 }
 
-double nist::frequency_block_test(const utils::seq_bytes &bytes, size_t count_part) {
+double nist::frequency_block_test(const utils::seq_bytes &bytes, size_t m) {
     size_t length_bytes = bytes.size();
-    size_t size_block = length_bytes / count_part;
+    size_t count_block = length_bytes / m;
     std::vector<double> pi;
-    pi.resize(count_part);
-    for (size_t i = 0; i < count_part; ++i) {
+    pi.resize(count_block);
+    for (size_t i = 0; i < count_block; ++i) {
         size_t sum = 0;
-        size_t left_border = i * size_block;
-        size_t right_border = left_border + size_block;
+        size_t left_border = i * m;
+        size_t right_border = left_border + m;
         for (size_t j = left_border; j < right_border; ++j) {
-            if (bytes[j]) {
-                ++sum;
-            }
+            sum += bytes[j];
         }
-        pi[i] = static_cast<double>(sum) / count_part;
+        pi[i] = static_cast<double>(sum) / m;
     }
-    double kappa = 4 * count_part;
+    double kappa = 4 * m;
     double sum = 0;
     for (const auto &p : pi) {
         sum += (p - 0.5) * (p - 0.5);
     }
     kappa *= sum;
-    return boost::math::gamma_q(static_cast<double>(size_block) / 2.0, kappa / 2.0);
+    return boost::math::gamma_q(static_cast<double>(count_block) / 2.0, kappa / 2.0);
 }
 
-bool nist::check_frequency_block_test(const utils::seq_bytes &bytes, size_t count_part) {
-    return nist::frequency_block_test(bytes, count_part) >= alpha;
+bool nist::check_frequency_block_test(const utils::seq_bytes &bytes, size_t m) {
+    return nist::frequency_block_test(bytes, m) >= alpha;
 }
 
 double nist::runs_test(const utils::seq_bytes &bytes) {
@@ -87,8 +78,8 @@ double nist::runs_test(const utils::seq_bytes &bytes) {
             ++v;
         }
     }
-    return std::erfcl(std::abs(v - 2 * length_bytes * pi * (1 - pi)) /
-                      (2.0 * std::sqrt(2 * length_bytes) * pi * (1 - pi)));
+    return boost::math::erfc(std::abs(v - 2 * length_bytes * pi * (1 - pi)) /
+                             (2.0 * std::sqrt(2 * length_bytes) * pi * (1 - pi)));
 }
 
 bool nist::check_runs_test(const utils::seq_bytes &bytes) {
@@ -96,17 +87,21 @@ bool nist::check_runs_test(const utils::seq_bytes &bytes) {
 }
 
 double nist::longest_run_of_ones(const utils::seq_bytes &bytes) {
+    std::map<std::pair<size_t, size_t>, std::vector<double>> PI = {
+        {{3, 8}, {0.2148, 0.3672, 0.2305, 0.1875}},
+        {{5, 128}, {0.1174, 0.2430, 0.2493, 0.1752, 0.1027, 0.1124}},
+        {{6, 10000}, {0.0882, 0.2092, 0.2483, 0.1933, 0.1208, 0.0675, 0.0727}}};
     std::map<size_t, size_t> M = {{128, 8}, {6572, 128}, {750000, 10000}};
     std::unordered_map<size_t, size_t> K = {{8, 3}, {128, 5}, {10000, 6}};
-    std::unordered_map<size_t, size_t> N = {{8, 16}, {128, 49}, {10000, 75}};
     std::unordered_map<size_t, std::vector<std::uint16_t>> V = {{8, {1, 4}}, {128, {4, 9}}, {10000, {10, 16}}};
     size_t size_block = 0U;
     size_t length_bytes = bytes.size();
-    for (const auto &[key, value] : M) {
-        if (key >= length_bytes) {
-            size_block = value;
-            break;
-        }
+    if (length_bytes < 6572) {
+        size_block = 8;
+    } else if (length_bytes < 750000) {
+        size_block = 128;
+    } else {
+        size_block = 10000;
     }
     std::vector<size_t> v;
     std::vector<std::uint16_t> &bounds = V[size_block];
@@ -125,12 +120,11 @@ double nist::longest_run_of_ones(const utils::seq_bytes &bytes) {
         }
     }
     double kappa = 0;
-    size_t n = N[size_block];
     size_t k = K[size_block];
     std::vector<double> pi = PI[{k, size_block}];
     for (size_t i = 0; i <= k; ++i) {
-        double temp = (v[i] - n * pi[i]);
-        kappa += temp * temp / (n * pi[i]);
+        double temp = (v[i] - count_block * pi[i]);
+        kappa += temp * temp / (count_block * pi[i]);
     }
     return boost::math::gamma_q(static_cast<double>(k) / 2.0, kappa / 2.0);
 }
@@ -393,7 +387,7 @@ double nist::universal(const utils::seq_bytes &bytes, size_t L, size_t Q) {
     double f_n = sum / (double)K;
     double c = 0.7 - 0.8 / L + (4 + 32.0 / (double)L) * std::pow(K, -3.0 / (double)L) / 15;
     double sigma = c * std::sqrt(variance[L] / K);
-    return std::erfcl(std::abs(f_n - expected_value[L] / (std::sqrt(2) * sigma)));
+    return boost::math::erfc(std::abs((f_n - expected_value[L]) / (std::sqrt(2) * sigma)));
 }
 
 bool nist::check_universal(const utils::seq_bytes &bytes, size_t L, size_t Q) {
@@ -685,7 +679,7 @@ std::vector<double> nist::random_excursions_variant(const utils::seq_bytes &byte
     for (size_t i = 0; i < count_state; i++) {
         int x = state_x[i];
         double count = std::count_if(S_.begin(), S_.end(), [&x](int element) { return element == x; });
-        p_values[i] = std::erfc(std::abs(count - J) / (std::sqrt(2 * J * (4 * std::abs(x) - 2))));
+        p_values[i] = boost::math::erfc(std::abs(count - J) / (std::sqrt(2 * J * (4 * std::abs(x) - 2))));
     }
 
     return p_values;

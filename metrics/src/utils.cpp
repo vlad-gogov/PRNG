@@ -31,27 +31,19 @@ size_t get_max_run(const seq_bytes &seq, size_t left_border, size_t right_border
     return max_run;
 }
 
-seq_bytes read_bytes_from_file(const std::string path, size_t count) {
+seq_bytes read_bits_from_exponent(size_t count) {
+    std::string path = std::getenv("PATH_TO_DIGIT_EXPONENT");
+    std::ifstream e_file(path, std::ios::binary | std::ios::in);
+    if (count == 0) {
+        e_file.seekg(0, std::ios::end);
+        count = e_file.tellg();
+        e_file.seekg(0, std::ios::beg);
+    }
     seq_bytes bytes(count);
-    std::stringstream path_stream;
-    path_stream << std::string(std::filesystem::current_path().parent_path().c_str());
-    path_stream << "/../";
-    path_stream << path;
-    std::ifstream e_file(path_stream.str(), std::ios::binary | std::ios::ate | std::ios::in);
-    size_t index = 0;
     size_t index_data = 0;
     if (e_file.is_open()) {
-        auto size = e_file.tellg();
-        std::string str(size, '\0');
-        e_file.seekg(0);
-        if (e_file.read(&str[0], size)) {
-            for (size_t i = 0; index < count && i < str.size(); i++) {
-                if (str[i] == '1') {
-                    bytes[index++] = 1;
-                } else if (str[i] == '0') {
-                    bytes[index++] = 0;
-                }
-            }
+        for (size_t i = 0; i < count; i++) {
+            e_file >> bytes[i];
         }
     } else {
         throw std::runtime_error("Can't open file: " + path);

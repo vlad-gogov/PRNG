@@ -59,6 +59,6 @@ std::vector<std::complex<double>> DFT(const std::vector<T> &x) {
     return result;
 }
 
-seq_bytes read_bytes_from_file(const std::string path, size_t count);
+seq_bytes read_bits_from_exponent(size_t count = 0);
 
 } // namespace utils

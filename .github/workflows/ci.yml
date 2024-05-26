@@ -38,6 +38,7 @@ jobs:
     - name: Run tests
       run: |
         cd build
+        export PATH_TO_DIGIT_EXPONENT=/tests/metrics/data.e
         ctest --output-on-failure
 
   windows-msvc:
@@ -56,4 +57,5 @@ jobs:
     - name: Run tests
       run: |
         cd build
+        setx PATH_TO_DIGIT_EXPONENT "/tests/metrics/data.e"
         ctest --output-on-failure
