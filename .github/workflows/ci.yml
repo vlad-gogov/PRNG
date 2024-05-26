@@ -39,7 +39,7 @@ jobs:
       run: |
         export PATH_TO_DIGIT_EXPONENT=${{ github.workspace }}/tests/metrics/data.e
         cd build
-        ctest --output-on-failure
+        ctest
 
   windows-msvc:
     name: Windows MSVC build & test
@@ -58,4 +58,4 @@ jobs:
       run: |
         setx PATH_TO_DIGIT_EXPONENT "${{ github.workspace }}/tests/metrics/data.e"
         cd build
-        ctest --output-on-failure
+        ctest
