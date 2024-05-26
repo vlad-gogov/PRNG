@@ -37,8 +37,8 @@ jobs:
         make
     - name: Run tests
       run: |
+        export PATH_TO_DIGIT_EXPONENT=${GITHUB_WORKSPACE}/tests/metrics/data.e
         cd build
-        export PATH_TO_DIGIT_EXPONENT=/tests/metrics/data.e
         ctest --output-on-failure
 
   windows-msvc:
@@ -56,6 +56,6 @@ jobs:
         cmake --build .
     - name: Run tests
       run: |
+        setx PATH_TO_DIGIT_EXPONENT "${GITHUB_WORKSPACE}/tests/metrics/data.e"
         cd build
-        setx PATH_TO_DIGIT_EXPONENT "/tests/metrics/data.e"
         ctest --output-on-failure
