@@ -16,6 +16,7 @@ target_link_libraries(${TARGET_NAME} PUBLIC
     generators
     gtest
     gtest_main
+    metrics
 )
 
 gtest_discover_tests(${TARGET_NAME})

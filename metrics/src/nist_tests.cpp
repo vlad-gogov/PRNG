@@ -316,7 +316,7 @@ double nist::overlapping_template_matching(const utils::seq_bytes &bytes, const 
 
 bool nist::check_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
                                                size_t M, size_t N, size_t K) {
-    return nist::overlapping_template_matching(bytes, template_, K) >= alpha;
+    return nist::overlapping_template_matching(bytes, template_, M, N, K) >= alpha;
 }
 
 double nist::universal(const utils::seq_bytes &bytes, size_t L, size_t Q) {
