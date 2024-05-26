@@ -4,6 +4,7 @@
 #include <complex>
 #include <iostream>
 #include <limits>
+#include <numbers>
 #include <vector>
 
 namespace utils {
@@ -52,7 +53,7 @@ std::vector<std::complex<double>> DFT(const std::vector<T> &x) {
     std::vector<std::complex<double>> result(size);
     for (size_t i = 0; i < size; i++) {
         for (size_t j = 0; j < size; j++) {
-            double a = 2 * M_PI * j * i / size;
+            double a = 2 * std::numbers::pi * j * i / size;
             result[i] += std::complex<double>(std::cos(a), std::sin(a)) * (double)x[j];
         }
     }
