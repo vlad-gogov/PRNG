@@ -9,7 +9,6 @@ file(GLOB_RECURSE TARGET_SRC
 
 add_executable(${TARGET_NAME} ${TARGET_SRC})
 
-include_directories(${ARMADILLO_INCLUDE_DIRS})
 target_include_directories(${TARGET_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/metircs/include
 )
