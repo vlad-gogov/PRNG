@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <unordered_map>
 #include <utility>
 
@@ -314,9 +315,20 @@ double diehard::craps_test(const utils::seq_bytes &bytes, int num_games) {
         throws.push_back(throws_this_game);
     }
 
-    // Calculate statistics
-    // TODO: Compare against expected distributions
-    // Will need the expected distribution values from you
-
-    return 0.0; // Placeholder - will return actual p-value
+    // Count total wins
+    int total_wins = std::accumulate(wins.begin(), wins.end(), 0);
+    
+    // Expected values
+    double p = 244.0/495.0;
+    double expected_wins = num_games * p;
+    double variance = num_games * p * (1.0 - p);
+    double std_dev = std::sqrt(variance);
+    
+    // Calculate z-score
+    double z_score = std::abs(total_wins - expected_wins) / std_dev;
+    
+    // Convert to p-value using erfc
+    double p_value = std::erfc(z_score / std::sqrt(2.0));
+    
+    return p_value;
 }
