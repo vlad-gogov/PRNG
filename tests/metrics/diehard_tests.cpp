@@ -80,3 +80,12 @@ TEST(Diehard, minimum_distance_test_3d_random) {
     double limit = 0.05;
     ASSERT_LE(p, limit);
 }
+
+TEST(Diehard, craps_test_random) {
+    int num_games = 200000;
+    // Need 2 rolls minimum per game, so allocate enough bytes
+    utils::seq_bytes bytes = utils::read_bytes_from_file("tests/metrics/random.txt", num_games * 4 * 32);
+    double p = diehard::craps_test(bytes, num_games);
+    // For truly random data, p-value should be > 0.01
+    ASSERT_GT(p, 0.01);
+}
