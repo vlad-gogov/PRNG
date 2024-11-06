@@ -263,3 +263,60 @@ double diehard::overlapping_permutations_test(const utils::seq_bytes &bytes, int
 
     return p_value;
 }
+
+double diehard::craps_test(const utils::seq_bytes &bytes, int num_games) {
+    std::vector<int> wins(0);   // Track number of wins
+    std::vector<int> throws(0); // Track number of throws per game
+
+    // Convert bytes to numbers we can use for dice rolls
+    std::vector<uint> rolls = utils::bits_to_vector_uint(bytes, num_games * 2); // We need at least 2 rolls per game
+
+    for (int game = 0; game < num_games; game++) {
+        int throws_this_game = 1;
+
+        // First throw - sum of two dice
+        int die1 = (rolls[game * 2] % 6) + 1;
+        int die2 = (rolls[game * 2 + 1] % 6) + 1;
+        int sum = die1 + die2;
+
+        bool game_won = false;
+        bool game_over = false;
+
+        // Check first throw results
+        if (sum == 7 || sum == 11) {
+            game_won = true;
+            game_over = true;
+        } else if (sum == 2 || sum == 3 || sum == 12) {
+            game_won = false;
+            game_over = true;
+        }
+
+        // If game isn't over, we have a point
+        int point = sum;
+        while (!game_over) {
+            throws_this_game++;
+
+            // Get next roll
+            die1 = (rolls[game * 2 + throws_this_game * 2] % 6) + 1;
+            die2 = (rolls[game * 2 + throws_this_game * 2 + 1] % 6) + 1;
+            sum = die1 + die2;
+
+            if (sum == point) {
+                game_won = true;
+                game_over = true;
+            } else if (sum == 7) {
+                game_won = false;
+                game_over = true;
+            }
+        }
+
+        wins.push_back(game_won ? 1 : 0);
+        throws.push_back(throws_this_game);
+    }
+
+    // Calculate statistics
+    // TODO: Compare against expected distributions
+    // Will need the expected distribution values from you
+
+    return 0.0; // Placeholder - will return actual p-value
+}
