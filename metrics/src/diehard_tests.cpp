@@ -266,20 +266,14 @@ double diehard::overlapping_permutations_test(const utils::seq_bytes &bytes, int
 }
 
 double diehard::craps_test(const utils::seq_bytes &bytes, int num_games) {
-    std::cout << "Starting craps test with " << num_games << " games\n";
-    std::vector<int> wins(0);   
-    std::vector<int> throws(0); 
+    std::vector<int> wins(0);
+    std::vector<int> throws(0);
 
     // Convert bytes to numbers we can use for dice rolls
-    std::cout << "Converting bytes to rolls...\n";
     std::vector<uint> rolls = utils::bits_to_vector_uint(bytes, num_games * 2);
-    std::cout << "Got " << rolls.size() << " rolls\n";
 
     for (int game = 0; game < num_games; game++) {
-        if (game % 10000 == 0) {
-            std::cout << "Playing game " << game << "\n";
-        }
-        
+
         int throws_this_game = 1;
 
         // First throw - sum of two dice
@@ -303,12 +297,6 @@ double diehard::craps_test(const utils::seq_bytes &bytes, int num_games) {
         int point = sum;
         while (!game_over) {
             throws_this_game++;
-            
-            // Check if we have enough rolls
-            if (game * 2 + throws_this_game * 2 + 1 >= rolls.size()) {
-                std::cout << "Not enough rolls at game " << game << ", throw " << throws_this_game << "\n";
-                return 0.0;
-            }
 
             // Get next roll
             die1 = (rolls[game * 2 + throws_this_game * 2] % 6) + 1;
@@ -328,24 +316,19 @@ double diehard::craps_test(const utils::seq_bytes &bytes, int num_games) {
         throws.push_back(throws_this_game);
     }
 
-    std::cout << "Games completed, calculating statistics...\n";
-    
     // Count total wins
     int total_wins = std::accumulate(wins.begin(), wins.end(), 0);
-    std::cout << "Total wins: " << total_wins << " out of " << num_games << " games\n";
-    
+
     // Expected values
-    double p = 244.0/495.0;
+    double p = 244.0 / 495.0;
     double expected_wins = num_games * p;
     double variance = num_games * p * (1.0 - p);
     double std_dev = std::sqrt(variance);
-    
+
     // Calculate z-score
     double z_score = std::abs(total_wins - expected_wins) / std_dev;
-    
+
     // Convert to p-value using erfc
     double p_value = std::erfc(z_score / std::sqrt(2.0));
-    
-    std::cout << "Final p-value: " << p_value << "\n";
     return p_value;
 }

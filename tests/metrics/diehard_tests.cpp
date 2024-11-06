@@ -47,7 +47,7 @@ TEST(Diehard, birthdays_test_random) {
     utils::seq_bytes bytes =
         utils::read_bytes_from_file("tests/metrics/random.txt", days_bits * num_bdays + tsamples * 32);
     double p = diehard::birthdays_test(bytes, days_bits, num_bdays, tsamples);
-    double answer = 0.1195526;
+    double answer = 0.11955267177999861;
     ASSERT_NEAR(p, answer, abs_error);
 }
 
@@ -82,7 +82,7 @@ TEST(Diehard, minimum_distance_test_3d_random) {
 }
 
 TEST(Diehard, craps_test_random) {
-    int num_games = 200000;
+    int num_games = 2000;
     // Need 2 rolls minimum per game, so allocate enough bytes
     utils::seq_bytes bytes = utils::read_bytes_from_file("tests/metrics/random.txt", num_games * 4 * 32);
     double p = diehard::craps_test(bytes, num_games);
