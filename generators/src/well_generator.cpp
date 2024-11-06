@@ -15,7 +15,7 @@ void WELL512a::seed(uint32_t s) {
 
 void WELL512a::discard(std::uint64_t z) {
     for (; z > 0; --z) {
-        this->operator()();
+        operator()();
     }
 }
 
