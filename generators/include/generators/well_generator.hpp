@@ -38,10 +38,10 @@ class WELL512a : public LinearGenerator<uint32_t> {
     void discard(std::uint64_t z) override;
     uint32_t operator()() noexcept;
 
-    constexpr uint32_t min() {
+    uint32_t min() {
         return 0;
     }
-    constexpr uint32_t max() {
+    uint32_t max() {
         return 0xFFFFFFFFU;
     }
 };
