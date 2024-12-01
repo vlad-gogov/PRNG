@@ -7,10 +7,12 @@
 #include <iostream>
 #include <random>
 
-TEST(MT, can_generator) {
-    MT19937 generator;
-    std::cout << generator() << std::endl;
-    ASSERT_EQ(1, 1);
+TEST(MT, can_generate_correct_seq) {
+    MT19937 my_generator;
+    std::mt19937 correct_generator;
+    for (size_t i = 0; i < 100; i++) {
+        ASSERT_EQ(correct_generator(), my_generator());
+    }
 }
 
 TEST(MT, frequency_lcg) {
