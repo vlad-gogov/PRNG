@@ -15,6 +15,16 @@ TEST(MT, can_generate_correct_seq) {
     }
 }
 
+TEST(MT, can_discard) {
+    MT19937 my_generator;
+    std::mt19937 correct_generator;
+    my_generator.discard(1000);
+    correct_generator.discard(1000);
+    for (size_t i = 0; i < 100; i++) {
+        ASSERT_EQ(correct_generator(), my_generator());
+    }
+}
+
 TEST(MT, frequency_lcg) {
     MT19937 generator;
     std::uint32_t count_number = 50;
