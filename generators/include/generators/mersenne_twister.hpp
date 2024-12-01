@@ -22,13 +22,13 @@
  * @tparam F  Initialization multiplier.
  */
 
-template <typename UIntType, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S, UIntType B,
-          size_t T, UIntType C, size_t L, UIntType F>
+template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
+          UIntType B, size_t T, UIntType C, size_t L, UIntType F>
 class MersenneTwisterEngine : Generator<UIntType> {
 
     static_assert(std::is_unsigned<UIntType>::value, "result_type must be an unsigned integral type");
     static_assert(1u <= M && M <= N, "template argument substituting M out of bounds");
-    static constexpr size_t W = std::numeric_limits<UIntType>::digits;
+    static_assert(W <= std::numeric_limits<UIntType>::digits, "template argument substituting __w out of bound");
     static_assert(R <= W, "template argument substituting "
                           "R out of bound");
     static_assert(U <= W, "template argument substituting "
@@ -103,6 +103,6 @@ class MersenneTwisterEngine : Generator<UIntType> {
     }
 };
 
-typedef MersenneTwisterEngine<uint32_t, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7, 0x9d2c5680UL, 15, 0xefc60000UL,
-                              18, 1812433253UL>
+typedef MersenneTwisterEngine<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7, 0x9d2c5680UL, 15,
+                              0xefc60000UL, 18, 1812433253UL>
     MT19937;
