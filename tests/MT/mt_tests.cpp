@@ -25,7 +25,7 @@ TEST(MT, can_discard) {
     }
 }
 
-TEST(MT, frequency_lcg) {
+TEST(MT, frequency_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -38,7 +38,7 @@ TEST(MT, frequency_lcg) {
     ASSERT_TRUE(nist::check_frequency_test(bytes));
 }
 
-TEST(MT, frequency_block_lcg) {
+TEST(MT, frequency_block_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -51,7 +51,7 @@ TEST(MT, frequency_block_lcg) {
     ASSERT_TRUE(nist::check_frequency_block_test(bytes, 128));
 }
 
-TEST(MT, runs_lcg) {
+TEST(MT, runs_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -64,7 +64,7 @@ TEST(MT, runs_lcg) {
     ASSERT_TRUE(nist::check_runs_test(bytes));
 }
 
-TEST(MT, longest_run_of_ones_lcg) {
+TEST(MT, longest_run_of_ones_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -77,7 +77,7 @@ TEST(MT, longest_run_of_ones_lcg) {
     ASSERT_TRUE(nist::check_longest_run_of_ones(bytes));
 }
 
-TEST(MT, binary_matrix_rank_lcg) {
+TEST(MT, binary_matrix_rank_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -92,7 +92,7 @@ TEST(MT, binary_matrix_rank_lcg) {
     ASSERT_TRUE(nist::check_binary_matrix_rank(bytes, M, Q));
 }
 
-TEST(MT, discrete_fourier_transform_lcg) {
+TEST(MT, discrete_fourier_transform_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -105,7 +105,7 @@ TEST(MT, discrete_fourier_transform_lcg) {
     ASSERT_TRUE(nist::check_discrete_fourier_transform(bytes));
 }
 
-TEST(MT, non_overlapping_template_matching_lcg) {
+TEST(MT, non_overlapping_template_matching_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -119,7 +119,7 @@ TEST(MT, non_overlapping_template_matching_lcg) {
     ASSERT_TRUE(nist::check_non_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, overlapping_template_matching_lcg) {
+TEST(MT, overlapping_template_matching_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -133,7 +133,7 @@ TEST(MT, overlapping_template_matching_lcg) {
     ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, universal_digit_lcg) {
+TEST(MT, universal_digit_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -146,7 +146,7 @@ TEST(MT, universal_digit_lcg) {
     ASSERT_TRUE(nist::check_universal(bytes));
 }
 
-TEST(MT, serial_lcg) {
+TEST(MT, serial_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -159,7 +159,7 @@ TEST(MT, serial_lcg) {
     ASSERT_TRUE(nist::check_serial_complexity(bytes, 16));
 }
 
-TEST(MT, approximate_entropy_lcg) {
+TEST(MT, approximate_entropy_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -172,7 +172,7 @@ TEST(MT, approximate_entropy_lcg) {
     ASSERT_TRUE(nist::check_approximate_entropy(bytes, 10));
 }
 
-TEST(MT, cumulative_sums_lcg_forward) {
+TEST(MT, cumulative_sums_mt_forward) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -185,7 +185,7 @@ TEST(MT, cumulative_sums_lcg_forward) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Forward));
 }
 
-TEST(MT, cumulative_sums_lcg_reverse) {
+TEST(MT, cumulative_sums_mt_reverse) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -198,7 +198,7 @@ TEST(MT, cumulative_sums_lcg_reverse) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Reverse));
 }
 
-TEST(MT, random_excursions_lcg) {
+TEST(MT, random_excursions_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -218,7 +218,7 @@ TEST(MT, random_excursions_lcg) {
     }
 }
 
-TEST(MT, random_excursions_variant_lcg) {
+TEST(MT, random_excursions_variant_mt) {
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -238,7 +238,7 @@ TEST(MT, random_excursions_variant_lcg) {
     }
 }
 
-TEST(MT, frequency_lcg_64) {
+TEST(MT, frequency_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -251,7 +251,7 @@ TEST(MT, frequency_lcg_64) {
     ASSERT_TRUE(nist::check_frequency_test(bytes));
 }
 
-TEST(MT, frequency_block_lcg_64) {
+TEST(MT, frequency_block_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -264,7 +264,7 @@ TEST(MT, frequency_block_lcg_64) {
     ASSERT_TRUE(nist::check_frequency_block_test(bytes, 128));
 }
 
-TEST(MT, runs_lcg_64) {
+TEST(MT, runs_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -277,7 +277,7 @@ TEST(MT, runs_lcg_64) {
     ASSERT_TRUE(nist::check_runs_test(bytes));
 }
 
-TEST(MT, longest_run_of_ones_lcg_64) {
+TEST(MT, longest_run_of_ones_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -290,7 +290,7 @@ TEST(MT, longest_run_of_ones_lcg_64) {
     ASSERT_TRUE(nist::check_longest_run_of_ones(bytes));
 }
 
-TEST(MT, binary_matrix_rank_lcg_64) {
+TEST(MT, binary_matrix_rank_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -305,7 +305,7 @@ TEST(MT, binary_matrix_rank_lcg_64) {
     ASSERT_TRUE(nist::check_binary_matrix_rank(bytes, M, Q));
 }
 
-TEST(MT, discrete_fourier_transform_lcg_64) {
+TEST(MT, discrete_fourier_transform_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -318,7 +318,7 @@ TEST(MT, discrete_fourier_transform_lcg_64) {
     ASSERT_TRUE(nist::check_discrete_fourier_transform(bytes));
 }
 
-TEST(MT, non_overlapping_template_matching_lcg_64) {
+TEST(MT, non_overlapping_template_matching_mt_64) {
     MT19937_64 generator;
 
     std::uint32_t count_number = 50;
@@ -333,7 +333,7 @@ TEST(MT, non_overlapping_template_matching_lcg_64) {
     ASSERT_TRUE(nist::check_non_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, overlapping_template_matching_lcg_64) {
+TEST(MT, overlapping_template_matching_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -347,7 +347,7 @@ TEST(MT, overlapping_template_matching_lcg_64) {
     ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, universal_digit_lcg_64) {
+TEST(MT, universal_digit_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -360,7 +360,7 @@ TEST(MT, universal_digit_lcg_64) {
     ASSERT_TRUE(nist::check_universal(bytes));
 }
 
-TEST(MT, serial_lcg_64) {
+TEST(MT, serial_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -373,7 +373,7 @@ TEST(MT, serial_lcg_64) {
     ASSERT_TRUE(nist::check_serial_complexity(bytes, 16));
 }
 
-TEST(MT, approximate_entropy_lcg_64) {
+TEST(MT, approximate_entropy_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -386,7 +386,7 @@ TEST(MT, approximate_entropy_lcg_64) {
     ASSERT_TRUE(nist::check_approximate_entropy(bytes, 10));
 }
 
-TEST(MT, cumulative_sums_lcg_forward_64) {
+TEST(MT, cumulative_sums_mt_forward_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -399,7 +399,7 @@ TEST(MT, cumulative_sums_lcg_forward_64) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Forward));
 }
 
-TEST(MT, cumulative_sums_lcg_reverse_64) {
+TEST(MT, cumulative_sums_mt_reverse_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -412,7 +412,7 @@ TEST(MT, cumulative_sums_lcg_reverse_64) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Reverse));
 }
 
-TEST(MT, random_excursions_lcg_64) {
+TEST(MT, random_excursions_mt_64) {
     MT19937_64 generator(100000);
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -432,7 +432,7 @@ TEST(MT, random_excursions_lcg_64) {
     }
 }
 
-TEST(MT, random_excursions_variant_lcg_64) {
+TEST(MT, random_excursions_variant_mt_64) {
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -452,7 +452,7 @@ TEST(MT, random_excursions_variant_lcg_64) {
     }
 }
 
-TEST(MT, frequency_lcg_64_1) {
+TEST(MT, frequency_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -465,7 +465,7 @@ TEST(MT, frequency_lcg_64_1) {
     ASSERT_TRUE(nist::check_frequency_test(bytes));
 }
 
-TEST(MT, frequency_block_lcg_64_1) {
+TEST(MT, frequency_block_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -478,7 +478,7 @@ TEST(MT, frequency_block_lcg_64_1) {
     ASSERT_TRUE(nist::check_frequency_block_test(bytes, 128));
 }
 
-TEST(MT, runs_lcg_64_1) {
+TEST(MT, runs_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -491,7 +491,7 @@ TEST(MT, runs_lcg_64_1) {
     ASSERT_TRUE(nist::check_runs_test(bytes));
 }
 
-TEST(MT, longest_run_of_ones_lcg_64_1) {
+TEST(MT, longest_run_of_ones_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -504,7 +504,7 @@ TEST(MT, longest_run_of_ones_lcg_64_1) {
     ASSERT_TRUE(nist::check_longest_run_of_ones(bytes));
 }
 
-TEST(MT, binary_matrix_rank_lcg_64_1) {
+TEST(MT, binary_matrix_rank_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -519,7 +519,7 @@ TEST(MT, binary_matrix_rank_lcg_64_1) {
     ASSERT_TRUE(nist::check_binary_matrix_rank(bytes, M, Q));
 }
 
-TEST(MT, discrete_fourier_transform_lcg_64_1) {
+TEST(MT, discrete_fourier_transform_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -532,7 +532,7 @@ TEST(MT, discrete_fourier_transform_lcg_64_1) {
     ASSERT_TRUE(nist::check_discrete_fourier_transform(bytes));
 }
 
-TEST(MT, non_overlapping_template_matching_lcg_64_1) {
+TEST(MT, non_overlapping_template_matching_mt_64_1) {
     MT19937_64_1 generator;
 
     std::uint32_t count_number = 50;
@@ -547,7 +547,7 @@ TEST(MT, non_overlapping_template_matching_lcg_64_1) {
     ASSERT_TRUE(nist::check_non_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, overlapping_template_matching_lcg_64_1) {
+TEST(MT, overlapping_template_matching_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -561,7 +561,7 @@ TEST(MT, overlapping_template_matching_lcg_64_1) {
     ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, universal_digit_lcg_64_1) {
+TEST(MT, universal_digit_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -574,7 +574,7 @@ TEST(MT, universal_digit_lcg_64_1) {
     ASSERT_TRUE(nist::check_universal(bytes));
 }
 
-TEST(MT, serial_lcg_64_1) {
+TEST(MT, serial_mt_64_1) {
     MT19937_64_1 generator(1111111111);
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -587,7 +587,7 @@ TEST(MT, serial_lcg_64_1) {
     ASSERT_TRUE(nist::check_serial_complexity(bytes, 16));
 }
 
-TEST(MT, approximate_entropy_lcg_64_1) {
+TEST(MT, approximate_entropy_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -600,7 +600,7 @@ TEST(MT, approximate_entropy_lcg_64_1) {
     ASSERT_TRUE(nist::check_approximate_entropy(bytes, 10));
 }
 
-TEST(MT, cumulative_sums_lcg_forward_64_1) {
+TEST(MT, cumulative_sums_mt_forward_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -613,7 +613,7 @@ TEST(MT, cumulative_sums_lcg_forward_64_1) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Forward));
 }
 
-TEST(MT, cumulative_sums_lcg_reverse_64_1) {
+TEST(MT, cumulative_sums_mt_reverse_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -626,7 +626,7 @@ TEST(MT, cumulative_sums_lcg_reverse_64_1) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Reverse));
 }
 
-TEST(MT, random_excursions_lcg_64_1) {
+TEST(MT, random_excursions_mt_64_1) {
     MT19937_64_1 generator(100000);
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -646,7 +646,7 @@ TEST(MT, random_excursions_lcg_64_1) {
     }
 }
 
-TEST(MT, random_excursions_variant_lcg_64_1) {
+TEST(MT, random_excursions_variant_mt_64_1) {
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -666,7 +666,7 @@ TEST(MT, random_excursions_variant_lcg_64_1) {
     }
 }
 
-TEST(MT, frequency_lcg_64_2) {
+TEST(MT, frequency_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -679,7 +679,7 @@ TEST(MT, frequency_lcg_64_2) {
     ASSERT_TRUE(nist::check_frequency_test(bytes));
 }
 
-TEST(MT, frequency_block_lcg_64_2) {
+TEST(MT, frequency_block_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -692,7 +692,7 @@ TEST(MT, frequency_block_lcg_64_2) {
     ASSERT_TRUE(nist::check_frequency_block_test(bytes, 128));
 }
 
-TEST(MT, runs_lcg_64_2) {
+TEST(MT, runs_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -705,7 +705,7 @@ TEST(MT, runs_lcg_64_2) {
     ASSERT_TRUE(nist::check_runs_test(bytes));
 }
 
-TEST(MT, longest_run_of_ones_lcg_64_2) {
+TEST(MT, longest_run_of_ones_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -718,7 +718,7 @@ TEST(MT, longest_run_of_ones_lcg_64_2) {
     ASSERT_TRUE(nist::check_longest_run_of_ones(bytes));
 }
 
-TEST(MT, binary_matrix_rank_lcg_64_2) {
+TEST(MT, binary_matrix_rank_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -733,7 +733,7 @@ TEST(MT, binary_matrix_rank_lcg_64_2) {
     ASSERT_TRUE(nist::check_binary_matrix_rank(bytes, M, Q));
 }
 
-TEST(MT, discrete_fourier_transform_lcg_64_2) {
+TEST(MT, discrete_fourier_transform_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -746,7 +746,7 @@ TEST(MT, discrete_fourier_transform_lcg_64_2) {
     ASSERT_TRUE(nist::check_discrete_fourier_transform(bytes));
 }
 
-TEST(MT, non_overlapping_template_matching_lcg_64_2) {
+TEST(MT, non_overlapping_template_matching_mt_64_2) {
     MT19937_64_2 generator;
 
     std::uint32_t count_number = 50;
@@ -761,7 +761,7 @@ TEST(MT, non_overlapping_template_matching_lcg_64_2) {
     ASSERT_TRUE(nist::check_non_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, overlapping_template_matching_lcg_64_2) {
+TEST(MT, overlapping_template_matching_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -775,7 +775,7 @@ TEST(MT, overlapping_template_matching_lcg_64_2) {
     ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, universal_digit_lcg_64_2) {
+TEST(MT, universal_digit_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -788,7 +788,7 @@ TEST(MT, universal_digit_lcg_64_2) {
     ASSERT_TRUE(nist::check_universal(bytes));
 }
 
-TEST(MT, serial_lcg_64_2) {
+TEST(MT, serial_mt_64_2) {
     MT19937_64_2 generator(1111111111);
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -801,7 +801,7 @@ TEST(MT, serial_lcg_64_2) {
     ASSERT_TRUE(nist::check_serial_complexity(bytes, 16));
 }
 
-TEST(MT, approximate_entropy_lcg_64_2) {
+TEST(MT, approximate_entropy_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -814,7 +814,7 @@ TEST(MT, approximate_entropy_lcg_64_2) {
     ASSERT_TRUE(nist::check_approximate_entropy(bytes, 10));
 }
 
-TEST(MT, cumulative_sums_lcg_forward_64_2) {
+TEST(MT, cumulative_sums_mt_forward_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -827,7 +827,7 @@ TEST(MT, cumulative_sums_lcg_forward_64_2) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Forward));
 }
 
-TEST(MT, cumulative_sums_lcg_reverse_64_2) {
+TEST(MT, cumulative_sums_mt_reverse_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -840,7 +840,7 @@ TEST(MT, cumulative_sums_lcg_reverse_64_2) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Reverse));
 }
 
-TEST(MT, random_excursions_lcg_64_2) {
+TEST(MT, random_excursions_mt_64_2) {
     MT19937_64_2 generator(100000);
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -860,7 +860,7 @@ TEST(MT, random_excursions_lcg_64_2) {
     }
 }
 
-TEST(MT, random_excursions_variant_lcg_64_2) {
+TEST(MT, random_excursions_variant_mt_64_2) {
     MT19937_64_2 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -880,7 +880,7 @@ TEST(MT, random_excursions_variant_lcg_64_2) {
     }
 }
 
-TEST(MT, frequency_lcg_64_3) {
+TEST(MT, frequency_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -893,7 +893,7 @@ TEST(MT, frequency_lcg_64_3) {
     ASSERT_TRUE(nist::check_frequency_test(bytes));
 }
 
-TEST(MT, frequency_block_lcg_64_3) {
+TEST(MT, frequency_block_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -906,7 +906,7 @@ TEST(MT, frequency_block_lcg_64_3) {
     ASSERT_TRUE(nist::check_frequency_block_test(bytes, 128));
 }
 
-TEST(MT, runs_lcg_64_3) {
+TEST(MT, runs_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -919,7 +919,7 @@ TEST(MT, runs_lcg_64_3) {
     ASSERT_TRUE(nist::check_runs_test(bytes));
 }
 
-TEST(MT, longest_run_of_ones_lcg_64_3) {
+TEST(MT, longest_run_of_ones_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -932,7 +932,7 @@ TEST(MT, longest_run_of_ones_lcg_64_3) {
     ASSERT_TRUE(nist::check_longest_run_of_ones(bytes));
 }
 
-TEST(MT, binary_matrix_rank_lcg_64_3) {
+TEST(MT, binary_matrix_rank_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -947,7 +947,7 @@ TEST(MT, binary_matrix_rank_lcg_64_3) {
     ASSERT_TRUE(nist::check_binary_matrix_rank(bytes, M, Q));
 }
 
-TEST(MT, discrete_fourier_transform_lcg_64_3) {
+TEST(MT, discrete_fourier_transform_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -960,7 +960,7 @@ TEST(MT, discrete_fourier_transform_lcg_64_3) {
     ASSERT_TRUE(nist::check_discrete_fourier_transform(bytes));
 }
 
-TEST(MT, non_overlapping_template_matching_lcg_64_3) {
+TEST(MT, non_overlapping_template_matching_mt_64_3) {
     MT19937_64_3 generator;
 
     std::uint32_t count_number = 50;
@@ -975,7 +975,7 @@ TEST(MT, non_overlapping_template_matching_lcg_64_3) {
     ASSERT_TRUE(nist::check_non_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, overlapping_template_matching_lcg_64_3) {
+TEST(MT, overlapping_template_matching_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -989,7 +989,7 @@ TEST(MT, overlapping_template_matching_lcg_64_3) {
     ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
-TEST(MT, universal_digit_lcg_64_3) {
+TEST(MT, universal_digit_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -1002,7 +1002,7 @@ TEST(MT, universal_digit_lcg_64_3) {
     ASSERT_TRUE(nist::check_universal(bytes));
 }
 
-TEST(MT, serial_lcg_64_3) {
+TEST(MT, serial_mt_64_3) {
     MT19937_64_3 generator(1111111111);
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -1015,7 +1015,7 @@ TEST(MT, serial_lcg_64_3) {
     ASSERT_TRUE(nist::check_serial_complexity(bytes, 16));
 }
 
-TEST(MT, approximate_entropy_lcg_64_3) {
+TEST(MT, approximate_entropy_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -1028,7 +1028,7 @@ TEST(MT, approximate_entropy_lcg_64_3) {
     ASSERT_TRUE(nist::check_approximate_entropy(bytes, 10));
 }
 
-TEST(MT, cumulative_sums_lcg_forward_64_3) {
+TEST(MT, cumulative_sums_mt_forward_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -1041,7 +1041,7 @@ TEST(MT, cumulative_sums_lcg_forward_64_3) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Forward));
 }
 
-TEST(MT, cumulative_sums_lcg_reverse_64_3) {
+TEST(MT, cumulative_sums_mt_reverse_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -1054,7 +1054,7 @@ TEST(MT, cumulative_sums_lcg_reverse_64_3) {
     ASSERT_TRUE(nist::check_cumulative_sums(bytes, nist::CumulativeSumsMode::Reverse));
 }
 
-TEST(MT, random_excursions_lcg_64_3) {
+TEST(MT, random_excursions_mt_64_3) {
     MT19937_64_3 generator(100000);
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -1074,7 +1074,7 @@ TEST(MT, random_excursions_lcg_64_3) {
     }
 }
 
-TEST(MT, random_excursions_variant_lcg_64_3) {
+TEST(MT, random_excursions_variant_mt_64_3) {
     MT19937_64_3 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
