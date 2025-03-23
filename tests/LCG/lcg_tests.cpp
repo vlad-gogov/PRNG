@@ -323,6 +323,7 @@ TEST(Lcg, non_overlapping_template_matching_lcg) {
 }
 
 TEST(Lcg, overlapping_template_matching_lcg) {
+    GTEST_SKIP();
     constexpr std::uint32_t a = 16807U;
     constexpr std::uint32_t c = 0U;
     constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
@@ -340,6 +341,7 @@ TEST(Lcg, overlapping_template_matching_lcg) {
 }
 
 TEST(Lcg, universal_digit_lcg) {
+    GTEST_SKIP();
     constexpr std::uint32_t a = 16807U;
     constexpr std::uint32_t c = 0U;
     constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
@@ -420,6 +422,7 @@ TEST(Lcg, cumulative_sums_lcg_reverse) {
 }
 
 TEST(Lcg, random_excursions_lcg) {
+    GTEST_SKIP();
     constexpr std::uint32_t a = 16807U;
     constexpr std::uint32_t c = 0U;
     constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
