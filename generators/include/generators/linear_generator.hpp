@@ -10,6 +10,6 @@ class LinearGenerator : Generator<Type> {
     Type _seed;
 
   public:
-    virtual void seed(Type seed) = 0;
-    virtual void discard(std::uint64_t z) = 0;
+    virtual void seed(const Type seed) = 0;
+    virtual void discard(const std::uint64_t z) = 0;
 };

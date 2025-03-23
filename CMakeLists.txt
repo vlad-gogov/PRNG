@@ -6,7 +6,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/archive)
@@ -20,6 +20,7 @@ if(WIN32)
     option(gtest_force_shared_crt "" TRUE)
 endif()
 
+add_subdirectory(app)
 add_subdirectory(metrics)
 add_subdirectory(generators)
 add_subdirectory(thirdparty)
