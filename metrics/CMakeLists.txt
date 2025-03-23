@@ -4,6 +4,7 @@ set(TARGET_NAME metrics)
 
 file(GLOB_RECURSE TARGET_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/metrics/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/statistical_test/*.hpp
 )
 
 file(GLOB_RECURSE TARGET_SRC
@@ -15,6 +16,7 @@ add_library(${TARGET_NAME} STATIC ${TARGET_SRC} ${TARGET_HEADERS})
 target_include_directories(${TARGET_NAME}
 PUBLIC
     include
+    include/statistical_test
 PRIVATE
     include/metrics
 )

@@ -2,8 +2,7 @@
 
 #include "generator.hpp"
 
-#include <array>
-#include <random>
+#include <cstdint>
 
 /*&
  * @tparam W  Word size, the number of bits in each element of
@@ -106,6 +105,8 @@ class MersenneTwisterEngine : Generator<UIntType> {
 using MT19937 = MersenneTwisterEngine<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7, 0x9d2c5680UL, 15,
                                       0xefc60000UL, 18, 1812433253UL>;
 
+// template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
+//          UIntType B, size_t T, UIntType C, size_t L, UIntType F>
 using MT19937_64 =
     MersenneTwisterEngine<uint64_t, 64, 312, 156, 31, 0xb5026f5aa96619e9ULL, 29, 0x5555555555555555ULL, 17,
                           0x71d67fffeda60000ULL, 37, 0xfff7eee000000000ULL, 43, 6364136223846793005ULL>;
@@ -211,6 +212,9 @@ class MersenneTwisterEngine64 : Generator<UIntType> {
         }
     }
 };
+
+// template <typename UIntType, size_t W, size_t N, size_t M0, size_t M1, size_t M2, size_t R, UIntType A, size_t U,
+//           size_t S, UIntType B, size_t T, UIntType C, size_t L, UIntType F>
 
 using MT19937_64_1 =
     MersenneTwisterEngine64<uint64_t, 64, 312, 63, 151, 224, 31, 0xB3815B624FC82E2FULL, 26, 17, 0x656BEDFFD9A40000ULL,

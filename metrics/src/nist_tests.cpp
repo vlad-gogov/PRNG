@@ -13,9 +13,9 @@
 #include "metrics/binary_matrix.hpp"
 #include "metrics/nist_tests.hpp"
 
-constexpr double alpha = 0.01;
+constexpr std::double_t alpha = 0.01;
 
-double nist::frequency_test(const utils::seq_bytes &bytes) {
+std::double_t nist::frequency_test(const utils::seq_bytes &bytes) {
     size_t length_bytes = bytes.size();
     std::int64_t sum = 0;
     for (const auto &byte : bytes) {
@@ -25,7 +25,7 @@ double nist::frequency_test(const utils::seq_bytes &bytes) {
             sum--;
         }
     }
-    double s_obs = std::abs(sum) / std::sqrt(length_bytes);
+    std::double_t s_obs = std::abs(sum) / std::sqrt(length_bytes);
     return boost::math::erfc(s_obs / std::sqrt(2));
 }
 
@@ -33,10 +33,10 @@ bool nist::check_frequency_test(const utils::seq_bytes &bytes) {
     return nist::frequency_test(bytes) >= alpha;
 }
 
-double nist::frequency_block_test(const utils::seq_bytes &bytes, size_t m) {
+std::double_t nist::frequency_block_test(const utils::seq_bytes &bytes, size_t m) {
     size_t length_bytes = bytes.size();
     size_t count_block = length_bytes / m;
-    std::vector<double> pi;
+    std::vector<std::double_t> pi;
     pi.resize(count_block);
     for (size_t i = 0; i < count_block; ++i) {
         size_t sum = 0;
@@ -45,27 +45,27 @@ double nist::frequency_block_test(const utils::seq_bytes &bytes, size_t m) {
         for (size_t j = left_border; j < right_border; ++j) {
             sum += bytes[j];
         }
-        pi[i] = static_cast<double>(sum) / m;
+        pi[i] = static_cast<std::double_t>(sum) / m;
     }
-    double kappa = 4 * m;
-    double sum = 0;
+    std::double_t kappa = 4 * m;
+    std::double_t sum = 0;
     for (const auto &p : pi) {
         sum += (p - 0.5) * (p - 0.5);
     }
     kappa *= sum;
-    return boost::math::gamma_q(static_cast<double>(count_block) / 2.0, kappa / 2.0);
+    return boost::math::gamma_q(static_cast<std::double_t>(count_block) / 2.0, kappa / 2.0);
 }
 
 bool nist::check_frequency_block_test(const utils::seq_bytes &bytes, size_t m) {
     return nist::frequency_block_test(bytes, m) >= alpha;
 }
 
-double nist::runs_test(const utils::seq_bytes &bytes) {
+std::double_t nist::runs_test(const utils::seq_bytes &bytes) {
     if (!nist::check_frequency_test(bytes)) {
         return 0.0;
     }
     size_t length_bytes = bytes.size();
-    double pi = 0;
+    std::double_t pi = 0;
     for (const auto &byte : bytes) {
         if (byte) {
             ++pi;
@@ -86,8 +86,8 @@ bool nist::check_runs_test(const utils::seq_bytes &bytes) {
     return nist::runs_test(bytes) >= alpha;
 }
 
-double nist::longest_run_of_ones(const utils::seq_bytes &bytes) {
-    std::map<std::pair<size_t, size_t>, std::vector<double>> PI = {
+std::double_t nist::longest_run_of_ones(const utils::seq_bytes &bytes) {
+    std::map<std::pair<size_t, size_t>, std::vector<std::double_t>> PI = {
         {{3, 8}, {0.2148, 0.3672, 0.2305, 0.1875}},
         {{5, 128}, {0.1174, 0.2430, 0.2493, 0.1752, 0.1027, 0.1124}},
         {{6, 10000}, {0.0882, 0.2092, 0.2483, 0.1933, 0.1208, 0.0675, 0.0727}}};
@@ -119,21 +119,21 @@ double nist::longest_run_of_ones(const utils::seq_bytes &bytes) {
             v[max_run - bounds[0]]++;
         }
     }
-    double kappa = 0;
+    std::double_t kappa = 0;
     size_t k = K[size_block];
-    std::vector<double> pi = PI[{k, size_block}];
+    std::vector<std::double_t> pi = PI[{k, size_block}];
     for (size_t i = 0; i <= k; ++i) {
-        double temp = (v[i] - count_block * pi[i]);
+        std::double_t temp = (v[i] - count_block * pi[i]);
         kappa += temp * temp / (count_block * pi[i]);
     }
-    return boost::math::gamma_q(static_cast<double>(k) / 2.0, kappa / 2.0);
+    return boost::math::gamma_q(static_cast<std::double_t>(k) / 2.0, kappa / 2.0);
 }
 
 bool nist::check_longest_run_of_ones(const utils::seq_bytes &bytes) {
     return nist::longest_run_of_ones(bytes) >= alpha;
 }
 
-double nist::binary_matrix_rank(const utils::seq_bytes &bytes, size_t M, size_t Q) {
+std::double_t nist::binary_matrix_rank(const utils::seq_bytes &bytes, size_t M, size_t Q) {
     if (M != Q) {
         throw std::runtime_error("Binary matrix rank test: M != Q\n");
     }
@@ -159,11 +159,11 @@ double nist::binary_matrix_rank(const utils::seq_bytes &bytes, size_t M, size_t 
             F[2]++;
         }
     }
-    double a = 0.288788 * N;
-    double b = 0.577576 * N;
-    double c = 0.133636 * N;
-    double kappa = std::pow(F[0] - a, 2) / a + std::pow(F[1] - b, 2) / b + std::pow(F[2] - c, 2) / c;
-    double result = std::exp(-kappa / 2);
+    std::double_t a = 0.288788 * N;
+    std::double_t b = 0.577576 * N;
+    std::double_t c = 0.133636 * N;
+    std::double_t kappa = std::pow(F[0] - a, 2) / a + std::pow(F[1] - b, 2) / b + std::pow(F[2] - c, 2) / c;
+    std::double_t result = std::exp(-kappa / 2);
     return result;
 }
 
@@ -180,23 +180,23 @@ std::vector<short> normalized(const utils::seq_bytes &bytes) {
     return x;
 }
 
-double nist::discrete_fourier_transform(const utils::seq_bytes &bytes) {
+std::double_t nist::discrete_fourier_transform(const utils::seq_bytes &bytes) {
     size_t size = bytes.size();
     std::vector<short> x = normalized(bytes);
-    std::vector<std::complex<double>> X = utils::DFT(x);
-    std::vector<double> M(size);
+    std::vector<std::complex<std::double_t>> X = utils::DFT(x);
+    std::vector<std::double_t> M(size);
     for (size_t i = 0; i < size; i++) {
         M[i] = std::abs(X[i]);
     }
-    double T = std::sqrt(std::log(1 / 0.05) * size);
-    double N_0 = 0.95 * size / 2;
-    double N_1 = 0;
+    std::double_t T = std::sqrt(std::log(1 / 0.05) * size);
+    std::double_t N_0 = 0.95 * size / 2;
+    std::double_t N_1 = 0;
     for (size_t i = 0; i < size / 2; i++) {
         if (M[i] < T) {
             N_1++;
         }
     }
-    double d = std::abs((N_1 - N_0) / std::sqrt(size * 0.95 * 0.05 / 4));
+    std::double_t d = std::abs((N_1 - N_0) / std::sqrt(size * 0.95 * 0.05 / 4));
     return boost::math::erfc(d / std::sqrt(2));
 }
 
@@ -204,8 +204,8 @@ bool nist::check_discrete_fourier_transform(const utils::seq_bytes &bytes) {
     return nist::discrete_fourier_transform(bytes) >= alpha;
 }
 
-double nist::non_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
-                                               size_t N) {
+std::double_t nist::non_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
+                                                      size_t N) {
     size_t n = bytes.size();
     size_t m = template_.size();
     size_t M = n / N;
@@ -236,15 +236,15 @@ double nist::non_overlapping_template_matching(const utils::seq_bytes &bytes, co
             }
         }
     }
-    double pow2 = std::pow(2, m);
-    double a = (M - m + 1) / pow2;
-    double b = M * (1 / pow2 - (2 * m - 1) / (pow2 * pow2));
-    double kappa = 0;
+    std::double_t pow2 = std::pow(2, m);
+    std::double_t a = (M - m + 1) / pow2;
+    std::double_t b = M * (1 / pow2 - (2 * m - 1) / (pow2 * pow2));
+    std::double_t kappa = 0;
     for (size_t i = 0; i < N; i++) {
         kappa += (W[i] - a) * (W[i] - a);
     }
     kappa /= b;
-    return boost::math::gamma_q(static_cast<double>(N) / 2.0, kappa / 2.0);
+    return boost::math::gamma_q(static_cast<std::double_t>(N) / 2.0, kappa / 2.0);
 }
 
 bool nist::check_non_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
@@ -252,8 +252,8 @@ bool nist::check_non_overlapping_template_matching(const utils::seq_bytes &bytes
     return nist::non_overlapping_template_matching(bytes, template_, N) >= alpha;
 }
 
-double nist::overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_, size_t M,
-                                           size_t N, size_t K) {
+std::double_t nist::overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
+                                                  size_t M, size_t N, size_t K) {
     size_t n = bytes.size();
     size_t m = template_.size();
     std::vector<utils::seq_bytes> blocks(N);
@@ -286,9 +286,9 @@ double nist::overlapping_template_matching(const utils::seq_bytes &bytes, const 
             v[K]++;
         }
     }
-    double lambda = (M - m + 1) / std::pow(2, m);
-    double theta = lambda / 2;
-    std::vector<double> pi(K + 1);
+    std::double_t lambda = (M - m + 1) / std::pow(2, m);
+    std::double_t theta = lambda / 2;
+    std::vector<std::double_t> pi(K + 1);
     if (M == 10 && N == 5) {
         pi[0] = 0.324652;
         pi[1] = 0.182617;
@@ -298,16 +298,16 @@ double nist::overlapping_template_matching(const utils::seq_bytes &bytes, const 
         pi[5] = 0.166269;
     } else {
         pi[0] = std::exp(-theta);
-        double a = std::exp(-2 * theta) * theta;
-        double sum = pi[0];
+        std::double_t a = std::exp(-2 * theta) * theta;
+        std::double_t sum = pi[0];
         for (size_t i = 1; i < K; i++) {
-            double b = std::pow(2, i);
-            pi[i] = a * boost::math::hypergeometric_1F1(double(i + 1), double(2), theta) / b;
+            std::double_t b = std::pow(2, i);
+            pi[i] = a * boost::math::hypergeometric_1F1(std::double_t(i + 1), std::double_t(2), theta) / b;
             sum += pi[i];
         }
         pi[K] = 1 - sum;
     }
-    double kappa = 0;
+    std::double_t kappa = 0;
     for (size_t i = 0; i < K + 1; i++) {
         kappa += (v[i] - N * pi[i]) * (v[i] - N * pi[i]) / (N * pi[i]);
     }
@@ -319,12 +319,12 @@ bool nist::check_overlapping_template_matching(const utils::seq_bytes &bytes, co
     return nist::overlapping_template_matching(bytes, template_, M, N, K) >= alpha;
 }
 
-double nist::universal(const utils::seq_bytes &bytes, size_t L, size_t Q) {
-    std::vector<double> expected_value = {0,         0,         0,         0,         0,         0,
-                                          5.2177052, 6.1962507, 7.1836656, 8.1764248, 9.1723243, 10.170032,
-                                          11.168765, 12.168070, 13.167693, 14.167488, 15.167379};
-    std::vector<double> variance = {0,     0,     0,     0,     0,     0,     2.954, 3.125, 3.238,
-                                    3.311, 3.356, 3.384, 3.401, 3.410, 3.416, 3.419, 3.421};
+std::double_t nist::universal(const utils::seq_bytes &bytes, size_t L, size_t Q) {
+    std::vector<std::double_t> expected_value = {0,         0,         0,         0,         0,         0,
+                                                 5.2177052, 6.1962507, 7.1836656, 8.1764248, 9.1723243, 10.170032,
+                                                 11.168765, 12.168070, 13.167693, 14.167488, 15.167379};
+    std::vector<std::double_t> variance = {0,     0,     0,     0,     0,     0,     2.954, 3.125, 3.238,
+                                           3.311, 3.356, 3.384, 3.401, 3.410, 3.416, 3.419, 3.421};
     size_t n = bytes.size();
     if (L == 0) {
         L = 5;
@@ -375,7 +375,7 @@ double nist::universal(const utils::seq_bytes &bytes, size_t L, size_t Q) {
         }
         T[dec_rep] = i;
     }
-    double sum = 0;
+    std::double_t sum = 0;
     for (size_t i = Q + 1; i <= Q + K; i++) {
         long dec_rep = 0;
         for (size_t j = 0; j < L; j++) {
@@ -384,9 +384,9 @@ double nist::universal(const utils::seq_bytes &bytes, size_t L, size_t Q) {
         sum += std::log(i - T[dec_rep]) / std::log(2);
         T[dec_rep] = i;
     }
-    double f_n = sum / (double)K;
-    double c = 0.7 - 0.8 / L + (4 + 32.0 / (double)L) * std::pow(K, -3.0 / (double)L) / 15;
-    double sigma = c * std::sqrt(variance[L] / K);
+    std::double_t f_n = sum / (std::double_t)K;
+    std::double_t c = 0.7 - 0.8 / L + (4 + 32.0 / (std::double_t)L) * std::pow(K, -3.0 / (std::double_t)L) / 15;
+    std::double_t sigma = c * std::sqrt(variance[L] / K);
     return boost::math::erfc(std::abs((f_n - expected_value[L]) / (std::sqrt(2) * sigma)));
 }
 
@@ -394,8 +394,8 @@ bool nist::check_universal(const utils::seq_bytes &bytes, size_t L, size_t Q) {
     return nist::universal(bytes, L, Q) >= alpha;
 }
 
-double nist::linear_complexity(const utils::seq_bytes &bytes, size_t M) {
-    std::vector<double> pi = {0.01047, 0.03125, 0.12500, 0.50000, 0.25000, 0.06250, 0.020833};
+std::double_t nist::linear_complexity(const utils::seq_bytes &bytes, size_t M) {
+    std::vector<std::double_t> pi = {0.01047, 0.03125, 0.12500, 0.50000, 0.25000, 0.06250, 0.020833};
     size_t n = bytes.size();
     size_t K = 6;
     size_t N = n / M;
@@ -446,8 +446,8 @@ double nist::linear_complexity(const utils::seq_bytes &bytes, size_t M) {
             N_++;
         }
         int sign = (M + 1) % 2 == 0 ? -1 : 1;
-        double mean = M / 2.0 + (9.0 + sign) / 36.0 - (M / 3.0 + 2.0 / 9.0) / std::pow(2, M);
-        double T_ = sign * (L - mean) + 2.0 / 9.0;
+        std::double_t mean = M / 2.0 + (9.0 + sign) / 36.0 - (M / 3.0 + 2.0 / 9.0) / std::pow(2, M);
+        std::double_t T_ = sign * (L - mean) + 2.0 / 9.0;
         if (T_ <= -2.5) {
             v[0]++;
         } else if (T_ > -2.5 && T_ <= -1.5) {
@@ -464,7 +464,7 @@ double nist::linear_complexity(const utils::seq_bytes &bytes, size_t M) {
             v[6]++;
         }
     }
-    double kappa = 0;
+    std::double_t kappa = 0;
     for (size_t i = 0; i <= K; i++) {
         kappa += std::pow(v[i] - N * pi[i], 2) / (N * pi[i]);
     }
@@ -475,7 +475,7 @@ bool nist::check_linear_complexity(const utils::seq_bytes &bytes, size_t M) {
     return nist::linear_complexity(bytes, M) >= alpha;
 }
 
-double psi(const utils::seq_bytes &bytes, size_t m) {
+std::double_t psi(const utils::seq_bytes &bytes, size_t m) {
     if (m == 0) {
         return 0;
     }
@@ -494,7 +494,7 @@ double psi(const utils::seq_bytes &bytes, size_t m) {
         vi[k - 1]++;
     }
 
-    double result = 0;
+    std::double_t result = 0;
     int index = std::pow(2, m);
     for (int i = index - 1; i < index * 2 - 1; i++) {
         result += std::pow(vi[i], 2);
@@ -502,22 +502,22 @@ double psi(const utils::seq_bytes &bytes, size_t m) {
     return result * index / n - n;
 }
 
-std::pair<double, double> nist::serial_complexity(const utils::seq_bytes &bytes, size_t m) {
-    double psi0 = psi(bytes, m);
-    double psi1 = psi(bytes, m - 1);
-    double psi2 = psi(bytes, m - 2);
-    double del1 = psi0 - psi1;
-    double del2 = psi0 - 2 * psi1 + psi2;
-    double arg = std::pow(2, (int)m - 2);
+std::pair<std::double_t, std::double_t> nist::serial_complexity(const utils::seq_bytes &bytes, size_t m) {
+    std::double_t psi0 = psi(bytes, m);
+    std::double_t psi1 = psi(bytes, m - 1);
+    std::double_t psi2 = psi(bytes, m - 2);
+    std::double_t del1 = psi0 - psi1;
+    std::double_t del2 = psi0 - 2 * psi1 + psi2;
+    std::double_t arg = std::pow(2, (int)m - 2);
     return {boost::math::gamma_q(arg, del1 / 2.0), boost::math::gamma_q(arg / 2, del2 / 2.0)};
 }
 
 bool nist::check_serial_complexity(const utils::seq_bytes &bytes, size_t m) {
-    std::pair<double, double> p_value = nist::serial_complexity(bytes, m);
+    std::pair<std::double_t, std::double_t> p_value = nist::serial_complexity(bytes, m);
     return p_value.first >= alpha && p_value.second >= alpha;
 }
 
-double ap_en(const utils::seq_bytes &bytes, size_t block_size) {
+std::double_t ap_en(const utils::seq_bytes &bytes, size_t block_size) {
     if (block_size == 0) {
         return 0;
     }
@@ -534,7 +534,7 @@ double ap_en(const utils::seq_bytes &bytes, size_t block_size) {
         }
         vi[k - 1]++;
     }
-    double sum = 0;
+    std::double_t sum = 0;
     size_t right_bound = std::pow(2, block_size);
     size_t index = right_bound - 1;
     for (size_t i = 0; i < right_bound; i++, index++) {
@@ -545,12 +545,12 @@ double ap_en(const utils::seq_bytes &bytes, size_t block_size) {
     return sum / n;
 }
 
-double nist::approximate_entropy(const utils::seq_bytes &bytes, size_t m) {
+std::double_t nist::approximate_entropy(const utils::seq_bytes &bytes, size_t m) {
     size_t n = bytes.size();
-    double psi0 = ap_en(bytes, m);
-    double psi1 = ap_en(bytes, m + 1);
-    double ApEn = psi0 - psi1;
-    double kappa = 2 * n * (std::log(2) - ApEn);
+    std::double_t psi0 = ap_en(bytes, m);
+    std::double_t psi1 = ap_en(bytes, m + 1);
+    std::double_t ApEn = psi0 - psi1;
+    std::double_t kappa = 2 * n * (std::log(2) - ApEn);
     return boost::math::gamma_q(std::pow(2, m - 1), kappa / 2.0);
 }
 
@@ -574,25 +574,25 @@ std::vector<int> partial_sums(const std::vector<short> &x,
     return S;
 }
 
-double nist::cumulative_sums(const utils::seq_bytes &bytes, nist::CumulativeSumsMode mode) {
+std::double_t nist::cumulative_sums(const utils::seq_bytes &bytes, nist::CumulativeSumsMode mode) {
     size_t n = bytes.size();
     std::vector<short> x = normalized(bytes);
     std::vector<int> S = partial_sums(x, mode);
     int z =
         std::abs(*std::max_element(S.begin(), S.end(), [](int lhs, int rhs) { return std::abs(lhs) < std::abs(rhs); }));
-    double sum1 = 0;
+    std::double_t sum1 = 0;
     int left = (-(int)n / z + 1) / 4;
     int right = (n / z - 1) / 4;
     for (int i = left; i <= right; i++) {
-        sum1 += boost::math::cdf(boost::math::normal_distribution<double>(), ((4 * i + 1) * z) / std::sqrt(n)) -
-                boost::math::cdf(boost::math::normal_distribution<double>(), ((4 * i - 1) * z) / std::sqrt(n));
+        sum1 += boost::math::cdf(boost::math::normal_distribution<std::double_t>(), ((4 * i + 1) * z) / std::sqrt(n)) -
+                boost::math::cdf(boost::math::normal_distribution<std::double_t>(), ((4 * i - 1) * z) / std::sqrt(n));
     }
 
-    double sum2 = 0;
+    std::double_t sum2 = 0;
     left = (-(int)n / z - 3) / 4;
     for (int i = left; i <= right; i++) {
-        sum2 += boost::math::cdf(boost::math::normal_distribution<double>(), ((4 * i + 3) * z) / std::sqrt(n)) -
-                boost::math::cdf(boost::math::normal_distribution<double>(), ((4 * i + 1) * z) / std::sqrt(n));
+        sum2 += boost::math::cdf(boost::math::normal_distribution<std::double_t>(), ((4 * i + 3) * z) / std::sqrt(n)) -
+                boost::math::cdf(boost::math::normal_distribution<std::double_t>(), ((4 * i + 1) * z) / std::sqrt(n));
     }
     return 1.0 - sum1 + sum2;
 }
@@ -601,10 +601,10 @@ bool nist::check_cumulative_sums(const utils::seq_bytes &bytes, nist::Cumulative
     return nist::cumulative_sums(bytes, mode) >= alpha;
 }
 
-std::vector<double> nist::random_excursions(const utils::seq_bytes &bytes) {
+std::vector<std::double_t> nist::random_excursions(const utils::seq_bytes &bytes) {
     std::vector<int> state_x = {-4, -3, -2, -1, 1, 2, 3, 4};
     constexpr size_t count_state = 8;
-    std::vector<std::vector<double>> pi = {
+    std::vector<std::vector<std::double_t>> pi = {
         {0.0000000000, 0.00000000000, 0.00000000000, 0.00000000000, 0.00000000000, 0.0000000000},
         {0.5000000000, 0.25000000000, 0.12500000000, 0.06250000000, 0.03125000000, 0.0312500000},
         {0.7500000000, 0.06250000000, 0.04687500000, 0.03515625000, 0.02636718750, 0.0791015625},
@@ -645,10 +645,10 @@ std::vector<double> nist::random_excursions(const utils::seq_bytes &bytes) {
             }
         }
     }
-    std::vector<double> p_values(count_state, 0);
+    std::vector<std::double_t> p_values(count_state, 0);
     for (size_t i = 0; i < count_state; i++) {
         int x = state_x[i];
-        double sum = 0;
+        std::double_t sum = 0;
         for (size_t j = 0; j < 6; j++) {
             sum += (std::pow(vi[j][i] - J * pi[(int)std::abs(x)][j], 2) / (J * pi[(int)std::abs(x)][j]));
         }
@@ -658,7 +658,7 @@ std::vector<double> nist::random_excursions(const utils::seq_bytes &bytes) {
 }
 
 std::vector<bool> nist::check_random_excursions(const utils::seq_bytes &bytes) {
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<std::double_t> p_values = nist::random_excursions(bytes);
     std::vector<bool> results(p_values.size(), false);
     for (size_t i = 0; i < p_values.size(); i++) {
         results[i] = p_values[i] >= alpha;
@@ -666,7 +666,7 @@ std::vector<bool> nist::check_random_excursions(const utils::seq_bytes &bytes) {
     return results;
 }
 
-std::vector<double> nist::random_excursions_variant(const utils::seq_bytes &bytes) {
+std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_bytes &bytes) {
     std::vector<int> state_x = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     constexpr size_t count_state = 18;
     std::vector<short> x = normalized(bytes);
@@ -675,10 +675,10 @@ std::vector<double> nist::random_excursions_variant(const utils::seq_bytes &byte
     S_.push_back(0);
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
 
-    std::vector<double> p_values(count_state, 0);
+    std::vector<std::double_t> p_values(count_state, 0);
     for (size_t i = 0; i < count_state; i++) {
         int x = state_x[i];
-        double count = std::count_if(S_.begin(), S_.end(), [&x](int element) { return element == x; });
+        std::double_t count = std::count_if(S_.begin(), S_.end(), [&x](int element) { return element == x; });
         p_values[i] = boost::math::erfc(std::abs(count - J) / (std::sqrt(2 * J * (4 * std::abs(x) - 2))));
     }
 
@@ -686,7 +686,7 @@ std::vector<double> nist::random_excursions_variant(const utils::seq_bytes &byte
 }
 
 std::vector<bool> nist::check_random_excursions_variant(const utils::seq_bytes &bytes) {
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<std::double_t> p_values = nist::random_excursions_variant(bytes);
     std::vector<bool> results(p_values.size(), false);
     for (size_t i = 0; i < p_values.size(); i++) {
         results[i] = p_values[i] >= alpha;
