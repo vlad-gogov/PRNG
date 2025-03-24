@@ -16,3 +16,5 @@ target_include_directories(${TARGET_NAME} PUBLIC
     include/generators
     include
 )
+
+target_compile_options(generators PRIVATE -mavx2 -mfma)

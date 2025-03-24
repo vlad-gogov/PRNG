@@ -213,9 +213,6 @@ class MersenneTwisterEngine64 : Generator<UIntType> {
     }
 };
 
-// template <typename UIntType, size_t W, size_t N, size_t M0, size_t M1, size_t M2, size_t R, UIntType A, size_t U,
-//           size_t S, UIntType B, size_t T, UIntType C, size_t L, UIntType F>
-
 using MT19937_64_1 =
     MersenneTwisterEngine64<uint64_t, 64, 312, 63, 151, 224, 31, 0xB3815B624FC82E2FULL, 26, 17, 0x656BEDFFD9A40000ULL,
                             33, 0xFFFAAFFE00000000ULL, 39, 6364136223846793005ULL>;
