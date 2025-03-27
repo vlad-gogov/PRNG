@@ -28,11 +28,11 @@ bool check_correct(size_t count_number) {
         uint32_t right = right_gen();
         uint32_t value = gen();
         if (right != value) {
-            std::cout << "i = " << i << " Diff value " << right << " != " << value << std::endl;
+            std::cout << "i = " << i << " Different value " << right << " != " << value << std::endl;
             count++;
         }
     }
-    std::cout << count << std::endl;
+    std::cout << "Different numbers: " << count << std::endl;
     return count == 0;
 }
 
