@@ -19,6 +19,4 @@ target_link_libraries(${TARGET_NAME} PUBLIC
     metrics
 )
 
-target_compile_options("MT_tests" PRIVATE -mavx2 -mfma -mavx512vl)
-
 gtest_discover_tests(${TARGET_NAME})
