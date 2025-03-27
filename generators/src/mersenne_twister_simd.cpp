@@ -23,9 +23,9 @@ MersenneTwister32AVX2::MersenneTwister32AVX2(const uint32_t &seed) {
 }
 
 __m256i MersenneTwister32AVX2::tempering_simd(__m256i y) const {
-    y = _mm256_xor_si256(y, _mm256_and_epi32(_mm256_srli_epi32(y, U), _mm256_set1_epi32(D)));
-    y = _mm256_xor_si256(y, _mm256_and_epi32(_mm256_slli_epi32(y, S), _mm256_set1_epi32(B)));
-    y = _mm256_xor_si256(y, _mm256_and_epi32(_mm256_slli_epi32(y, T), _mm256_set1_epi32(C)));
+    y = _mm256_xor_si256(y, _mm256_and_si256(_mm256_srli_epi32(y, U), _mm256_set1_epi32(D)));
+    y = _mm256_xor_si256(y, _mm256_and_si256(_mm256_slli_epi32(y, S), _mm256_set1_epi32(B)));
+    y = _mm256_xor_si256(y, _mm256_and_si256(_mm256_slli_epi32(y, T), _mm256_set1_epi32(C)));
     y = _mm256_xor_si256(y, _mm256_srli_epi32(y, L));
     return y;
 }
