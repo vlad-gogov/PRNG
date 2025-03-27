@@ -47,9 +47,9 @@ class MersenneTwisterEngine : Generator<UIntType> {
     void twist() {
         const UIntType UPPER_MASK = (~UIntType()) << R;
         const UIntType LOWER_MASK = ~UPPER_MASK;
-        for (int i = 0; i < N; ++i) {
-            unsigned int x = (mt[i] & UPPER_MASK) + (mt[(i + 1) % N] & LOWER_MASK);
-            unsigned int xA = x >> 1;
+        for (size_t i = 0; i < N; ++i) {
+            size_t x = (mt[i] & UPPER_MASK) | (mt[(i + 1) % N] & LOWER_MASK);
+            size_t xA = x >> 1;
             if (x % 2 != 0) {
                 xA ^= A;
             }

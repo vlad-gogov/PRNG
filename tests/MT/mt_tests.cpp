@@ -2,6 +2,7 @@
 
 #include <generators/base_error.hpp>
 #include <generators/mersenne_twister.hpp>
+#include <generators/mersenne_twister_simd.hpp>
 #include <metrics/nist_tests.hpp>
 
 #include <iostream>
@@ -1102,5 +1103,13 @@ TEST(MT, random_excursions_variant_mt_64_3) {
     std::vector<bool> answers = nist::check_random_excursions_variant(bytes);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
+    }
+}
+
+TEST(MT32AVX2, can_generate_correct_seq) {
+    MT19937 correct_generator;
+    MT32AVX2 my_generator;
+    for (size_t i = 0; i < 1'000'000'000; i++) {
+        ASSERT_EQ(correct_generator(), my_generator());
     }
 }
