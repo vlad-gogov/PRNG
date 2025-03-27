@@ -1,14 +1,16 @@
+#include <chrono>
 #include <iostream>
 
 #include "generators/linear_congruential_generator.hpp"
+#include "generators/mersenne_twister.hpp"
+#include "generators/mersenne_twister_simd.hpp"
 #include "statistical_test/nist.hpp"
 
-int main() {
+void lcg_nist_test(size_t count_number) {
     constexpr std::uint32_t a = 16807U;
     constexpr std::uint32_t c = 0U;
     constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
     LinearCongruentialGenerator<std::uint32_t, a, c, m> generator(23482349);
-    std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -16,5 +18,74 @@ int main() {
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
     statistical_test::NistTest nist_test(bytes);
     nist_test.test(true);
+}
+
+bool check_correct(size_t count_number) {
+    MT19937 right_gen;
+    MersenneTwister32AVX2 gen;
+    size_t count = 0;
+    for (size_t i = 0; i < count_number; i++) {
+        uint32_t right = right_gen();
+        uint32_t value = gen();
+        if (right != value) {
+            std::cout << "i = " << i << " Different value " << right << " != " << value << std::endl;
+            count++;
+        }
+    }
+    std::cout << "Different numbers: " << count << std::endl;
+    return count == 0;
+}
+
+void benchmark_generate(size_t count_number) {
+    MT19937 right_gen;
+    auto begin = std::chrono::steady_clock::now();
+    for (size_t i = 0; i < count_number; i++) {
+        right_gen();
+    }
+    auto elapsed =
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count();
+    std::cout << "Fill with MT19937: " << elapsed << " ms" << std::endl;
+
+    MersenneTwister32AVX2 gen;
+    begin = std::chrono::steady_clock::now();
+    for (size_t i = 0; i < count_number; i++) {
+        gen();
+    }
+    elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count();
+    std::cout << "Fill with MT19937AVX2: " << elapsed << " ms" << std::endl;
+}
+
+void benchmark_generate_array(size_t count_number) {
+    MT19937 right_gen;
+    std::vector<uint32_t> array_right(count_number);
+    auto begin = std::chrono::steady_clock::now();
+    for (size_t i = 0; i < count_number; i++) {
+        array_right[i] = right_gen();
+    }
+    auto elapsed =
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count();
+    std::cout << "Fill with MT19937: " << elapsed << " ms" << std::endl;
+
+    MersenneTwister32AVX2 gen;
+    std::vector<uint32_t> array(count_number);
+    begin = std::chrono::steady_clock::now();
+    gen.generate_bulk(array.data(), array.size());
+    elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count();
+    std::cout << "Fill with MT19937AVX2: " << elapsed << " ms" << std::endl;
+
+    for (size_t i = 0; i < count_number; i++) {
+        if (array_right[i] != array[i]) {
+            std::cout << "i = " << i << " Diff value " << array_right[i] << " != " << array[i] << std::endl;
+        }
+    }
+}
+
+int main() {
+    // std::size_t count_number = 1'000'000'000;
+    // std::size_t count_number = 1'000'000'111;
+    // std::size_t count_number = 100'000;
+    // check_correct(count_number);
+    // benchmark_generate(count_number);
+    // benchmark_generate_array(count_number);
     return 0;
 }
