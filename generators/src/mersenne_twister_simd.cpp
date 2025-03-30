@@ -3,6 +3,7 @@
 #include <iostream>
 #include <limits>
 
+#if defined(__AVX__) && defined(__AVX2__)
 // TODO: Move in utils
 void print_m256i(const __m256i &vec) {
     uint32_t values[8];
@@ -124,7 +125,9 @@ uint32_t MersenneTwister32AVX2::min() const {
 uint32_t MersenneTwister32AVX2::max() const {
     return std::numeric_limits<uint32_t>::max();
 }
+#endif
 
+#ifdef __AVX512F__
 // TODO: Move in utils
 void print_m512(const __m512i &vec) {
     uint32_t values[16];
@@ -246,3 +249,4 @@ uint32_t MersenneTwister32AVX512::min() const {
 uint32_t MersenneTwister32AVX512::max() const {
     return std::numeric_limits<uint32_t>::max();
 }
+#endif

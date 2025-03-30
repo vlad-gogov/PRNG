@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <immintrin.h>
 
-#ifdef __AVX2__
+#if defined(__AVX__) && defined(__AVX2__)
 class MersenneTwister32AVX2 : public Generator<uint32_t> {
   private:
     static constexpr size_t W = 32UL;

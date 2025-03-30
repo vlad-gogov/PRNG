@@ -21,7 +21,7 @@ void lcg_nist_test(size_t count_number) {
     nist_test.test(true);
 }
 
-#ifdef __AVX2__
+#if defined(__AVX__) && defined(__AVX2__)
 bool check_correct_avx2(size_t count_number) {
     MT19937 right_gen;
     MT32AVX2 gen;
@@ -145,7 +145,7 @@ void benchmark_generate_array_avx512(size_t count_number) {
 }
 #endif
 
-#if defined(__AVX2__) && defined(__AVX512F__)
+#if defined(__AVX__) && defined(__AVX2__) && defined(__AVX512F__)
 void benchmark_generate_avx2_vs_avx512(size_t count_number) {
     MT32AVX2 right_gen;
     auto begin = std::chrono::steady_clock::now();
@@ -210,7 +210,7 @@ int main() {
     // std::size_t count_number = 1'000'000'111;
     // std::size_t count_number = 100'000;
 
-#ifdef __AVX2__
+#if defined(__AVX__) && defined(__AVX2__)
     std::cout << "AVX2\n";
     check_correct_avx2(count_number);
 // benchmark_generate_avx2(count_number);
@@ -224,7 +224,7 @@ int main() {
 // benchmark_generate_array_avx512(count_number);
 #endif
 
-#if (defined(__AVX2__) && defined(__AVX512F__))
+#if defined(__AVX__) && defined(__AVX2__) && defined(__AVX512F__)
     // benchmark_generate_avx2_vs_avx512(count_number);
     // benchmark_generate_array_avx2_vs_avx512(count_number);
 #endif
