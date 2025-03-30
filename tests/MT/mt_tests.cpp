@@ -1115,3 +1115,12 @@ TEST(MT32AVX2, can_generate_correct_seq) {
         ASSERT_EQ(correct_generator(), my_generator());
     }
 }
+
+TEST(MT32AVX512, can_generate_correct_seq) {
+    GTEST_SKIP();
+    MT19937 correct_generator;
+    MT32AVX512 my_generator;
+    for (size_t i = 0; i < 1'000'000; i++) {
+        ASSERT_EQ(correct_generator(), my_generator());
+    }
+}
