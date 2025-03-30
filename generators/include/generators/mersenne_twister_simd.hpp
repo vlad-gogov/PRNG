@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <immintrin.h>
 
+#ifdef __AVX2__
 class MersenneTwister32AVX2 : public Generator<uint32_t> {
   private:
     static constexpr size_t W = 32UL;
@@ -47,7 +48,9 @@ class MersenneTwister32AVX2 : public Generator<uint32_t> {
 };
 
 using MT32AVX2 = MersenneTwister32AVX2;
+#endif
 
+#ifdef __AVX512F__
 class MersenneTwister32AVX512 : public Generator<uint32_t> {
   private:
     static constexpr size_t W = 32UL;
@@ -89,3 +92,4 @@ class MersenneTwister32AVX512 : public Generator<uint32_t> {
 };
 
 using MT32AVX512 = MersenneTwister32AVX512;
+#endif
