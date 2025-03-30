@@ -17,4 +17,4 @@ target_include_directories(${TARGET_NAME} PUBLIC
     include
 )
 
-target_compile_options(generators PRIVATE -mavx2 -mfma -mavx512vl)
+target_compile_options(generators PRIVATE -O3 -mavx2 -mfma -mavx512f -mavx512vl -mavx512ifma)
