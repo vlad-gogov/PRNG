@@ -422,7 +422,6 @@ TEST(Lcg, cumulative_sums_lcg_reverse) {
 }
 
 TEST(Lcg, random_excursions_lcg) {
-    GTEST_SKIP();
     constexpr std::uint32_t a = 16807U;
     constexpr std::uint32_t c = 0U;
     constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();

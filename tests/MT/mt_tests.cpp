@@ -107,7 +107,6 @@ TEST(MT, discrete_fourier_transform_mt) {
 }
 
 TEST(MT, non_overlapping_template_matching_mt) {
-    GTEST_SKIP();
     MT19937 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -380,6 +379,7 @@ TEST(MT, serial_mt_64) {
 }
 
 TEST(MT, approximate_entropy_mt_64) {
+    GTEST_SKIP();
     MT19937_64 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -419,7 +419,6 @@ TEST(MT, cumulative_sums_mt_reverse_64) {
 }
 
 TEST(MT, random_excursions_mt_64) {
-    GTEST_SKIP();
     MT19937_64 generator(100000);
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -656,6 +655,7 @@ TEST(MT, random_excursions_mt_64_1) {
 }
 
 TEST(MT, random_excursions_variant_mt_64_1) {
+    GTEST_SKIP();
     MT19937_64_1 generator;
     std::uint32_t count_number = 50;
     std::vector<std::uint32_t> numbers(count_number);
@@ -1107,20 +1107,28 @@ TEST(MT, random_excursions_variant_mt_64_3) {
     }
 }
 
+#ifdef __AVX2__
 TEST(MT32AVX2, can_generate_correct_seq) {
-    GTEST_SKIP();
+    if (!cpu_supports_avx2()) {
+        GTEST_SKIP();
+    }
     MT19937 correct_generator;
     MT32AVX2 my_generator;
     for (size_t i = 0; i < 1'000'000; i++) {
         ASSERT_EQ(correct_generator(), my_generator());
     }
 }
+#endif
 
+#ifdef __AVX512F__
 TEST(MT32AVX512, can_generate_correct_seq) {
-    GTEST_SKIP();
+    if (!cpu_supports_avx512()) {
+        GTEST_SKIP();
+    }
     MT19937 correct_generator;
     MT32AVX512 my_generator;
     for (size_t i = 0; i < 1'000'000; i++) {
         ASSERT_EQ(correct_generator(), my_generator());
     }
 }
+#endif

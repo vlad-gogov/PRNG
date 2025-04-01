@@ -3,9 +3,17 @@
 #include "generator.hpp"
 
 #include <array>
+#include <cpuid.h>
 #include <cstdint>
 #include <immintrin.h>
 
+unsigned int cpu_supports();
+
+bool cpu_supports_avx2();
+
+bool cpu_supports_avx512();
+
+#if defined(__AVX__) && defined(__AVX2__)
 class MersenneTwister32AVX2 : public Generator<uint32_t> {
   private:
     static constexpr size_t W = 32UL;
@@ -47,7 +55,9 @@ class MersenneTwister32AVX2 : public Generator<uint32_t> {
 };
 
 using MT32AVX2 = MersenneTwister32AVX2;
+#endif
 
+#ifdef __AVX512F__
 class MersenneTwister32AVX512 : public Generator<uint32_t> {
   private:
     static constexpr size_t W = 32UL;
@@ -89,3 +99,4 @@ class MersenneTwister32AVX512 : public Generator<uint32_t> {
 };
 
 using MT32AVX512 = MersenneTwister32AVX512;
+#endif

@@ -3,6 +3,26 @@
 #include <iostream>
 #include <limits>
 
+unsigned int cpu_supports() {
+    unsigned int eax, ebx, ecx, edx;
+    __get_cpuid(1, &eax, &ebx, &ecx, &edx);
+    if (!(ecx & (1 << 27)))
+        return false;
+    if (!(ecx & (1 << 28)))
+        return false;
+    __cpuid_count(7, 0, eax, ebx, ecx, edx);
+    return ebx;
+}
+
+bool cpu_supports_avx2() {
+    return (cpu_supports() & (1 << 5));
+}
+
+bool cpu_supports_avx512() {
+    return (cpu_supports() & (1 << 16));
+}
+
+#if defined(__AVX__) && defined(__AVX2__)
 // TODO: Move in utils
 void print_m256i(const __m256i &vec) {
     uint32_t values[8];
@@ -124,7 +144,9 @@ uint32_t MersenneTwister32AVX2::min() const {
 uint32_t MersenneTwister32AVX2::max() const {
     return std::numeric_limits<uint32_t>::max();
 }
+#endif
 
+#ifdef __AVX512F__
 // TODO: Move in utils
 void print_m512(const __m512i &vec) {
     uint32_t values[16];
@@ -246,3 +268,4 @@ uint32_t MersenneTwister32AVX512::min() const {
 uint32_t MersenneTwister32AVX512::max() const {
     return std::numeric_limits<uint32_t>::max();
 }
+#endif

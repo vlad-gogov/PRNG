@@ -15,18 +15,14 @@ template <class UIntType>
 seq_bytes convert_number_to_seq_bytes(const UIntType number) {
     static_assert(std::is_integral_v<UIntType> && std::is_unsigned_v<UIntType>);
     if (number == 0U) {
-        return {0};
+        return seq_bytes(sizeof(UIntType) * 8U, 0);
     }
     std::bitset<sizeof(UIntType) * 8U> bits = number;
     std::string number_bits = bits.to_string();
-    size_t length_number = sizeof(UIntType) * 8U;
-    while (!(number & (1U << (length_number - 1U)))) {
-        --length_number;
-    }
-    seq_bytes result;
-    result.reserve(length_number);
     size_t size = number_bits.size();
-    for (size_t i = size - length_number; i < size; i++) {
+    seq_bytes result;
+    result.reserve(size);
+    for (size_t i = 0; i < size; i++) {
         result.push_back(number_bits[i] == '1' ? 1 : 0);
     }
     return result;
