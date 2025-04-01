@@ -1107,7 +1107,7 @@ TEST(MT, random_excursions_variant_mt_64_3) {
     }
 }
 
-#ifdef __AVX2F__
+#ifdef __AVX2__
 TEST(MT32AVX2, can_generate_correct_seq) {
     MT19937 correct_generator;
     MT32AVX2 my_generator;
