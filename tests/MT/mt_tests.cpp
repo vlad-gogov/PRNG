@@ -1109,6 +1109,9 @@ TEST(MT, random_excursions_variant_mt_64_3) {
 
 #ifdef __AVX2__
 TEST(MT32AVX2, can_generate_correct_seq) {
+    if (!cpu_supports_avx2()) {
+        GTEST_SKIP();
+    }
     MT19937 correct_generator;
     MT32AVX2 my_generator;
     for (size_t i = 0; i < 1'000'000; i++) {
@@ -1119,6 +1122,9 @@ TEST(MT32AVX2, can_generate_correct_seq) {
 
 #ifdef __AVX512F__
 TEST(MT32AVX512, can_generate_correct_seq) {
+    if (!cpu_supports_avx512()) {
+        GTEST_SKIP();
+    }
     MT19937 correct_generator;
     MT32AVX512 my_generator;
     for (size_t i = 0; i < 1'000'000; i++) {

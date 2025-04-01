@@ -3,8 +3,15 @@
 #include "generator.hpp"
 
 #include <array>
+#include <cpuid.h>
 #include <cstdint>
 #include <immintrin.h>
+
+unsigned int cpu_supports();
+
+bool cpu_supports_avx2();
+
+bool cpu_supports_avx512();
 
 #if defined(__AVX__) && defined(__AVX2__)
 class MersenneTwister32AVX2 : public Generator<uint32_t> {
