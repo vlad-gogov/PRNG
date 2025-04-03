@@ -10,7 +10,8 @@ bool StatisticalTest::compare_p_value(const std::double_t &p_value) const {
     return p_value >= alpha;
 }
 
-StatisticalTest::StatisticalTest(const utils::seq_bytes &bytes, const double &alpha) : bytes(bytes), alpha(alpha) {
+StatisticalTest::StatisticalTest(const std::vector<utils::seq_bytes> &bytes, const double &alpha)
+    : bytes(bytes), alpha(alpha) {
 }
 
 }; // namespace statistical_test

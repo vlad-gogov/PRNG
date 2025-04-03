@@ -1,3 +1,4 @@
+#include <cassert>
 #include <chrono>
 #include <cpuid.h>
 #include <iostream>
@@ -17,7 +18,7 @@ void lcg_nist_test(size_t count_number) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    statistical_test::NistTest nist_test(bytes);
+    statistical_test::NistTest nist_test({bytes});
     nist_test.test(true);
 }
 
@@ -205,6 +206,21 @@ bool is_avx512_enabled() {
     return (xcr0 & XCR0_ZMM_MASK) == XCR0_ZMM_MASK;
 }
 
+void mt_nist_test(size_t count_tests, size_t count_number, uint32_t start_seed = 0u) {
+    std::vector<utils::seq_bytes> bytes(count_tests);
+    for (size_t i = 0; i < count_tests; ++i) {
+        MT19937 generator(start_seed + i);
+        std::vector<uint32_t> numbers(count_number);
+        for (size_t j = 0; j < count_number; ++j) {
+            numbers[j] = generator();
+        }
+        bytes[i] = utils::convert_numbers_to_seq_bytes(numbers);
+        assert(bytes[i].size() == count_number * 32);
+    }
+    statistical_test::NistTest nist_test(bytes);
+    nist_test.test();
+}
+
 int main() {
     std::size_t count_number = 1'000'000'000;
     // std::size_t count_number = 1'000'000'111;
@@ -228,5 +244,6 @@ int main() {
     // benchmark_generate_avx2_vs_avx512(count_number);
     // benchmark_generate_array_avx2_vs_avx512(count_number);
 #endif
+    mt_nist_test(1, 10);
     return 0;
 }

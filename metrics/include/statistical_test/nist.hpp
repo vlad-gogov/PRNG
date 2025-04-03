@@ -7,7 +7,7 @@ namespace statistical_test {
 
 class NistTest : private StatisticalTest {
   public:
-    NistTest(const utils::seq_bytes &bytes, const double &alpha = 0.01f);
+    NistTest(const std::vector<utils::seq_bytes> &bytes, const double &alpha = 0.01f);
 
     void test(const bool &print_p_values = false) const override;
 };
