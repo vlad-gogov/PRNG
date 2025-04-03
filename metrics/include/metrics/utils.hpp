@@ -5,6 +5,7 @@
 #include <iostream>
 #include <limits>
 #include <numbers>
+#include <omp.h>
 #include <vector>
 
 namespace utils {
@@ -22,7 +23,7 @@ seq_bytes convert_number_to_seq_bytes(const UIntType number) {
     size_t size = number_bits.size();
     seq_bytes result;
     result.reserve(size);
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; ++i) {
         result.push_back(number_bits[i] == '1' ? 1 : 0);
     }
     return result;
@@ -47,8 +48,9 @@ template <typename T>
 std::vector<std::complex<double>> DFT(const std::vector<T> &x) {
     size_t size = x.size();
     std::vector<std::complex<double>> result(size);
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = 0; j < size; j++) {
+#pragma omp parallel for
+    for (size_t i = 0; i < size; ++i) {
+        for (size_t j = 0; j < size; ++j) {
             double a = 2 * std::numbers::pi * j * i / size;
             result[i] += std::complex<double>(std::cos(a), std::sin(a)) * (double)x[j];
         }

@@ -227,15 +227,15 @@ int main() {
     // std::size_t count_number = 100'000;
 
 #if defined(__AVX__) && defined(__AVX2__)
-    std::cout << "AVX2\n";
-    check_correct_avx2(count_number);
+    // std::cout << "AVX2\n";
+    // check_correct_avx2(count_number);
 // benchmark_generate_avx2(count_number);
 // benchmark_generate_array_avx2(count_number);
 #endif
 
 #ifdef __AVX512F__
-    std::cout << "AVX512\n";
-    check_correct_avx512(count_number);
+    // std::cout << "AVX512\n";
+    // check_correct_avx512(count_number);
 // benchmark_generate_avx512(count_number);
 // benchmark_generate_array_avx512(count_number);
 #endif
@@ -244,6 +244,6 @@ int main() {
     // benchmark_generate_avx2_vs_avx512(count_number);
     // benchmark_generate_array_avx2_vs_avx512(count_number);
 #endif
-    mt_nist_test(1, 10);
+    mt_nist_test(100, 15000, 12345);
     return 0;
 }
