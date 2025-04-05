@@ -1,3 +1,4 @@
+#include <cassert>
 #include <chrono>
 #include <cpuid.h>
 #include <iostream>
@@ -5,6 +6,7 @@
 #include "generators/linear_congruential_generator.hpp"
 #include "generators/mersenne_twister.hpp"
 #include "generators/mersenne_twister_simd.hpp"
+#include "indicators.hpp"
 #include "statistical_test/nist.hpp"
 
 void lcg_nist_test(size_t count_number) {
@@ -17,8 +19,8 @@ void lcg_nist_test(size_t count_number) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    statistical_test::NistTest nist_test(bytes);
-    nist_test.test(true);
+    statistical_test::NistTest nist_test;
+    nist_test.test(bytes, true);
 }
 
 #if defined(__AVX__) && defined(__AVX2__)
@@ -205,28 +207,66 @@ bool is_avx512_enabled() {
     return (xcr0 & XCR0_ZMM_MASK) == XCR0_ZMM_MASK;
 }
 
+void mt_nist_test(size_t count_tests, size_t count_number, uint32_t start_seed = 0u) {
+    std::float_t progress = 0.0f;
+    const std::float_t step_size = 100.0f / count_tests;
+
+    // Hide cursor
+    indicators::show_console_cursor(false);
+
+    indicators::BlockProgressBar bar{
+        indicators::option::BarWidth{80},
+        indicators::option::PrefixText{"Nist tests"},
+        indicators::option::Start{" ["},
+        indicators::option::End{"]"},
+        indicators::option::ForegroundColor{indicators::Color::green},
+        indicators::option::ShowElapsedTime{true},
+        indicators::option::ShowRemainingTime{true},
+        indicators::option::ShowElapsedTime{true},
+        indicators::option::FontStyles{std::vector<indicators::FontStyle>{indicators::FontStyle::bold}}};
+
+    statistical_test::NistTest nist_test;
+    for (size_t i = 0; i < count_tests; ++i) {
+        MT19937 generator(start_seed + i);
+        std::vector<uint32_t> numbers(count_number);
+        for (size_t j = 0; j < count_number; ++j) {
+            numbers[j] = generator();
+        }
+        utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
+        assert(bytes.size() == count_number * 32);
+        nist_test.test(bytes);
+        progress += step_size;
+        bar.set_progress(progress);
+    }
+    bar.mark_as_completed();
+    indicators::show_console_cursor(true);
+
+    nist_test.print_statistics();
+}
+
 int main() {
     std::size_t count_number = 1'000'000'000;
     // std::size_t count_number = 1'000'000'111;
     // std::size_t count_number = 100'000;
 
 #if defined(__AVX__) && defined(__AVX2__)
-    std::cout << "AVX2\n";
-    check_correct_avx2(count_number);
-// benchmark_generate_avx2(count_number);
-// benchmark_generate_array_avx2(count_number);
+    // std::cout << "AVX2\n";
+    // check_correct_avx2(count_number);
+    // benchmark_generate_avx2(count_number);
+    // benchmark_generate_array_avx2(count_number);
 #endif
 
 #ifdef __AVX512F__
-    std::cout << "AVX512\n";
-    check_correct_avx512(count_number);
-// benchmark_generate_avx512(count_number);
-// benchmark_generate_array_avx512(count_number);
+    // std::cout << "AVX512\n";
+    // check_correct_avx512(count_number);
+    // benchmark_generate_avx512(count_number);
+    // benchmark_generate_array_avx512(count_number);
 #endif
 
 #if defined(__AVX__) && defined(__AVX2__) && defined(__AVX512F__)
     // benchmark_generate_avx2_vs_avx512(count_number);
     // benchmark_generate_array_avx2_vs_avx512(count_number);
 #endif
+    mt_nist_test(100, 16384, 12345);
     return 0;
 }

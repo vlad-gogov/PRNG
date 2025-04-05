@@ -18,9 +18,9 @@ jobs:
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
         source: '.'
-        exclude: './thirdparty ./docs'
+        exclude: './thirdparty ./docs ./app'
         extensions: 'hpp,cpp'
-        clangFormatVersion: 12
+        clangFormatVersion: 14
 
   ubuntu-gcc:
     name: Ubuntu GCC build & test

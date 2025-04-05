@@ -32,8 +32,8 @@ double overlapping_template_matching(const utils::seq_bytes &bytes, const utils:
 bool check_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
                                          size_t M = 1032, size_t N = 968, size_t K = 5);
 
-double universal(const utils::seq_bytes &bytes, size_t L = 0, size_t Q = 0);
-bool check_universal(const utils::seq_bytes &bytes, size_t L = 0, size_t Q = 0);
+double universal(const utils::seq_bytes &bytes);
+bool check_universal(const utils::seq_bytes &bytes);
 
 double linear_complexity(const utils::seq_bytes &bytes, size_t M);
 bool check_linear_complexity(const utils::seq_bytes &bytes, size_t M);
