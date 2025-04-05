@@ -218,7 +218,11 @@ void mt_nist_test(size_t count_tests, size_t count_number, uint32_t start_seed =
         assert(bytes[i].size() == count_number * 32);
     }
     statistical_test::NistTest nist_test(bytes);
+    auto begin = std::chrono::steady_clock::now();
     nist_test.test();
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+    std::cout << "Nist tests: " << elapsed << " ms" << std::endl;
 }
 
 int main() {
@@ -229,15 +233,15 @@ int main() {
 #if defined(__AVX__) && defined(__AVX2__)
     // std::cout << "AVX2\n";
     // check_correct_avx2(count_number);
-// benchmark_generate_avx2(count_number);
-// benchmark_generate_array_avx2(count_number);
+    // benchmark_generate_avx2(count_number);
+    // benchmark_generate_array_avx2(count_number);
 #endif
 
 #ifdef __AVX512F__
     // std::cout << "AVX512\n";
     // check_correct_avx512(count_number);
-// benchmark_generate_avx512(count_number);
-// benchmark_generate_array_avx512(count_number);
+    // benchmark_generate_avx512(count_number);
+    // benchmark_generate_array_avx512(count_number);
 #endif
 
 #if defined(__AVX__) && defined(__AVX2__) && defined(__AVX512F__)
