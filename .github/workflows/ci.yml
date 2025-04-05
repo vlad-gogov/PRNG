@@ -20,7 +20,7 @@ jobs:
         source: '.'
         exclude: './thirdparty ./docs ./app'
         extensions: 'hpp,cpp'
-        clangFormatVersion: 12
+        clangFormatVersion: 14
 
   ubuntu-gcc:
     name: Ubuntu GCC build & test
