@@ -221,8 +221,8 @@ void mt_nist_test(size_t count_tests, size_t count_number, uint32_t start_seed =
     auto begin = std::chrono::steady_clock::now();
     nist_test.test();
     auto end = std::chrono::steady_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-    std::cout << "Nist tests: " << elapsed << " ms" << std::endl;
+    auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(end - begin).count();
+    std::cout << "Nist tests: " << elapsed << " min" << std::endl;
 }
 
 int main() {
