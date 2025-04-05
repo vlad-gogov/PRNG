@@ -36,4 +36,4 @@ PUBLIC
     OpenMP::OpenMP_CXX
 )
 
-add_compile_options("-fopenmp")
+add_compile_options("-O3 -march=native -ffast-math -fopenmp")

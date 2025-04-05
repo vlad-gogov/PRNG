@@ -184,9 +184,13 @@ std::vector<short> normalized(const utils::seq_bytes &bytes) {
 std::double_t nist::discrete_fourier_transform(const utils::seq_bytes &bytes) {
     size_t size = bytes.size();
     std::vector<short> x = normalized(bytes);
-    std::vector<std::complex<std::double_t>> X = utils::DFT(x);
+    std::vector<std::complex<std::double_t>> X;
+    if ((size & (size - 1)) == 0) {
+        X = utils::FFT(x); // more fast for power of two
+    } else {
+        X = utils::DFT(x);
+    }
     std::vector<std::double_t> M(size);
-#pragma omp parallel for
     for (size_t i = 0; i < size; ++i) {
         M[i] = std::abs(X[i]);
     }
