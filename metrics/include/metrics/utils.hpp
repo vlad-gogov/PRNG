@@ -94,9 +94,12 @@ std::vector<std::complex<std::double_t>> FFT(const std::vector<T> &x) {
     const std::double_t pi = std::numbers::pi;
     const size_t log2_size = static_cast<size_t>(std::log2(size));
     for (size_t s = 1; s <= log2_size; ++s) {
-        const size_t m = 1 << s;         // Block size
-        const size_t m2 = m >> 1;        // Half block size
-        const std::double_t theta = 2 * pi / m; // Base angle
+        // Block size
+        const size_t m = 1 << s;
+        // Half block size
+        const size_t m2 = m >> 1;
+        // Base angle
+        const std::double_t theta = 2 * pi / m;
 
         // Calculation of rotation multipliers (twiddle factors)
         std::vector<std::complex<std::double_t>> w(m2);
