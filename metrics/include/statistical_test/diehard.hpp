@@ -10,7 +10,7 @@ namespace statistical_test {
 
 class diehardTest : private StatisticalTest {
 
-    static constexpr std::array<std::string_view, 15> test_names = {"Runs test"
+    static constexpr std::array<std::string_view, 9> test_names = {"Runs test"
                                                                     "Matrix test"
                                                                     "Birthdays test"
                                                                     "Minimum distance test"
