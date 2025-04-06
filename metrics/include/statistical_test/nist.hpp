@@ -35,7 +35,7 @@ class NistTest : private StatisticalTest {
 
     void test(const utils::seq_bytes &bytes, const bool &print_p_values = false) override;
 
-    void print_statistics() const override;
+    void print_statistics(const std::string &generator_name) const override;
 };
 
 }; // namespace statistical_test

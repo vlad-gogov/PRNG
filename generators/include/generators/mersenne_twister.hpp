@@ -23,7 +23,7 @@
 
 template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
           UIntType B, size_t T, UIntType C, size_t L, UIntType F>
-class MersenneTwisterEngine : Generator<UIntType> {
+class MersenneTwisterEngine : public Generator<UIntType> {
 
     static_assert(std::is_unsigned<UIntType>::value, "result_type must be an unsigned integral type");
     static_assert(1u <= M && M <= N, "template argument substituting M out of bounds");
@@ -80,25 +80,29 @@ class MersenneTwisterEngine : Generator<UIntType> {
         return static_cast<UIntType>(1) << W - 1;
     }
 
-    UIntType operator()() noexcept override {
-        if (index_state >= N) {
-            twist();
-        }
-
-        UIntType y = mt[index_state];
+    UIntType tempering(UIntType y) noexcept {
         y ^= (y >> U) & D;
         y ^= (y << S) & B;
         y ^= (y << T) & C;
         y ^= (y >> L);
-        index_state++;
-
         return y;
+    }
+
+    UIntType operator()() noexcept override {
+        return tempering(random_raw());
     }
 
     void discard(uint64_t z) {
         for (; 0 < z; --z) {
             this->operator()();
         }
+    }
+
+    UIntType random_raw() noexcept {
+        if (index_state >= N) {
+            twist();
+        }
+        return mt[index_state++];
     }
 };
 
@@ -132,7 +136,7 @@ using MT19937_64 =
 
 template <typename UIntType, size_t W, size_t N, size_t M0, size_t M1, size_t M2, size_t R, UIntType A, size_t U,
           size_t S, UIntType B, size_t T, UIntType C, size_t L, UIntType F>
-class MersenneTwisterEngine64 : Generator<UIntType> {
+class MersenneTwisterEngine64 : public Generator<UIntType> {
 
   protected:
     static_assert(std::is_unsigned<UIntType>::value, "result_type must be an unsigned integral type");
@@ -191,25 +195,29 @@ class MersenneTwisterEngine64 : Generator<UIntType> {
         return static_cast<UIntType>(1) << W - 1;
     }
 
-    UIntType operator()() noexcept override {
-        if (index_state >= N) {
-            twist();
-        }
-
-        UIntType y = mt[index_state];
+    UIntType tempering(UIntType y) noexcept {
         y ^= (y >> U);
         y ^= (y << S) & B;
         y ^= (y << T) & C;
         y ^= (y >> L);
-        index_state++;
-
         return y;
+    }
+
+    UIntType operator()() noexcept override {
+        return tempering(random_raw());
     }
 
     void discard(uint64_t z) {
         for (; 0 < z; --z) {
             this->operator()();
         }
+    }
+
+    UIntType random_raw() noexcept {
+        if (index_state >= N) {
+            twist();
+        }
+        return mt[index_state++];
     }
 };
 
