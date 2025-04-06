@@ -5,7 +5,7 @@
 
 #include "generators/linear_congruential_generator.hpp"
 #include "generators/mersenne_twister.hpp"
-#include "generators/mersenne_twister_s_box.hpp"
+#include "generators/mersenne_twister_sbox.hpp"
 #include "generators/mersenne_twister_simd.hpp"
 #include "indicators.hpp"
 #include "statistical_test/nist.hpp"
