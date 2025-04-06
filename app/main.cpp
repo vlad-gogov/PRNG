@@ -5,6 +5,7 @@
 
 #include "generators/linear_congruential_generator.hpp"
 #include "generators/mersenne_twister.hpp"
+#include "generators/mersenne_twister_s_box.hpp"
 #include "generators/mersenne_twister_simd.hpp"
 #include "indicators.hpp"
 #include "statistical_test/nist.hpp"
@@ -24,22 +25,6 @@ void lcg_nist_test(size_t count_number) {
 }
 
 #if defined(__AVX__) && defined(__AVX2__)
-bool check_correct_avx2(size_t count_number) {
-    MT19937 right_gen;
-    MT32AVX2 gen;
-    size_t count = 0;
-    for (size_t i = 0; i < count_number; i++) {
-        uint32_t right = right_gen();
-        uint32_t value = gen();
-        if (right != value) {
-            std::cout << "i = " << i << " Different value " << right << " != " << value << std::endl;
-            count++;
-        }
-    }
-    std::cout << "Different numbers: " << count << std::endl;
-    return count == 0;
-}
-
 void benchmark_generate_avx2(size_t count_number) {
     MT19937 right_gen;
     auto begin = std::chrono::steady_clock::now();
@@ -86,22 +71,6 @@ void benchmark_generate_array_avx2(size_t count_number) {
 #endif
 
 #ifdef __AVX512F__
-bool check_correct_avx512(size_t count_number) {
-    MT19937 right_gen;
-    MT32AVX512 gen;
-    size_t count = 0;
-    for (size_t i = 0; i < count_number; i++) {
-        uint32_t right = right_gen();
-        uint32_t value = gen();
-        if (right != value) {
-            std::cout << "i = " << i << " Different value " << right << " != " << value << std::endl;
-            count++;
-        }
-    }
-    std::cout << "Different numbers: " << count << std::endl;
-    return count == 0;
-}
-
 void benchmark_generate_avx512(size_t count_number) {
     MT19937 right_gen;
     auto begin = std::chrono::steady_clock::now();
@@ -192,31 +161,17 @@ void benchmark_generate_array_avx2_vs_avx512(size_t count_number) {
 }
 #endif
 
-bool is_avx512_enabled() {
-    unsigned int eax, ebx, ecx, edx;
-
-    // Проверка AVX512F (бит 16 в EBX при leaf=7)
-    __cpuid_count(7, 0, eax, ebx, ecx, edx);
-    if (!(ebx & (1 << 16))) {
-        return false; // AVX512F не поддерживается
-    }
-
-    // Проверка регистра XCR0 (ZMM-регистры разрешены)
-    const uint64_t xcr0 = _xgetbv(0);
-    constexpr uint64_t XCR0_ZMM_MASK = 0xE0; // Биты 7:5 (ZMM0-15, ZMM16-31)
-    return (xcr0 & XCR0_ZMM_MASK) == XCR0_ZMM_MASK;
-}
-
-void mt_nist_test(size_t count_tests, size_t count_number, uint32_t start_seed = 0u) {
+template <typename Generator>
+void nist_test(const std::string &generator_name, const size_t count_tests, const size_t count_number,
+               const uint32_t start_seed = 0u) {
     std::float_t progress = 0.0f;
     const std::float_t step_size = 100.0f / count_tests;
 
-    // Hide cursor
     indicators::show_console_cursor(false);
 
     indicators::BlockProgressBar bar{
         indicators::option::BarWidth{80},
-        indicators::option::PrefixText{"Nist tests"},
+        indicators::option::PrefixText{std::string("Nist tests ") + generator_name},
         indicators::option::Start{" ["},
         indicators::option::End{"]"},
         indicators::option::ForegroundColor{indicators::Color::green},
@@ -227,8 +182,8 @@ void mt_nist_test(size_t count_tests, size_t count_number, uint32_t start_seed =
 
     statistical_test::NistTest nist_test;
     for (size_t i = 0; i < count_tests; ++i) {
-        MT19937 generator(start_seed + i);
-        std::vector<uint32_t> numbers(count_number);
+        Generator generator(start_seed + i);
+        std::vector<typename Generator::ValueType> numbers(count_number);
         for (size_t j = 0; j < count_number; ++j) {
             numbers[j] = generator();
         }
@@ -241,24 +196,20 @@ void mt_nist_test(size_t count_tests, size_t count_number, uint32_t start_seed =
     bar.mark_as_completed();
     indicators::show_console_cursor(true);
 
-    nist_test.print_statistics();
+    nist_test.print_statistics(generator_name);
 }
 
 int main() {
-    std::size_t count_number = 1'000'000'000;
-    // std::size_t count_number = 1'000'000'111;
-    // std::size_t count_number = 100'000;
+    // std::size_t count_number = 1'000'000'000;
 
 #if defined(__AVX__) && defined(__AVX2__)
     // std::cout << "AVX2\n";
-    // check_correct_avx2(count_number);
     // benchmark_generate_avx2(count_number);
     // benchmark_generate_array_avx2(count_number);
 #endif
 
 #ifdef __AVX512F__
     // std::cout << "AVX512\n";
-    // check_correct_avx512(count_number);
     // benchmark_generate_avx512(count_number);
     // benchmark_generate_array_avx512(count_number);
 #endif
@@ -267,6 +218,8 @@ int main() {
     // benchmark_generate_avx2_vs_avx512(count_number);
     // benchmark_generate_array_avx2_vs_avx512(count_number);
 #endif
-    mt_nist_test(100, 16384, 12345);
+
+    nist_test<MT19937>("MT19937", 100, 16384, 12345);
+    nist_test<MT19937SBOX>("MT19937SBOX", 100, 16384, 12345);
     return 0;
 }

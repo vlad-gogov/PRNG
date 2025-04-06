@@ -20,6 +20,6 @@ class StatisticalTest {
     StatisticalTest(const double &alpha);
 
     virtual void test(const utils::seq_bytes &bytes, const bool &print_p_value) = 0;
-    virtual void print_statistics() const = 0;
+    virtual void print_statistics(const std::string &generator_name) const = 0;
 };
 } // namespace statistical_test

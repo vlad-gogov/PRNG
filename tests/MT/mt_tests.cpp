@@ -28,7 +28,7 @@ TEST(MT, can_discard) {
 
 TEST(MT, frequency_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -41,7 +41,7 @@ TEST(MT, frequency_mt) {
 
 TEST(MT, frequency_block_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -54,7 +54,7 @@ TEST(MT, frequency_block_mt) {
 
 TEST(MT, runs_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -67,7 +67,7 @@ TEST(MT, runs_mt) {
 
 TEST(MT, longest_run_of_ones_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -80,7 +80,7 @@ TEST(MT, longest_run_of_ones_mt) {
 
 TEST(MT, binary_matrix_rank_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -95,7 +95,7 @@ TEST(MT, binary_matrix_rank_mt) {
 
 TEST(MT, discrete_fourier_transform_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -108,7 +108,7 @@ TEST(MT, discrete_fourier_transform_mt) {
 
 TEST(MT, non_overlapping_template_matching_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -121,9 +121,8 @@ TEST(MT, non_overlapping_template_matching_mt) {
 }
 
 TEST(MT, overlapping_template_matching_mt) {
-    GTEST_SKIP();
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -132,13 +131,12 @@ TEST(MT, overlapping_template_matching_mt) {
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     double p = nist::overlapping_template_matching(bytes, template_);
     std::cout << "P-value: " << p << std::endl;
-    ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
+    ASSERT_FALSE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
 TEST(MT, universal_digit_mt) {
-    GTEST_SKIP();
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -151,7 +149,7 @@ TEST(MT, universal_digit_mt) {
 
 TEST(MT, serial_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -164,7 +162,7 @@ TEST(MT, serial_mt) {
 
 TEST(MT, approximate_entropy_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -177,7 +175,7 @@ TEST(MT, approximate_entropy_mt) {
 
 TEST(MT, cumulative_sums_mt_forward) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -190,7 +188,7 @@ TEST(MT, cumulative_sums_mt_forward) {
 
 TEST(MT, cumulative_sums_mt_reverse) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -202,8 +200,8 @@ TEST(MT, cumulative_sums_mt_reverse) {
 }
 
 TEST(MT, random_excursions_mt) {
-    MT19937 generator;
-    std::uint32_t count_number = 50;
+    MT19937 generator(12345);
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -223,7 +221,7 @@ TEST(MT, random_excursions_mt) {
 
 TEST(MT, random_excursions_variant_mt) {
     MT19937 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -243,7 +241,7 @@ TEST(MT, random_excursions_variant_mt) {
 
 TEST(MT, frequency_mt_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -256,7 +254,7 @@ TEST(MT, frequency_mt_64) {
 
 TEST(MT, frequency_block_mt_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -269,7 +267,7 @@ TEST(MT, frequency_block_mt_64) {
 
 TEST(MT, runs_mt_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -282,7 +280,7 @@ TEST(MT, runs_mt_64) {
 
 TEST(MT, longest_run_of_ones_mt_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -295,7 +293,7 @@ TEST(MT, longest_run_of_ones_mt_64) {
 
 TEST(MT, binary_matrix_rank_mt_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -310,7 +308,7 @@ TEST(MT, binary_matrix_rank_mt_64) {
 
 TEST(MT, discrete_fourier_transform_mt_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -324,7 +322,7 @@ TEST(MT, discrete_fourier_transform_mt_64) {
 TEST(MT, non_overlapping_template_matching_mt_64) {
     MT19937_64 generator;
 
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -337,9 +335,8 @@ TEST(MT, non_overlapping_template_matching_mt_64) {
 }
 
 TEST(MT, overlapping_template_matching_mt_64) {
-    GTEST_SKIP();
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -348,13 +345,12 @@ TEST(MT, overlapping_template_matching_mt_64) {
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     double p = nist::overlapping_template_matching(bytes, template_);
     std::cout << "P-value: " << p << std::endl;
-    ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
+    ASSERT_FALSE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
 TEST(MT, universal_digit_mt_64) {
-    GTEST_SKIP();
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -367,7 +363,7 @@ TEST(MT, universal_digit_mt_64) {
 
 TEST(MT, serial_mt_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -379,9 +375,8 @@ TEST(MT, serial_mt_64) {
 }
 
 TEST(MT, approximate_entropy_mt_64) {
-    GTEST_SKIP();
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -394,7 +389,7 @@ TEST(MT, approximate_entropy_mt_64) {
 
 TEST(MT, cumulative_sums_mt_forward_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -407,7 +402,7 @@ TEST(MT, cumulative_sums_mt_forward_64) {
 
 TEST(MT, cumulative_sums_mt_reverse_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -420,7 +415,7 @@ TEST(MT, cumulative_sums_mt_reverse_64) {
 
 TEST(MT, random_excursions_mt_64) {
     MT19937_64 generator(100000);
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -440,7 +435,7 @@ TEST(MT, random_excursions_mt_64) {
 
 TEST(MT, random_excursions_variant_mt_64) {
     MT19937_64 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -460,7 +455,7 @@ TEST(MT, random_excursions_variant_mt_64) {
 
 TEST(MT, frequency_mt_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -473,7 +468,7 @@ TEST(MT, frequency_mt_64_1) {
 
 TEST(MT, frequency_block_mt_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -486,7 +481,7 @@ TEST(MT, frequency_block_mt_64_1) {
 
 TEST(MT, runs_mt_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -499,7 +494,7 @@ TEST(MT, runs_mt_64_1) {
 
 TEST(MT, longest_run_of_ones_mt_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -512,7 +507,7 @@ TEST(MT, longest_run_of_ones_mt_64_1) {
 
 TEST(MT, binary_matrix_rank_mt_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -527,7 +522,7 @@ TEST(MT, binary_matrix_rank_mt_64_1) {
 
 TEST(MT, discrete_fourier_transform_mt_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -541,7 +536,7 @@ TEST(MT, discrete_fourier_transform_mt_64_1) {
 TEST(MT, non_overlapping_template_matching_mt_64_1) {
     MT19937_64_1 generator;
 
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -554,9 +549,8 @@ TEST(MT, non_overlapping_template_matching_mt_64_1) {
 }
 
 TEST(MT, overlapping_template_matching_mt_64_1) {
-    GTEST_SKIP();
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -565,13 +559,12 @@ TEST(MT, overlapping_template_matching_mt_64_1) {
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     double p = nist::overlapping_template_matching(bytes, template_);
     std::cout << "P-value: " << p << std::endl;
-    ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
+    ASSERT_FALSE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
 TEST(MT, universal_digit_mt_64_1) {
-    GTEST_SKIP();
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -584,7 +577,7 @@ TEST(MT, universal_digit_mt_64_1) {
 
 TEST(MT, serial_mt_64_1) {
     MT19937_64_1 generator(1111111111);
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -597,7 +590,7 @@ TEST(MT, serial_mt_64_1) {
 
 TEST(MT, approximate_entropy_mt_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -610,7 +603,7 @@ TEST(MT, approximate_entropy_mt_64_1) {
 
 TEST(MT, cumulative_sums_mt_forward_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -623,7 +616,7 @@ TEST(MT, cumulative_sums_mt_forward_64_1) {
 
 TEST(MT, cumulative_sums_mt_reverse_64_1) {
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -636,7 +629,7 @@ TEST(MT, cumulative_sums_mt_reverse_64_1) {
 
 TEST(MT, random_excursions_mt_64_1) {
     MT19937_64_1 generator(100000);
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -655,9 +648,8 @@ TEST(MT, random_excursions_mt_64_1) {
 }
 
 TEST(MT, random_excursions_variant_mt_64_1) {
-    GTEST_SKIP();
     MT19937_64_1 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -677,7 +669,7 @@ TEST(MT, random_excursions_variant_mt_64_1) {
 
 TEST(MT, frequency_mt_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -690,7 +682,7 @@ TEST(MT, frequency_mt_64_2) {
 
 TEST(MT, frequency_block_mt_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -703,7 +695,7 @@ TEST(MT, frequency_block_mt_64_2) {
 
 TEST(MT, runs_mt_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -716,7 +708,7 @@ TEST(MT, runs_mt_64_2) {
 
 TEST(MT, longest_run_of_ones_mt_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -729,7 +721,7 @@ TEST(MT, longest_run_of_ones_mt_64_2) {
 
 TEST(MT, binary_matrix_rank_mt_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -744,7 +736,7 @@ TEST(MT, binary_matrix_rank_mt_64_2) {
 
 TEST(MT, discrete_fourier_transform_mt_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -758,7 +750,7 @@ TEST(MT, discrete_fourier_transform_mt_64_2) {
 TEST(MT, non_overlapping_template_matching_mt_64_2) {
     MT19937_64_2 generator;
 
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -771,9 +763,8 @@ TEST(MT, non_overlapping_template_matching_mt_64_2) {
 }
 
 TEST(MT, overlapping_template_matching_mt_64_2) {
-    GTEST_SKIP();
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -782,13 +773,12 @@ TEST(MT, overlapping_template_matching_mt_64_2) {
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     double p = nist::overlapping_template_matching(bytes, template_);
     std::cout << "P-value: " << p << std::endl;
-    ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
+    ASSERT_FALSE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
 TEST(MT, universal_digit_mt_64_2) {
-    GTEST_SKIP();
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -801,7 +791,7 @@ TEST(MT, universal_digit_mt_64_2) {
 
 TEST(MT, serial_mt_64_2) {
     MT19937_64_2 generator(1111111111);
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -814,7 +804,7 @@ TEST(MT, serial_mt_64_2) {
 
 TEST(MT, approximate_entropy_mt_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -827,7 +817,7 @@ TEST(MT, approximate_entropy_mt_64_2) {
 
 TEST(MT, cumulative_sums_mt_forward_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -840,7 +830,7 @@ TEST(MT, cumulative_sums_mt_forward_64_2) {
 
 TEST(MT, cumulative_sums_mt_reverse_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -853,7 +843,7 @@ TEST(MT, cumulative_sums_mt_reverse_64_2) {
 
 TEST(MT, random_excursions_mt_64_2) {
     MT19937_64_2 generator(100000);
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -873,7 +863,7 @@ TEST(MT, random_excursions_mt_64_2) {
 
 TEST(MT, random_excursions_variant_mt_64_2) {
     MT19937_64_2 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -893,7 +883,7 @@ TEST(MT, random_excursions_variant_mt_64_2) {
 
 TEST(MT, frequency_mt_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -906,7 +896,7 @@ TEST(MT, frequency_mt_64_3) {
 
 TEST(MT, frequency_block_mt_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -919,7 +909,7 @@ TEST(MT, frequency_block_mt_64_3) {
 
 TEST(MT, runs_mt_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -932,7 +922,7 @@ TEST(MT, runs_mt_64_3) {
 
 TEST(MT, longest_run_of_ones_mt_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -945,7 +935,7 @@ TEST(MT, longest_run_of_ones_mt_64_3) {
 
 TEST(MT, binary_matrix_rank_mt_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -960,7 +950,7 @@ TEST(MT, binary_matrix_rank_mt_64_3) {
 
 TEST(MT, discrete_fourier_transform_mt_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -974,7 +964,7 @@ TEST(MT, discrete_fourier_transform_mt_64_3) {
 TEST(MT, non_overlapping_template_matching_mt_64_3) {
     MT19937_64_3 generator;
 
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -987,9 +977,8 @@ TEST(MT, non_overlapping_template_matching_mt_64_3) {
 }
 
 TEST(MT, overlapping_template_matching_mt_64_3) {
-    GTEST_SKIP();
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -998,13 +987,12 @@ TEST(MT, overlapping_template_matching_mt_64_3) {
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     double p = nist::overlapping_template_matching(bytes, template_);
     std::cout << "P-value: " << p << std::endl;
-    ASSERT_TRUE(nist::check_overlapping_template_matching(bytes, template_));
+    ASSERT_FALSE(nist::check_overlapping_template_matching(bytes, template_));
 }
 
 TEST(MT, universal_digit_mt_64_3) {
-    GTEST_SKIP();
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -1017,7 +1005,7 @@ TEST(MT, universal_digit_mt_64_3) {
 
 TEST(MT, serial_mt_64_3) {
     MT19937_64_3 generator(1111111111);
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -1030,7 +1018,7 @@ TEST(MT, serial_mt_64_3) {
 
 TEST(MT, approximate_entropy_mt_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -1043,7 +1031,7 @@ TEST(MT, approximate_entropy_mt_64_3) {
 
 TEST(MT, cumulative_sums_mt_forward_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -1056,7 +1044,7 @@ TEST(MT, cumulative_sums_mt_forward_64_3) {
 
 TEST(MT, cumulative_sums_mt_reverse_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -1069,7 +1057,7 @@ TEST(MT, cumulative_sums_mt_reverse_64_3) {
 
 TEST(MT, random_excursions_mt_64_3) {
     MT19937_64_3 generator(100000);
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();
@@ -1089,7 +1077,7 @@ TEST(MT, random_excursions_mt_64_3) {
 
 TEST(MT, random_excursions_variant_mt_64_3) {
     MT19937_64_3 generator;
-    std::uint32_t count_number = 50;
+    std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
         numbers[i] = generator();

@@ -147,7 +147,8 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
     }
 }
 
-void NistTest::print_statistics() const {
+void NistTest::print_statistics(const std::string &generator_name) const {
+    std::cout << "Nist test for " << generator_name << std::endl;
     size_t pass_count = 0;
     for (size_t i = 0; i < 15; ++i) {
         bool answer = static_cast<std::double_t>(test_success[i]) / static_cast<std::double_t>(test_count) >= 0.95;
