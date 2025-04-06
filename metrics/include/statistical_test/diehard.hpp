@@ -20,7 +20,7 @@ class diehardTest : private StatisticalTest {
                                                                     "Sums test"
                                                                     "Craps test"};
 
-    std::array<size_t, 15> test_success;
+    std::array<size_t, 9> test_success;
 
   public:
     DiehardTest(const double &alpha = 0.01f);
