@@ -56,8 +56,8 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
         test_success[5] += compare_p_value(p_value);
     }
 
-    utils::seq_bytes template_ = {0, 0, 0, 0, 0, 0, 0, 0, 1};
     {
+        utils::seq_bytes template_ = {0, 0, 0, 0, 0, 0, 0, 0, 1};
         std::double_t p_value = nist::non_overlapping_template_matching(bytes, template_);
         if (print_p_values) {
             std::cout << test_names[6] << ": " << p_value << std::endl;
@@ -65,8 +65,8 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
         test_success[6] += compare_p_value(p_value);
     }
 
-    template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     {
+        utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
         std::double_t p_value = nist::overlapping_template_matching(bytes, template_);
         if (print_p_values) {
             std::cout << test_names[7] << ": " << p_value << std::endl;
