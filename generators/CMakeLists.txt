@@ -4,6 +4,7 @@ set(TARGET_NAME generators)
 
 file(GLOB_RECURSE TARGET_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/generators/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/hash_functions/*.hpp
 )
 
 file(GLOB_RECURSE TARGET_SRC
