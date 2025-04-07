@@ -6,8 +6,8 @@
 #include "generators/mersenne_twister.hpp"
 #include "hash_functions/siphash.hpp"
 
-template <size_t W, size_t N, size_t M, size_t R, uint32_t A, size_t U, uint32_t D, size_t S,
-          uint32_t B, size_t T, uint32_t C, size_t L, uint32_t F>
+template <size_t W, size_t N, size_t M, size_t R, uint32_t A, size_t U, uint32_t D, size_t S, uint32_t B, size_t T,
+          uint32_t C, size_t L, uint32_t F>
 class MersenneTwisterEngineSiphash : public Generator<uint32_t> {
     MersenneTwisterEngine<uint32_t, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
     static constexpr uint32_t default_seed = 5489u;
@@ -36,5 +36,5 @@ class MersenneTwisterEngineSiphash : public Generator<uint32_t> {
     }
 };
 
-using MT19937SIPHASH = MersenneTwisterEngineSiphash<32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
-                                                 0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL>;
+using MT19937SIPHASH = MersenneTwisterEngineSiphash<32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7, 0x9d2c5680UL,
+                                                    15, 0xefc60000UL, 18, 1812433253UL>;
