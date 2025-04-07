@@ -7,6 +7,7 @@
 #include "generators/mersenne_twister.hpp"
 #include "generators/mersenne_twister_sbox.hpp"
 #include "generators/mersenne_twister_simd.hpp"
+#include "generators/mersenne_twister_siphash.hpp"
 #include "indicators.hpp"
 #include "statistical_test/nist.hpp"
 
@@ -219,7 +220,10 @@ int main() {
     // benchmark_generate_array_avx2_vs_avx512(count_number);
 #endif
 
-    nist_test<MT19937>("MT19937", 100, 16384, 12345);
-    nist_test<MT19937SBOX>("MT19937SBOX", 100, 16384, 12345);
+    // nist_test<MT19937>("MT19937", 100, 16384, 12345);
+    // nist_test<MT19937SBOX>("MT19937SBOX", 100, 16384, 12345);
+    // nist_test<MT19937SBOXBegin>("MT19937SBOXBegin", 100, 16384, 12345);
+    // nist_test<MT19937SBOXEnd>("MT19937SBOXEnd", 100, 16384, 12345);
+    // nist_test<MT19937SIPHASH>("MT19937SIPHASH", 100, 16384, 12345);
     return 0;
 }
