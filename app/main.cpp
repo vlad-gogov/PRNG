@@ -200,6 +200,15 @@ void nist_test(const std::string &generator_name, const size_t count_tests, cons
     nist_test.print_statistics(generator_name);
 }
 
+template <typename Generator>
+void print_gen_value(const size_t count_numbers, const uint32_t seed = 0u) {
+    Generator generator(seed);
+    for (size_t i = 0; i < count_numbers; ++i) {
+        std::cout << generator() << " ";
+    }
+    std::cout << std::endl;
+}
+
 int main() {
     // std::size_t count_number = 1'000'000'000;
 
@@ -222,8 +231,9 @@ int main() {
 
     // nist_test<MT19937>("MT19937", 100, 16384, 12345);
     // nist_test<MT19937SBOX>("MT19937SBOX", 100, 16384, 12345);
-    // nist_test<MT19937SBOXBegin>("MT19937SBOXBegin", 100, 16384, 12345);
+    // print_gen_value<MT19937SBOX>(10);
     // nist_test<MT19937SBOXEnd>("MT19937SBOXEnd", 100, 16384, 12345);
+    // print_gen_value<MT19937SBOXEnd>(10);
     // nist_test<MT19937SIPHASH>("MT19937SIPHASH", 100, 16384, 12345);
     return 0;
 }

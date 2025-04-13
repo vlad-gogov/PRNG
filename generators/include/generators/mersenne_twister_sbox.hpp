@@ -22,95 +22,66 @@ constexpr std::array<uint8_t, 256> SBOX = {
     0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf, 0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42,
     0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16};
 
-template <size_t W, size_t N, size_t M, size_t R, uint32_t A, size_t U, uint32_t D, size_t S, uint32_t B, size_t T,
-          uint32_t C, size_t L, uint32_t F>
-class MersenneTwisterEngineSBox : public Generator<uint32_t> {
-    MersenneTwisterEngine<uint32_t, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
-    static constexpr uint32_t default_seed = 5489u;
+template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
+          UIntType B, size_t T, UIntType C, size_t L, UIntType F>
+class MersenneTwisterEngineSBox : public Generator<UIntType> {
+    MersenneTwisterEngine<UIntType, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
+    static constexpr UIntType default_seed = 5489u;
 
   public:
-    MersenneTwisterEngineSBox(const uint32_t seed = default_seed) : mt_gen(default_seed) {
+    MersenneTwisterEngineSBox(const UIntType seed = default_seed) : mt_gen(default_seed) {
     }
 
-    uint32_t operator()() noexcept override {
-        uint32_t raw_val = mt_gen.random_raw();
-        std::vector<uint8_t> bytes(4, 0);
-        for (size_t i = 0; i < 4; ++i) {
-            bytes[i] = SBOX[(raw_val >> (i * 8)) & 0xFF];
+    UIntType operator()() noexcept override {
+        constexpr size_t bytes = sizeof(UIntType);
+        UIntType raw_val = mt_gen.random_raw();
+        UIntType result = 0u;
+        for (size_t i = 0; i < bytes; ++i) {
+            result |= (SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
         }
-        return mt_gen.tempering((bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3]);
+        return mt_gen.tempering(result);
     }
 
-    uint32_t min() const override {
+    UIntType min() const override {
         return mt_gen.min();
     }
 
-    uint32_t max() const override {
+    UIntType max() const override {
         return mt_gen.max();
     }
 };
 
-using MT19937SBOX = MersenneTwisterEngineSBox<32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7, 0x9d2c5680UL, 15,
-                                              0xefc60000UL, 18, 1812433253UL>;
+using MT19937SBOX = MersenneTwisterEngineSBox<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
+                                              0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL>;
 
-template <size_t W, size_t N, size_t M, size_t R, uint32_t A, size_t U, uint32_t D, size_t S, uint32_t B, size_t T,
-          uint32_t C, size_t L, uint32_t F>
-class MersenneTwisterEngineSBoxBegin : public Generator<uint32_t> {
-    MersenneTwisterEngine<uint32_t, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
-    static constexpr uint32_t default_seed = 5489u;
-
-  public:
-    MersenneTwisterEngineSBoxBegin(const uint32_t seed = default_seed) : mt_gen(default_seed) {
-    }
-
-    uint32_t operator()() noexcept override {
-        uint32_t raw_val = mt_gen.random_raw();
-        std::vector<uint8_t> bytes(4, 0);
-        for (size_t i = 0; i < 4; ++i) {
-            bytes[i] = SBOX[(raw_val >> (i * 8)) & 0xFF];
-        }
-        return mt_gen.tempering((bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3]);
-    }
-
-    uint32_t min() const override {
-        return mt_gen.min();
-    }
-
-    uint32_t max() const override {
-        return mt_gen.max();
-    }
-};
-
-using MT19937SBOXBegin = MersenneTwisterEngineSBoxBegin<32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
-                                                        0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL>;
-
-template <size_t W, size_t N, size_t M, size_t R, uint32_t A, size_t U, uint32_t D, size_t S, uint32_t B, size_t T,
-          uint32_t C, size_t L, uint32_t F>
+template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
+          UIntType B, size_t T, UIntType C, size_t L, UIntType F>
 class MersenneTwisterEngineSBoxEnd : public Generator<uint32_t> {
     MersenneTwisterEngine<uint32_t, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
-    static constexpr uint32_t default_seed = 5489u;
+    static constexpr UIntType default_seed = 5489u;
 
   public:
-    MersenneTwisterEngineSBoxEnd(const uint32_t seed = default_seed) : mt_gen(default_seed) {
+    MersenneTwisterEngineSBoxEnd(const UIntType seed = default_seed) : mt_gen(default_seed) {
     }
 
-    uint32_t operator()() noexcept override {
-        uint32_t raw_val = mt_gen();
-        std::vector<uint8_t> bytes(4, 0);
-        for (size_t i = 0; i < 4; ++i) {
-            bytes[i] = SBOX[(raw_val >> (i * 8)) & 0xFF];
+    UIntType operator()() noexcept override {
+        constexpr size_t bytes = sizeof(UIntType);
+        UIntType raw_val = mt_gen();
+        UIntType result = 0u;
+        for (size_t i = 0; i < bytes; ++i) {
+            result |= (SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
         }
-        return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+        return result;
     }
 
-    uint32_t min() const override {
+    UIntType min() const override {
         return mt_gen.min();
     }
 
-    uint32_t max() const override {
+    UIntType max() const override {
         return mt_gen.max();
     }
 };
 
-using MT19937SBOXEnd = MersenneTwisterEngineSBoxEnd<32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7, 0x9d2c5680UL,
-                                                    15, 0xefc60000UL, 18, 1812433253UL>;
+using MT19937SBOXEnd = MersenneTwisterEngineSBoxEnd<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
+                                                    0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL>;
