@@ -97,25 +97,6 @@ int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows)
     return rank;
 }
 
-seq_bytes read_bytes_from_file(const std::string path, size_t count) {
-    seq_bytes bytes(count);
-    std::stringstream path_stream;
-    path_stream << std::string(std::filesystem::current_path().parent_path().c_str());
-    path_stream << "/../";
-    path_stream << path;
-    std::ifstream e_file(path_stream.str());
-    size_t index = 0;
-    while (e_file.is_open() && index < count) {
-        char sym = e_file.get();
-        if (sym == '1') {
-            bytes[index++] = 1;
-        } else if (sym == '0') {
-            bytes[index++] = 0;
-        }
-    }
-    return bytes;
-}
-
 double chi_square(std::vector<double> trial_vector, std::vector<double> expected_vector, int degrees_of_freedom) {
     double chi_sq = 0.0;
     for (size_t i = 0; i < degrees_of_freedom; i++) {
@@ -204,21 +185,5 @@ int kperm(const std::vector<int> &v) {
 
     return uret;
 }
-
-// uint bits_to_uint(const seq_bytes &bytes, uint offset) {
-//     std::bitset<32> bitset;
-//     for (size_t i = 0; i < 32; i++) {
-//         bitset[i] = bytes[offset + i];
-//     }
-//     return bitset.to_ulong();
-// }
-
-// std::vector<uint> bits_to_vector_uint(const seq_bytes &bytes, int size) {
-//     std::vector<uint> result(size);
-//     for (size_t i = 0; i < size; i++) {
-//         result[i] = bits_to_uint(bytes, 31 * i);
-//     }
-//     return result;
-// }
 
 } // namespace utils

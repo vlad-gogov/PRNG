@@ -46,9 +46,6 @@ double diehard::matrix_rank_prob(int M, int Q, int rank) {
     for (int i = 0; i < rank; ++i) {
         double numerator = (1 - std::pow(2, (i - Q))) * (1 - std::pow(2, (i - M)));
         double denominator = 1 - std::pow(2, (i - rank));
-        // std::cout << "numerator: " << numerator << " = " << (1 - std::pow(2, (i - Q))) << " * " << (1 - std::pow(2,
-        // (i - M))) << std::endl; std::cout << "denominator: " << denominator << " = " << 1 - std::pow(2, (i - rank))
-        // << std::endl;
         second_part *= numerator / denominator;
     }
     probability = first_part * second_part;
@@ -64,12 +61,10 @@ double diehard::matrix_test(const utils::seq_bytes &bytes, int rows, int cols, i
     std::map<int, int> map_ranks;
 
     for (size_t i = 0; i < iterations; i++) {
-        // std::vector<std::vector<int>> matrix = utils::matrix_from_bytes(bytes, rows, cols, offset);
         utils::seq_bytes slice(bytes.begin() + offset, bytes.begin() + offset + rows * cols);
 
         BinaryMatrix matrix(slice, rows);
         offset += rows * cols;
-        // int rank = utils::binary_matrix_rank(matrix, cols, rows);
         size_t rank = matrix.compute_rank();
         ranks.push_back(rank);
         if (map_ranks.find(rank) == map_ranks.end()) {
@@ -78,17 +73,11 @@ double diehard::matrix_test(const utils::seq_bytes &bytes, int rows, int cols, i
             map_ranks[rank]++;
         }
     }
-    // for (const auto &p : map_ranks) {
-    //     std::cout << p.first << ": " << p.second << std::endl;
-    // }
     std::map<int, double> map_probs;
     for (const auto &p : map_ranks) {
         double probability = matrix_rank_prob(rows, cols, p.first);
         map_probs[p.first] = probability;
     }
-    // for (const auto &p : map_probs) {
-    //     std::cout << "Probs: " << p.first << ": " << p.second << std::endl;
-    // }
     // Discard ranks with less than cutoff matrices
     int cutoff = std::min(iterations / 100, 5);
     int degrees_of_freedom = -1;
@@ -102,9 +91,7 @@ double diehard::matrix_test(const utils::seq_bytes &bytes, int rows, int cols, i
         }
     }
     double chi_square = utils::chi_square(significant_ranks_trial, significant_ranks_expected, degrees_of_freedom);
-    // std::cout << "Chi squared value: " << chi_square << std::endl;
     double p_value = utils::p_value(degrees_of_freedom, chi_square);
-    // std::cout << "p-value: " << p_value << std::endl;
 
     return p_value;
 }
@@ -163,20 +150,11 @@ double diehard::birthdays_test(const utils::seq_bytes &bytes, int days_bits, int
             histogram[k] += 1.0;
         }
     }
-    // std::cout << "Histogram: " << std::endl;
-    // for (size_t i = 0; i < tsamples; i++) {
-    //     std::cout << i << ": " << histogram[i] << std::endl;
-    // }
 
     std::vector<double> expected_histogram(kmax, 0);
     for (size_t k = 0; k < kmax; k++) {
         expected_histogram[k] = tsamples * utils::poissonian(k, lambda);
     }
-
-    // std::cout << "Expected Histogram: " << std::endl;
-    // for (size_t i = 0; i < tsamples; i++) {
-    //     std::cout << i << ": " << expected_histogram[i] << std::endl;
-    // }
 
     // Calculate chi_square and p-value
     double chi_square = utils::chi_square(histogram, expected_histogram, kmax);
@@ -204,10 +182,6 @@ double diehard::minimum_distance_test(const utils::seq_bytes &bytes, int n_dims,
             }
             coordinates.push_back(dot);
         }
-        // for (size_t i = 0; i < num_coordinates; i++) {
-        //     std::cout << "(" << coordinates[i][0] << ": " << coordinates[i][1] << "); ";
-        // }
-        // std::cout << std::endl;
         // Sort the dots by their first coordinate
         std::sort(coordinates.begin(), coordinates.end(),
                   [](const std::vector<double> &a, const std::vector<double> &b) { return a[0] < b[0]; });
@@ -223,7 +197,6 @@ double diehard::minimum_distance_test(const utils::seq_bytes &bytes, int n_dims,
                 minimal_distance = distance;
             }
         }
-        // std::cout << "minimal_distance = " << minimal_distance << std::endl;
 
         double dvolume;
         if ((n_dims % 2) == 0) {
