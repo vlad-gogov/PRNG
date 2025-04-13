@@ -26,14 +26,14 @@ class MersenneTwisterEngineInvolution : public Generator<UIntType> {
     }
 };
 
-using MT19937Involution3 = MersenneTwisterEngineInvolution<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
-                                                          0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL, 3>;
+using MT19937Involution3 = MersenneTwisterEngineInvolution<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL,
+                                                           7, 0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL, 3>;
 
-using MT19937Involution14 = MersenneTwisterEngineInvolution<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
-                                                          0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL, 14>;
+using MT19937Involution14 = MersenneTwisterEngineInvolution<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL,
+                                                            7, 0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL, 14>;
 
-using MT19937Involution24 = MersenneTwisterEngineInvolution<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
-                                                          0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL, 24>;
+using MT19937Involution24 = MersenneTwisterEngineInvolution<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL,
+                                                            7, 0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL, 24>;
 
-using MT19937Involution26 = MersenneTwisterEngineInvolution<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
-                                                          0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL, 26>;
+using MT19937Involution26 = MersenneTwisterEngineInvolution<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL,
+                                                            7, 0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL, 26>;
