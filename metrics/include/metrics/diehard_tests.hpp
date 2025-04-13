@@ -16,9 +16,13 @@ double minimum_distance_test(const utils::seq_bytes &bytes, int n_dims, int num_
 
 double overlapping_permutations_test(const utils::seq_bytes &bytes, int num_samples);
 
-double monkey_test(const utils::seq_bytes &bytes);
-double squeeze_test(const utils::seq_bytes &bytes);
-double sums_test(const utils::seq_bytes &bytes);
+double base_5_word_chi_sq(const utils::seq_bytes &bytes, int num_samples, int word_length);
+double monkey_test(const utils::seq_bytes &bytes, int num_samples);
+
+double squeeze_test(const utils::seq_bytes &bytes, int num_samples);
+
+double sums_test(const utils::seq_bytes &bytes, int num_samples);
+
 double craps_test(const utils::seq_bytes &bytes, int num_games);
 
 } // namespace diehard

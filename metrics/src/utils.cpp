@@ -53,50 +53,6 @@ seq_bytes read_bits_from_exponent(size_t count) {
     return bytes;
 }
 
-// std::vector<std::vector<int>> matrix_from_bytes(const seq_bytes &bytes, int rows, int cols, int offset) {
-
-//     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
-//     for (size_t row = 0; row < rows; row++) {
-//         for (size_t col = 0; col < cols; col++) {
-//             matrix[row][col] = bytes[offset + row * cols + col];
-//         }
-//     }
-
-//     return matrix;
-// }
-
-int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows) {
-    int rank = cols;
-    for (size_t row = 0; row < rank; row++) {
-        if (matrix[row][row]) {
-            for (size_t col = 0; col < rows; col++) {
-                if (col != row) {
-                    for (size_t i = 0; i < rank; i++) {
-                        matrix[col][i] ^= matrix[row][i];
-                    }
-                }
-            }
-        } else {
-            bool reduce = true;
-            for (size_t i = row + 1; i < rows; i++) {
-                if (matrix[i][row]) {
-                    std::swap(matrix[row], matrix[i]);
-                    reduce = false;
-                    break;
-                }
-            }
-            if (reduce) {
-                rank--;
-                for (size_t i = 0; i < rows; i++) {
-                    matrix[i][row] = matrix[i][rank];
-                }
-            }
-            row--;
-        }
-    }
-    return rank;
-}
-
 double chi_square(std::vector<double> trial_vector, std::vector<double> expected_vector, int degrees_of_freedom) {
     double chi_sq = 0.0;
     for (size_t i = 0; i < degrees_of_freedom; i++) {
@@ -115,19 +71,19 @@ double poissonian(int k, double lambda) {
     return std::pow(lambda, k) * std::exp(-lambda) / boost::math::factorial<double>(k);
 }
 
-std::vector<double> doubles_from_bits(const seq_bytes &bytes, int num_doubles) {
-    // Converts seq_bytes to doubles within [0, 1]
-    std::vector<double> result_doubles(num_doubles);
-    for (size_t i = 0; i < num_doubles; i++) {
-        std::bitset<64> num_bitset;
-        for (size_t j = 0; j < 64; j++) {
-            num_bitset[j] = bytes[i * 64 + j];
-        }
-        unsigned long long c = num_bitset.to_ullong();
-        double val = *reinterpret_cast<double *>(&c);
-        result_doubles.push_back(val / std::numeric_limits<double>::max());
+std::vector<double> bits_to_doubles(const seq_bytes &bytes, int num_floats) {
+    // Converts bits to doubles [0;1)
+
+    std::vector<uint64_t> uintValues = bits_to_vector_uint<uint64_t>(bytes, num_floats);
+
+    std::vector<double> doubleVector(num_floats);
+    const double maxUInt64 = static_cast<double>(UINT64_MAX);
+
+    for (int i = 0; i < num_floats; ++i) {
+        doubleVector[i] = static_cast<double>(uintValues[i]) / maxUInt64;
     }
-    return result_doubles;
+
+    return doubleVector;
 }
 
 std::vector<double> random_doubles(int num_doubles) {

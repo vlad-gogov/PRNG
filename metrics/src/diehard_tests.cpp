@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <bitset>
 #include <boost/math/distributions/chi_squared.hpp>
+#include <boost/math/distributions/normal.hpp>
 #include <cmath>
 #include <iostream>
 #include <map>
@@ -241,6 +242,142 @@ double diehard::overlapping_permutations_test(const utils::seq_bytes &bytes, int
     int degrees_of_freedom = 96;
     double p_value = utils::p_value(degrees_of_freedom / 2.0, chi_square / 2.0);
 
+    return p_value;
+}
+
+double diehard::base_5_word_chi_sq(const utils::seq_bytes &bytes, int num_samples, int word_length) {
+    const double probabilities[5] = {37.0 / 256, 56.0 / 256, 70.0 / 256, 56.0 / 256, 37.0 / 256};
+    // const double mu = 2500, std = 70.7106781;
+    auto count_ones = [](uint8_t byte) {
+        int count = 0;
+        while (byte) {
+            count += byte & 1;
+            byte >>= 1;
+        }
+        return count;
+    };
+
+    auto map_to_letter = [](int ones) {
+        if (ones <= 2)
+            return 'A';
+        if (ones == 3)
+            return 'B';
+        if (ones == 4)
+            return 'C';
+        if (ones == 5)
+            return 'D';
+        return 'E';
+    };
+
+    std::unordered_map<std::string, int> word_count;
+    for (size_t i = 0; i <= num_samples; ++i) {
+        std::string word;
+        for (int j = 0; j < word_length; ++j) {
+            int ones = count_ones(utils::bits_to_uint<uint8_t>(bytes, i + j));
+            word += map_to_letter(ones);
+        }
+        word_count[word]++;
+    }
+    std::vector<double> observed;
+    std::vector<double> expected;
+
+    for (const auto &entry : word_count) {
+        const std::string &word = entry.first;
+        int observed_count = entry.second;
+        observed.push_back(observed_count);
+
+        double expected_count = 1.0;
+        for (char c : word) {
+            if (c == 'A')
+                expected_count *= probabilities[0];
+            else if (c == 'B')
+                expected_count *= probabilities[1];
+            else if (c == 'C')
+                expected_count *= probabilities[2];
+            else if (c == 'D')
+                expected_count *= probabilities[3];
+            else if (c == 'E')
+                expected_count *= probabilities[4];
+        }
+        expected_count *= num_samples;
+        expected.push_back(expected_count);
+    }
+    int degrees_of_freedom = observed.size() - 1;
+    double chi_sq = utils::chi_square(observed, expected, degrees_of_freedom);
+    return chi_sq;
+}
+
+double diehard::monkey_test(const utils::seq_bytes &bytes, int num_samples) {
+    const double mu = 2500, std = 70.7106781;
+
+    double chi_sq_len_5 = base_5_word_chi_sq(bytes, num_samples, 5);
+    double chi_sq_len_4 = base_5_word_chi_sq(bytes, num_samples, 4);
+    boost::math::normal_distribution<double> normal_dist(mu, std);
+    double p_value = boost::math::cdf(normal_dist, chi_sq_len_5 - chi_sq_len_4);
+    std::cout << "P-Value: " << p_value << std::endl;
+    return p_value;
+}
+
+double diehard::squeeze_test(const utils::seq_bytes &bytes, int num_samples) {
+    std::vector<double> doubles = utils::bits_to_doubles(bytes, num_samples * 50);
+    const int initial_k = 1 << 31 - 1;
+    const int max_bins = 48;
+    const int min_bins = 6;
+    static double probabilities[] = {
+        0.00002103, 0.00005779, 0.00017554, 0.00046732, 0.00110783, 0.00236784, 0.00460944, 0.00824116, 0.01362781,
+        0.02096849, 0.03017612, 0.04080197, 0.05204203, 0.06283828, 0.07205637, 0.07869451, 0.08206755, 0.08191935,
+        0.07844008, 0.07219412, 0.06398679, 0.05470931, 0.04519852, 0.03613661, 0.02800028, 0.02105567, 0.01538652,
+        0.01094020, 0.00757796, 0.00511956, 0.00337726, 0.00217787, 0.00137439, 0.00084970, 0.00051518, 0.00030666,
+        0.00017939, 0.00010324, 0.00005851, 0.00003269, 0.00001803, 0.00000982, 0.00001121};
+    std::vector<double> expected(43);
+    for (size_t i = 0; i < 43; ++i) {
+        expected[i] = probabilities[i] * num_samples;
+    }
+
+    std::vector<double> bins(43, 0.0);
+    int global_iterations = 0;
+    for (int sample = 0; sample < num_samples; ++sample) {
+        int k = initial_k;
+        int iterations = 0;
+        // while (k > 1.0) {
+        while ((k > 1.0) && (iterations < 49)) {
+            double U = doubles[global_iterations + iterations];
+            // std::cout << k << " * " << U << std::endl;
+            k = static_cast<int>(std::ceil(k * U));
+            iterations++;
+        }
+
+        if (iterations <= min_bins) {
+            bins[0]++;
+        } else if (iterations >= max_bins) {
+            bins[max_bins - 6]++;
+        } else {
+            bins[iterations - 6]++;
+        }
+        global_iterations += iterations;
+    }
+    double chi_square = utils::chi_square(bins, expected, 42);
+    double p_value = utils::p_value(max_bins - min_bins - 1, chi_square);
+    // for (size_t i = 0; i < 43; ++i) {
+    //     std::cout << "[" << i << "] "
+    //               << "Expected: " << expected[i] << " -- Trial: " << bins[i] << std::endl;
+    // }
+
+    return p_value;
+}
+
+double diehard::sums_test(const utils::seq_bytes &bytes, int num_samples) {
+    std::vector<double> doubles = utils::bits_to_doubles(bytes, num_samples);
+    double sum = 0.0;
+    for (size_t i = 0; i < num_samples; i++) {
+        sum += doubles[i];
+    }
+    double expected = num_samples * 0.5;
+    double std = sqrt(num_samples / 12.0);
+    std::cout << "Expected: " << expected << " | Trial: " << sum << std::endl;
+    boost::math::normal_distribution<double> normal_dist(0, std);
+    double p_value = boost::math::cdf(normal_dist, expected - sum);
+    std::cout << "P-Value: " << p_value << std::endl;
     return p_value;
 }
 

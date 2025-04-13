@@ -78,6 +78,27 @@ TEST(Diehard, minimum_distance_test_3d_random) {
     ASSERT_LE(p, limit);
 }
 
+TEST(Diehard, monkey_test) {
+    int num_samples = 256000;
+    utils::seq_bytes bytes = utils::read_bits_from_exponent();
+    double p = diehard::monkey_test(bytes, num_samples);
+    ASSERT_GT(p, 0.1);
+}
+
+TEST(Diehard, squeeze_test) {
+    int num_samples = 200;
+    utils::seq_bytes bytes = utils::read_bits_from_exponent();
+    double p = diehard::squeeze_test(bytes, num_samples);
+    ASSERT_GT(p, 0.1);
+}
+
+TEST(Diehard, sums_test) {
+    int num_samples = 10000;
+    utils::seq_bytes bytes = utils::read_bits_from_exponent();
+    double p = diehard::sums_test(bytes, num_samples);
+    ASSERT_GT(p, 0.1);
+}
+
 TEST(Diehard, craps_test_random) {
     int num_games = 2000;
     // Need 2 rolls minimum per game, so allocate enough bytes

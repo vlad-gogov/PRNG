@@ -121,11 +121,10 @@ std::vector<std::complex<std::double_t>> FFT(const std::vector<T> &x) {
     return result;
 }
 
-int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows);
 double chi_square(std::vector<double> trial_vector, std::vector<double> expected_vector, int degrees_of_freedom);
 double p_value(int degrees_of_freedom, double chi_square);
 double poissonian(int k, double lambda);
-std::vector<double> doubles_from_bits(const seq_bytes &bytes, int num_doubles);
+std::vector<double> bits_to_doubles(const seq_bytes &bytes, int num_floats);
 std::vector<double> random_doubles(int num_doubles);
 double kstest(std::vector<double> p_values);
 int kperm(const std::vector<int> &v);
@@ -156,4 +155,5 @@ std::vector<UIntType> bits_to_vector_uint(const seq_bytes &bytes, int size) {
     }
     return result;
 }
+
 } // namespace utils
