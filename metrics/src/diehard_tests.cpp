@@ -314,15 +314,15 @@ double diehard::monkey_test(const utils::seq_bytes &bytes, int num_samples) {
     double chi_sq_len_4 = base_5_word_chi_sq(bytes, num_samples, 4);
     boost::math::normal_distribution<double> normal_dist(mu, std);
     double p_value = boost::math::cdf(normal_dist, chi_sq_len_5 - chi_sq_len_4);
-    std::cout << "P-Value: " << p_value << std::endl;
+    // std::cout << "P-Value: " << p_value << std::endl;
     return p_value;
 }
 
 double diehard::squeeze_test(const utils::seq_bytes &bytes, int num_samples) {
     std::vector<double> doubles = utils::bits_to_doubles(bytes, num_samples * 50);
-    const int initial_k = 1 << 31 - 1;
-    const int max_bins = 48;
-    const int min_bins = 6;
+    const size_t initial_k = (1u << 31) - 1;
+    const size_t max_bins = 48;
+    const size_t min_bins = 6;
     static double probabilities[] = {
         0.00002103, 0.00005779, 0.00017554, 0.00046732, 0.00110783, 0.00236784, 0.00460944, 0.00824116, 0.01362781,
         0.02096849, 0.03017612, 0.04080197, 0.05204203, 0.06283828, 0.07205637, 0.07869451, 0.08206755, 0.08191935,
@@ -374,10 +374,10 @@ double diehard::sums_test(const utils::seq_bytes &bytes, int num_samples) {
     }
     double expected = num_samples * 0.5;
     double std = sqrt(num_samples / 12.0);
-    std::cout << "Expected: " << expected << " | Trial: " << sum << std::endl;
+    // std::cout << "Expected: " << expected << " | Trial: " << sum << std::endl;
     boost::math::normal_distribution<double> normal_dist(0, std);
     double p_value = boost::math::cdf(normal_dist, expected - sum);
-    std::cout << "P-Value: " << p_value << std::endl;
+    // std::cout << "P-Value: " << p_value << std::endl;
     return p_value;
 }
 

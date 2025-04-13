@@ -10,6 +10,7 @@
 #include "generators/mersenne_twister_simd.hpp"
 #include "generators/mersenne_twister_siphash.hpp"
 #include "indicators.hpp"
+#include "statistical_test/diehard.hpp"
 #include "statistical_test/nist.hpp"
 #include "statistical_test/statistical_test.hpp"
 
@@ -232,6 +233,7 @@ int main() {
 #endif
 
     // run_test<statistical_test::NistTest, MT19937>("MT19937", 100, 16384, 12345);
+    // run_test<statistical_test::DiehardTest, MT19937>("MT19937", 100, 16384, 12345);
     // run_test<statistical_test::NistTest, MT19937SBOX>("MT19937SBOX", 100, 16384, 12345);
     // print_gen_value<MT19937SBOX>(10);
     // run_test<statistical_test::NistTest, MT19937SBOXEnd>("MT19937SBOXEnd", 100, 16384, 12345);
