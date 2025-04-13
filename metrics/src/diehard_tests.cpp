@@ -10,6 +10,7 @@
 
 #include "diehard_const.hpp"
 #include "diehard_tests.hpp"
+#include "metrics/binary_matrix.hpp"
 #include "metrics/diehard_tests.hpp"
 #include "metrics/utils.hpp"
 
@@ -59,12 +60,18 @@ double diehard::matrix_test(const utils::seq_bytes &bytes, int rows, int cols, i
     Calculates ranks of matrices and performs chi-square test on them
     */
     int offset = 0;
-    std::vector<int> ranks;
+    std::vector<size_t> ranks;
     std::map<int, int> map_ranks;
     for (size_t i = 0; i < iterations; i++) {
-        std::vector<std::vector<int>> matrix = utils::matrix_from_bytes(bytes, rows, cols, offset);
+        // std::vector<std::vector<int>> matrix = utils::matrix_from_bytes(bytes, rows, cols, offset);
+        auto start = bytes.cbegin() + offset;
+        auto end = bytes.cbegin() + offset + rows * cols;
+        utils::seq_bytes slice(start, end);
+
+        BinaryMatrix matrix(slice, rows * cols);
         offset += rows * cols;
-        int rank = utils::binary_matrix_rank(matrix, cols, rows);
+        // int rank = utils::binary_matrix_rank(matrix, cols, rows);
+        size_t rank = matrix.compute_rank();
         ranks.push_back(rank);
         if (map_ranks.find(rank) == map_ranks.end()) {
             map_ranks[rank] = 1;

@@ -53,17 +53,17 @@ seq_bytes read_bits_from_exponent(size_t count) {
     return bytes;
 }
 
-std::vector<std::vector<int>> matrix_from_bytes(const seq_bytes &bytes, int rows, int cols, int offset) {
+// std::vector<std::vector<int>> matrix_from_bytes(const seq_bytes &bytes, int rows, int cols, int offset) {
 
-    std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
-    for (size_t row = 0; row < rows; row++) {
-        for (size_t col = 0; col < cols; col++) {
-            matrix[row][col] = bytes[offset + row * cols + col];
-        }
-    }
+//     std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols));
+//     for (size_t row = 0; row < rows; row++) {
+//         for (size_t col = 0; col < cols; col++) {
+//             matrix[row][col] = bytes[offset + row * cols + col];
+//         }
+//     }
 
-    return matrix;
-}
+//     return matrix;
+// }
 
 int binary_matrix_rank(std::vector<std::vector<int>> matrix, int cols, int rows) {
     int rank = cols;
