@@ -33,12 +33,13 @@ class MersenneTwisterEngineSBox : public Generator<UIntType> {
     }
 
     UIntType operator()() noexcept override {
+        constexpr size_t bytes = sizeof(UIntType);
         UIntType raw_val = mt_gen.random_raw();
-        std::vector<uint8_t> bytes(4, 0);
-        for (size_t i = 0; i < 4; ++i) {
-            bytes[i] = SBOX[(raw_val >> (i * 8)) & 0xFF];
+        UIntType result = 0u;
+        for (size_t i = 0; i < bytes; ++i) {
+            result |= (SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
         }
-        return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+        return mt_gen.tempering(result);
     }
 
     UIntType min() const override {
@@ -52,3 +53,35 @@ class MersenneTwisterEngineSBox : public Generator<UIntType> {
 
 using MT19937SBOX = MersenneTwisterEngineSBox<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
                                               0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL>;
+
+template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
+          UIntType B, size_t T, UIntType C, size_t L, UIntType F>
+class MersenneTwisterEngineSBoxEnd : public Generator<uint32_t> {
+    MersenneTwisterEngine<uint32_t, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
+    static constexpr UIntType default_seed = 5489u;
+
+  public:
+    MersenneTwisterEngineSBoxEnd(const UIntType seed = default_seed) : mt_gen(default_seed) {
+    }
+
+    UIntType operator()() noexcept override {
+        constexpr size_t bytes = sizeof(UIntType);
+        UIntType raw_val = mt_gen();
+        UIntType result = 0u;
+        for (size_t i = 0; i < bytes; ++i) {
+            result |= (SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
+        }
+        return result;
+    }
+
+    UIntType min() const override {
+        return mt_gen.min();
+    }
+
+    UIntType max() const override {
+        return mt_gen.max();
+    }
+};
+
+using MT19937SBOXEnd = MersenneTwisterEngineSBoxEnd<uint32_t, 32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7,
+                                                    0x9d2c5680UL, 15, 0xefc60000UL, 18, 1812433253UL>;

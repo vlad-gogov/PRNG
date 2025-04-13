@@ -5,10 +5,14 @@
 
 #include "generators/linear_congruential_generator.hpp"
 #include "generators/mersenne_twister.hpp"
+#include "generators/mersenne_twister_involutio.hpp"
 #include "generators/mersenne_twister_sbox.hpp"
 #include "generators/mersenne_twister_simd.hpp"
+#include "generators/mersenne_twister_siphash.hpp"
 #include "indicators.hpp"
+#include "statistical_test/diehard.hpp"
 #include "statistical_test/nist.hpp"
+#include "statistical_test/statistical_test.hpp"
 
 void lcg_nist_test(size_t count_number) {
     constexpr std::uint32_t a = 16807U;
@@ -161,9 +165,9 @@ void benchmark_generate_array_avx2_vs_avx512(size_t count_number) {
 }
 #endif
 
-template <typename Generator>
-void nist_test(const std::string &generator_name, const size_t count_tests, const size_t count_number,
-               const uint32_t start_seed = 0u) {
+template <typename StatisticalTest, typename Generator>
+void run_test(const std::string &generator_name, const size_t count_tests, const size_t count_number,
+              const uint32_t start_seed = 0u) {
     std::float_t progress = 0.0f;
     const std::float_t step_size = 100.0f / count_tests;
 
@@ -180,7 +184,7 @@ void nist_test(const std::string &generator_name, const size_t count_tests, cons
         indicators::option::ShowElapsedTime{true},
         indicators::option::FontStyles{std::vector<indicators::FontStyle>{indicators::FontStyle::bold}}};
 
-    statistical_test::NistTest nist_test;
+    StatisticalTest test;
     for (size_t i = 0; i < count_tests; ++i) {
         Generator generator(start_seed + i);
         std::vector<typename Generator::ValueType> numbers(count_number);
@@ -189,14 +193,23 @@ void nist_test(const std::string &generator_name, const size_t count_tests, cons
         }
         utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
         assert(bytes.size() == count_number * 32);
-        nist_test.test(bytes);
+        test.test(bytes);
         progress += step_size;
         bar.set_progress(progress);
     }
     bar.mark_as_completed();
     indicators::show_console_cursor(true);
 
-    nist_test.print_statistics(generator_name);
+    test.print_statistics(generator_name);
+}
+
+template <typename Generator>
+void print_gen_value(const size_t count_numbers, const uint32_t seed = 0u) {
+    Generator generator(seed);
+    for (size_t i = 0; i < count_numbers; ++i) {
+        std::cout << generator() << " ";
+    }
+    std::cout << std::endl;
 }
 
 int main() {
@@ -219,7 +232,13 @@ int main() {
     // benchmark_generate_array_avx2_vs_avx512(count_number);
 #endif
 
-    nist_test<MT19937>("MT19937", 100, 16384, 12345);
-    nist_test<MT19937SBOX>("MT19937SBOX", 100, 16384, 12345);
+    // run_test<statistical_test::NistTest, MT19937>("MT19937", 100, 16384, 12345);
+    // run_test<statistical_test::DiehardTest, MT19937>("MT19937", 100, 16384, 12345);
+    // run_test<statistical_test::NistTest, MT19937SBOX>("MT19937SBOX", 100, 16384, 12345);
+    // print_gen_value<MT19937SBOX>(10);
+    // run_test<statistical_test::NistTest, MT19937SBOXEnd>("MT19937SBOXEnd", 100, 16384, 12345);
+    // print_gen_value<MT19937SBOXEnd>(10);
+    // run_test<statistical_test::NistTest, MT19937SIPHASH>("MT19937SIPHASH", 100, 16384, 12345);
+    // run_test<statistical_test::NistTest, MT19937Involution3>("MT19937Involution3", 100, 16384, 12345);
     return 0;
 }
