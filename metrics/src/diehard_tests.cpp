@@ -62,13 +62,12 @@ double diehard::matrix_test(const utils::seq_bytes &bytes, int rows, int cols, i
     int offset = 0;
     std::vector<size_t> ranks;
     std::map<int, int> map_ranks;
+
     for (size_t i = 0; i < iterations; i++) {
         // std::vector<std::vector<int>> matrix = utils::matrix_from_bytes(bytes, rows, cols, offset);
-        auto start = bytes.cbegin() + offset;
-        auto end = bytes.cbegin() + offset + rows * cols;
-        utils::seq_bytes slice(start, end);
+        utils::seq_bytes slice(bytes.begin() + offset, bytes.begin() + offset + rows * cols);
 
-        BinaryMatrix matrix(slice, rows * cols);
+        BinaryMatrix matrix(slice, rows);
         offset += rows * cols;
         // int rank = utils::binary_matrix_rank(matrix, cols, rows);
         size_t rank = matrix.compute_rank();

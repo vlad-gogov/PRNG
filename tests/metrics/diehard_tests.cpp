@@ -27,7 +27,7 @@ TEST(Diehard, matrix_test) {
     utils::seq_bytes bytes = {0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1};
 
     double p = diehard::matrix_test(bytes, 3, 3, 2);
-    double answer = 0.0645713;
+    double answer = 0.8898351;
     ASSERT_NEAR(p, answer, abs_error);
 }
 
@@ -36,7 +36,7 @@ TEST(Diehard, binary_matrix_rank_e) {
     size_t M = 32;
     size_t Q = 32;
     double p = diehard::matrix_test(bytes, M, Q, 100000 / (32 * 32));
-    double answer = 0.171961;
+    double answer = 0.788588;
     ASSERT_NEAR(p, answer, abs_error);
 }
 
