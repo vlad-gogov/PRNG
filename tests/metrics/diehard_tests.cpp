@@ -64,7 +64,7 @@ TEST(Diehard, overlapping_permutations_test_random) {
     int num_samples = 1000;
     utils::seq_bytes bytes = utils::read_bits_from_exponent((num_samples + 4) * 32);
     double p = diehard::overlapping_permutations_test(bytes, num_samples);
-    double answer = 0.477356439;
+    double answer = 0.32847355;
     ASSERT_NEAR(p, answer, abs_error);
 }
 

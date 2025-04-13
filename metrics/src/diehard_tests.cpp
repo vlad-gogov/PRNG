@@ -243,7 +243,7 @@ double diehard::minimum_distance_test(const utils::seq_bytes &bytes, int n_dims,
 }
 
 double diehard::overlapping_permutations_test(const utils::seq_bytes &bytes, int num_samples) {
-    std::vector<uint> data = utils::bits_to_vector_uint(bytes, num_samples + 4);
+    std::vector<uint> data = utils::bits_to_vector_uint<uint>(bytes, num_samples + 4);
     double count[120];
     double x[120];
     std::fill(count, count + 120, 0.0);
@@ -276,7 +276,7 @@ double diehard::craps_test(const utils::seq_bytes &bytes, int num_games) {
     std::vector<int> throws(0);
 
     // Convert bytes to numbers we can use for dice rolls
-    std::vector<uint> rolls = utils::bits_to_vector_uint(bytes, num_games * 2);
+    std::vector<uint> rolls = utils::bits_to_vector_uint<uint>(bytes, num_games * 2);
 
     for (int game = 0; game < num_games; game++) {
 

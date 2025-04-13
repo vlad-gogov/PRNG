@@ -205,20 +205,20 @@ int kperm(const std::vector<int> &v) {
     return uret;
 }
 
-uint bits_to_uint(const seq_bytes &bytes, uint offset) {
-    std::bitset<32> bitset;
-    for (size_t i = 0; i < 32; i++) {
-        bitset[i] = bytes[offset + i];
-    }
-    return bitset.to_ulong();
-}
+// uint bits_to_uint(const seq_bytes &bytes, uint offset) {
+//     std::bitset<32> bitset;
+//     for (size_t i = 0; i < 32; i++) {
+//         bitset[i] = bytes[offset + i];
+//     }
+//     return bitset.to_ulong();
+// }
 
-std::vector<uint> bits_to_vector_uint(const seq_bytes &bytes, int size) {
-    std::vector<uint> result(size);
-    for (size_t i = 0; i < size; i++) {
-        result[i] = bits_to_uint(bytes, 31 * i);
-    }
-    return result;
-}
+// std::vector<uint> bits_to_vector_uint(const seq_bytes &bytes, int size) {
+//     std::vector<uint> result(size);
+//     for (size_t i = 0; i < size; i++) {
+//         result[i] = bits_to_uint(bytes, 31 * i);
+//     }
+//     return result;
+// }
 
 } // namespace utils

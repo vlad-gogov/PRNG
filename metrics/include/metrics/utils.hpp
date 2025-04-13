@@ -131,6 +131,33 @@ std::vector<double> doubles_from_bits(const seq_bytes &bytes, int num_doubles);
 std::vector<double> random_doubles(int num_doubles);
 double kstest(std::vector<double> p_values);
 int kperm(const std::vector<int> &v);
-uint bits_to_uint(const seq_bytes &bytes, uint offset);
-std::vector<uint> bits_to_vector_uint(const seq_bytes &bytes, int size);
+// uint bits_to_uint(const seq_bytes &bytes, uint offset);
+
+template <class UIntType>
+UIntType bits_to_uint(const seq_bytes &bytes, size_t offset) {
+    static_assert(std::is_integral_v<UIntType> && std::is_unsigned_v<UIntType>);
+
+    constexpr size_t bits = sizeof(UIntType) * 8;
+    std::bitset<bits> bitset;
+
+    for (size_t i = 0; i < bits; i++) {
+        bitset[i] = bytes[offset + i];
+    }
+
+    return static_cast<UIntType>(bitset.to_ulong());
+}
+
+// std::vector<uint> bits_to_vector_uint(const seq_bytes &bytes, int size);
+template <class UIntType>
+std::vector<UIntType> bits_to_vector_uint(const seq_bytes &bytes, int size) {
+    static_assert(std::is_integral_v<UIntType> && std::is_unsigned_v<UIntType>);
+
+    std::vector<UIntType> result(size);
+    size_t bits_per_element = sizeof(UIntType) * 8;
+
+    for (size_t i = 0; i < size; i++) {
+        result[i] = bits_to_uint<UIntType>(bytes, bits_per_element * i);
+    }
+    return result;
+}
 } // namespace utils
