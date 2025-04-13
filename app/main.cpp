@@ -5,6 +5,7 @@
 
 #include "generators/linear_congruential_generator.hpp"
 #include "generators/mersenne_twister.hpp"
+#include "generators/mersenne_twister_involutio.hpp"
 #include "generators/mersenne_twister_sbox.hpp"
 #include "generators/mersenne_twister_simd.hpp"
 #include "generators/mersenne_twister_siphash.hpp"
@@ -235,5 +236,6 @@ int main() {
     // nist_test<MT19937SBOXEnd>("MT19937SBOXEnd", 100, 16384, 12345);
     // print_gen_value<MT19937SBOXEnd>(10);
     // nist_test<MT19937SIPHASH>("MT19937SIPHASH", 100, 16384, 12345);
+    // nist_test<MT19937Involution3>("MT19937Involution3", 100, 16384, 12345);
     return 0;
 }
