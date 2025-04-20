@@ -92,7 +92,8 @@ double diehard::matrix_test(const utils::seq_bytes &bytes, int rows, int cols, i
         }
     }
     double chi_square = utils::chi_square(significant_ranks_trial, significant_ranks_expected, degrees_of_freedom);
-    double p_value = utils::p_value(degrees_of_freedom, chi_square);
+    // double p_value = utils::p_value(degrees_of_freedom, chi_square);
+    double p_value = boost::math::gamma_q(((double)(degrees_of_freedom) / 2.0), chi_square / 2.0);
 
     return p_value;
 }
@@ -159,7 +160,8 @@ double diehard::birthdays_test(const utils::seq_bytes &bytes, int days_bits, int
 
     // Calculate chi_square and p-value
     double chi_square = utils::chi_square(histogram, expected_histogram, kmax);
-    double p_value = utils::p_value((double)(kmax - 1) / 2.0, chi_square / 2.0);
+    // double p_value = utils::p_value((double)(kmax - 1) / 2.0, chi_square / 2.0);
+    double p_value = boost::math::gamma_q(((double)(kmax - 1) / 2.0), chi_square / 2.0);
 
     return p_value;
 }
@@ -175,7 +177,7 @@ double diehard::minimum_distance_test(const utils::seq_bytes &bytes, int n_dims,
         auto end = bytes.begin() + (sample + 1) * num_coordinates;
         utils::seq_bytes sub_seq_bytes(start, end);
         // std::vector<double> doubles = utils::doubles_from_bits(sub_seq_bytes, num_coordinates * n_dims);
-        std::vector<double> doubles = utils::random_doubles(num_coordinates * n_dims);
+        std::vector<double> doubles = utils::bits_to_doubles(bytes, num_coordinates * n_dims);
         for (size_t dot_num = 0; dot_num < num_coordinates; dot_num++) {
             std::vector<double> dot;
             for (size_t dim = 0; dim < n_dims; dim++) {
@@ -240,7 +242,8 @@ double diehard::overlapping_permutations_test(const utils::seq_bytes &bytes, int
     }
     chi_square = std::abs(chi_square / norm);
     int degrees_of_freedom = 96;
-    double p_value = utils::p_value(degrees_of_freedom / 2.0, chi_square / 2.0);
+    // double p_value = utils::p_value(degrees_of_freedom / 2.0, chi_square / 2.0);
+    double p_value = boost::math::gamma_q(((double)(degrees_of_freedom) / 2.0), chi_square / 2.0);
 
     return p_value;
 }
@@ -357,7 +360,9 @@ double diehard::squeeze_test(const utils::seq_bytes &bytes, int num_samples) {
         global_iterations += iterations;
     }
     double chi_square = utils::chi_square(bins, expected, 42);
-    double p_value = utils::p_value(max_bins - min_bins - 1, chi_square);
+    // double p_value = utils::p_value(max_bins - min_bins - 1, chi_square);
+    double p_value = boost::math::gamma_q(((double)(max_bins - min_bins - 1) / 2.0), chi_square / 2.0);
+
     // for (size_t i = 0; i < 43; ++i) {
     //     std::cout << "[" << i << "] "
     //               << "Expected: " << expected[i] << " -- Trial: " << bins[i] << std::endl;
