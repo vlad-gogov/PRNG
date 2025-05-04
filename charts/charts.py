@@ -181,8 +181,8 @@ class DrawChart:
         """
         Преобразует массив uint32 в RGB-изображение.
         """
-        width = 256
-        height = 256
+        width = 1024
+        height = 1024
         img = self.uint32_to_rgb_image(width, height)
         plt.figure(figsize=(6, 6))
         plt.imshow(img)
