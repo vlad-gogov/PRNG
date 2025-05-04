@@ -156,4 +156,6 @@ std::vector<UIntType> bits_to_vector_uint(const seq_bytes &bytes, int size) {
     return result;
 }
 
+void save_p_values_to_file(const std::string &path, const std::vector<std::double_t> &p_values);
+
 } // namespace utils

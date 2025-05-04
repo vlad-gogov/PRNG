@@ -8,6 +8,7 @@
 
 namespace statistical_test {
 
+// min 1'000'000'000 bits = 125'000'000 bytes
 class NistTest : private StatisticalTest {
 
     static constexpr std::array<std::string_view, 15> test_names = {
@@ -29,6 +30,7 @@ class NistTest : private StatisticalTest {
     };
 
     std::array<size_t, 15> test_success;
+    std::array<std::vector<std::double_t>, 15> save_p_values;
 
   public:
     NistTest(const double &alpha = 0.01f);

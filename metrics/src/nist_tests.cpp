@@ -295,7 +295,7 @@ std::double_t nist::overlapping_template_matching(const utils::seq_bytes &bytes,
     std::double_t lambda = (M - m + 1) / (1 << m);
     std::double_t theta = lambda / 2;
     std::vector<std::double_t> pi(K + 1);
-    if (M == 10 && N == 5) {
+    if (K == 5) {
         pi[0] = 0.324652;
         pi[1] = 0.182617;
         pi[2] = 0.142670;

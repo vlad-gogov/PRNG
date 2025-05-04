@@ -34,6 +34,16 @@ class MersenneTwisterEngineSiphash : public Generator<uint32_t> {
     uint32_t max() const override {
         return mt_gen.max();
     }
+
+    void seed(const uint32_t seed) override {
+        mt_gen = MersenneTwisterEngine<uint32_t, W, N, M, R, A, U, D, S, B, T, C, L, F>(seed);
+    }
+
+    void discard(const std::uint64_t z) override {
+        for (size_t i = 0; i < z; ++i) {
+            this->operator()();
+        }
+    }
 };
 
 using MT19937SIPHASH = MersenneTwisterEngineSiphash<32, 624, 397, 31, 0x9908b0dfUL, 11, 0xffffffffUL, 7, 0x9d2c5680UL,

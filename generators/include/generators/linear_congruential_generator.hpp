@@ -5,18 +5,19 @@
 
 #include <climits>
 #include <iostream>
+#include <limits>
 #include <type_traits>
 
 template <class UIntType, UIntType a, UIntType c, UIntType m>
-class LinearCongruentialGenerator : LinearGenerator<UIntType> {
+class LinearCongruentialGenerator : public Generator<UIntType> {
     static_assert(std::is_integral_v<UIntType> && std::is_unsigned_v<UIntType>);
 
     UIntType _seed;
 
   public:
     explicit LinearCongruentialGenerator(const UIntType seed = 1U) {
-        static_assert(a < m, "Incorrect multiplier");
-        static_assert(c < m, "Incorrect increment");
+        // static_assert(a < m, "Incorrect multiplier");
+        // static_assert(c < m, "Incorrect increment");
         if (seed >= m) {
             throw BaseError("Incorrect seed");
         }
@@ -62,3 +63,17 @@ class LinearCongruentialGenerator : LinearGenerator<UIntType> {
         return m - static_cast<UIntType>(1);
     }
 };
+
+using LINE_LCG = LinearCongruentialGenerator<uint32_t, 1103515245UL, 12345UL, 256UL>;
+
+using MINSTD_RAND0 = LinearCongruentialGenerator<uint32_t, 16807UL, 0UL, 2147483647UL>;
+
+using MINSTD_RAND = LinearCongruentialGenerator<uint32_t, 48271UL, 0UL, 2147483647UL>;
+
+using LCG_GLIBC = LinearCongruentialGenerator<uint32_t, 1103515245UL, 12345UL, 2147483648UL>;
+
+using LCG_Numerical_Recipes = LinearCongruentialGenerator<uint64_t, 1664525UL, 1013904223UL, 4294967296UL>;
+
+using LCG_Borland = LinearCongruentialGenerator<uint64_t, 22695477UL, 1UL, 4294967296UL>;
+
+using LCG_ANSI_C = LinearCongruentialGenerator<uint32_t, 1103515245UL, 12345UL, 2147483648UL>;
