@@ -6,6 +6,8 @@
 #include <filesystem>
 #include <strstream>
 
+#include <boost/math/special_functions/gamma.hpp>
+
 namespace statistical_test {
 
 NistTest::NistTest(const double &alpha) : StatisticalTest(alpha) {
@@ -13,17 +15,17 @@ NistTest::NistTest(const double &alpha) : StatisticalTest(alpha) {
 }
 
 void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
-    test_count++;
+    ++test_count;
     {
         std::double_t p_value = nist::frequency_test(bytes);
         if (print_p_values) {
             std::cout << test_names[0] << ": " << p_value << std::endl;
         }
-        save_p_values[0].push_back(p_value);
         bool res = compare_p_value(p_value);
         if (!res) {
             return;
         }
+        save_p_values[0].push_back(p_value);
         test_success[0] += res;
     }
 
@@ -178,23 +180,54 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
 }
 
 void NistTest::print_statistics(const std::string &generator_name) const {
+    constexpr std::size_t bins = 10;
+    constexpr std::double_t bin_width = 0.1; // Choose your bin interval
     auto root_folder = std::filesystem::current_path().parent_path().parent_path();
-    std::double_t pass_value = 1 - alpha - 3 * std::sqrt(alpha * (1 - alpha) / test_count);
-    std::cout << "Nist test for " << generator_name << " pass value: " << pass_value << std::endl;
+    std::double_t temp = 3 * std::sqrt(alpha * (1 - alpha) / test_count);
+    std::double_t pass_value_max = 1 - alpha + temp;
+    std::double_t pass_value_min = 1 - alpha - temp;
+    std::cout << "Nist test for " << generator_name << " pass value: [" << pass_value_min << ";" << pass_value_max
+              << "]" << std::endl;
     size_t pass_count = 0;
     for (size_t i = 0; i < 15; ++i) {
-        bool answer =
-            static_cast<std::double_t>(test_success[i]) / static_cast<std::double_t>(test_count) >= pass_value;
-        std::cout << test_names[i] << ": " << result_to_string(answer) << " (" << test_success[i] << " / " << test_count
-                  << ")" << std::endl;
-        pass_count += answer;
+        // pass test
+        std::double_t p = static_cast<std::double_t>(test_success[i]) / static_cast<std::double_t>(test_count);
+        bool answer_test = pass_value_min <= p && p <= pass_value_max;
+
+        // uniform p-values
+        auto copy_p_values = save_p_values[i];
+        std::sort(copy_p_values.begin(), copy_p_values.end());
+        std::vector<uint32_t> histogram(10, 0);
+        std::double_t bin = 0; // Choose your starting bin
+        std::uint32_t bin_count = 0;
+        for (const auto &e : copy_p_values) {
+            e >= bin + bin_width ? bin += bin_width, ++bin_count : false;
+            ++histogram[bin_count];
+        }
+        std::cout << std::fixed << std::setprecision(6);
+        std::double_t expected_p_values = test_count * 1.0 / bins;
+        std::double_t chi = 0;
+        for (size_t i = 0; i < bins; ++i) {
+            chi += (histogram[i] * 1.0 - expected_p_values) * (histogram[i] * 1.0 - expected_p_values);
+        }
+        chi = chi / expected_p_values;
+        std::double_t p_uniform = boost::math::gamma_q(9 / 2.0, chi / 2.0);
+        bool answer_uniform = p_uniform > 0.0001;
+
+        // if (answer_uniform) {
         std::string copy_name = std::string(test_names[i]);
         std::replace(copy_name.begin(), copy_name.end(), ' ', '_');
         std::stringstream path;
         path << root_folder.c_str() << "/results/nist_test/" << generator_name;
         std::filesystem::create_directory(path.str());
         path << "/" << copy_name << ".txt";
-        utils::save_p_values_to_file(path.str(), save_p_values[i]);
+        utils::save_p_values_to_file(path.str(), copy_p_values);
+        // }
+
+        std::cout << test_names[i] << ": " << result_to_string(answer_test) << " (" << test_success[i] << " / "
+                  << test_count << ") && uniform p-values (" << p_uniform << ") " << result_to_string(answer_uniform)
+                  << " = " << result_to_string(answer_test & answer_uniform) << std::endl;
+        pass_count += answer_test & answer_uniform;
     }
     std::cout << "Pass test count: " << pass_count << std::endl;
 }

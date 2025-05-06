@@ -79,9 +79,9 @@ class DrawChart:
         # 1. График траектории
         plt.figure(figsize=(12, 5))
         plt.plot(position)
-        plt.title(f"Random Walk using {self.generator_name}")
-        plt.xlabel("Step number")
-        plt.ylabel("Position")
+        plt.title(f"Случайное блуждание для {self.generator_name}")
+        plt.xlabel("Номер шага")
+        plt.ylabel("Позиция")
         plt.grid()
         plt.show()
 
@@ -146,7 +146,6 @@ class DrawChart:
         Преобразует массив uint32 в RGB-изображение.
 
         Args:
-            data: numpy-массив типа np.uint32
             width: ширина изображения (опционально)
             height: высота изображения (опционально)
 
@@ -167,6 +166,52 @@ class DrawChart:
         else:
             colors = np.stack((r, g, b), axis=1)
 
+        # Если размер не указан, делаем квадрат
+        if width is None or height is None:
+            size = int(np.ceil(np.sqrt(len(colors))))
+            width = height = size
+
+        image = colors.reshape((height, width, 3 + int(alpha)))
+
+        return image
+    
+    def uint64_to_rgb_image(self, width=None, height=None, alpha=False):
+        """
+        Преобразует массив uint64 в RGB-изображение.
+
+        Args:
+            width: ширина изображения (опционально)
+            height: высота изображения (опционально)
+
+        Returns:
+            image: np.ndarray с формой (H, W, 3)
+        """
+
+        data = np.array(self.generate_data(width * height, self.seed), dtype=np.uint64).astype(np.uint64)
+        r = np.ndarray(shape=(len(data) * 2, 4), dtype=np.uint8)
+        g = np.ndarray(shape=(len(data) * 2, 4), dtype=np.uint8)
+        b = np.ndarray(shape=(len(data) * 2, 4), dtype=np.uint8)
+        a = np.ndarray(shape=(len(data) * 2, 4), dtype=np.uint8)
+        print(data.dtype)
+        for i in range(len(data)):
+            r[i] = data[i] & np.uint64(0xFF)
+            r[i + 1] = (data[i] >> np.uint64(32)) & np.uint64(0xFF)
+
+            g[i] = (data[i] >> np.uint64(48)) & np.uint64(0xFF)
+            g[i + 1] = (data[i] >> np.uint64(40)) & np.uint64(0xFF)
+
+            b[i] = (data[i] >> np.uint64(16)) & np.uint64(0xFF)
+            b[i + 1] = (data[i] >> np.uint64(48)) & np.uint64(0xFF)
+
+            if alpha:
+                a[i] = (data[i] >> np.uint64(24)) & np.uint64(0xFF)
+                a[i + 1] = (data[i] >> np.uint64(56)) & np.uint64(0xFF)
+
+        colors = None
+        if alpha:
+            colors = np.stack((r, g, b, a), axis=1)
+        else:
+            colors = np.stack((r, g, b), axis=1)
 
         # Если размер не указан, делаем квадрат
         if width is None or height is None:
@@ -183,7 +228,9 @@ class DrawChart:
         """
         width = 1024
         height = 1024
-        img = self.uint32_to_rgb_image(width, height)
+        img = None
+        # img = self.uint32_to_rgb_image(width, height, True)
+        img = self.uint64_to_rgb_image(width, height, True)
         plt.figure(figsize=(6, 6))
         plt.imshow(img)
         plt.axis('off')

@@ -7,7 +7,7 @@
 
 #include "generators/linear_congruential_generator.hpp"
 #include "generators/mersenne_twister.hpp"
-#include "generators/mersenne_twister_involutio.hpp"
+#include "generators/mersenne_twister_involution.hpp"
 #include "generators/mersenne_twister_sbox.hpp"
 #include "generators/mersenne_twister_simd.hpp"
 #include "generators/mersenne_twister_siphash.hpp"
@@ -17,20 +17,6 @@
 #include "statistical_test/statistical_test.hpp"
 
 #include "utils.hpp"
-
-void lcg_nist_test(size_t count_number) {
-    constexpr std::uint32_t a = 16807U;
-    constexpr std::uint32_t c = 0U;
-    constexpr std::uint32_t m = std::numeric_limits<std::uint32_t>::max();
-    LinearCongruentialGenerator<std::uint32_t, a, c, m> generator(23482349);
-    std::vector<std::uint32_t> numbers(count_number);
-    for (std::uint32_t i = 0; i < count_number; ++i) {
-        numbers[i] = generator();
-    }
-    utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    statistical_test::NistTest nist_test;
-    nist_test.test(bytes, true);
-}
 
 #if defined(__AVX__) && defined(__AVX2__)
 void benchmark_generate_avx2(size_t count_number) {
@@ -192,22 +178,40 @@ int main() {
     const size_t count_number = 32768;
     const size_t count_tests = 1000;
 
+    // ratio_one_zero<MINSTD_RAND0>(count_number, 23482349);
+    // run_statistical_test<statistical_test::NistTest, MINSTD_RAND>("MINSTD_RAND", count_tests, count_number,
+    // 23482349);
+    // run_statistical_test<statistical_test::NistTest, MT19937_64>("MT19937_64", count_tests, count_number / 2, 5489u);
+    run_statistical_test<statistical_test::NistTest, MT19937>("MT19937", count_tests, count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOX>("MT19937SBOX", count_tests, count_number, 5489u);
     // run_statistical_test<statistical_test::NistTest, std::minstd_rand0>("lib_minstd_rand0", count_tests,
     // count_number,
     //                                                                     23482349);
-    // run_statistical_test<statistical_test::NistTest, LCG_GLIBC>("LCG_GLIBC", count_tests, count_number, 23482349);
-    // run_statistical_test<statistical_test::NistTest, LCG_Numerical_Recipes>("LCG_Numerical_Recipes", count_tests,
+    // run_statistical_test<statistical_test::NistTest, LCG_GLIBC>("LCG_GLIBC", count_tests, count_number,
+    // 23482349); run_statistical_test<statistical_test::NistTest, LCG_Numerical_Recipes>("LCG_Numerical_Recipes",
+    // count_tests,
     //                                                                         count_number, 23482349);
     // run_statistical_test<statistical_test::NistTest, LCG_Borland>("LCG_Borland", count_tests, count_number,
-    // 23482349); run_statistical_test<statistical_test::NistTest, LCG_ANSI_C>("LCG_ANSI_C", count_tests, count_number,
-    // 23482349); run_statistical_test<statistical_test::NistTest, MINSTD_RAND_IMPROVE>("MINSTD_RAND_IMPROVE", 1000,
-    // 32768, 23482349); run_statistical_test<statistical_test::NistTest, MT19937>("MT19937", 1000, 32768, 12345);
+    // 23482349); run_statistical_test<statistical_test::NistTest, LCG_ANSI_C>("LCG_ANSI_C", count_tests,
+    // count_number, 23482349); run_statistical_test<statistical_test::NistTest,
+    // MINSTD_RAND_IMPROVE>("MINSTD_RAND_IMPROVE", 1000, 32768, 23482349);
+    // run_statistical_test<statistical_test::NistTest, MT19937>("MT19937", 1000, 32768, 12345);
     // run_statistical_test<statistical_test::DiehardTest, MT19937>("MT19937", 1000, 32768, 12345);
     // run_statistical_test<statistical_test::NistTest, MT19937SBOX>("MT19937SBOX", 1000, 32768, 12345);
     // print_gen_value<MT19937SBOX>(10);
     // run_statistical_test<statistical_test::NistTest, MT19937SBOXEnd>("MT19937SBOXEnd", 1000, 32768, 12345);
     // print_gen_value<MT19937SBOXEnd>(10);
     // run_statistical_test<statistical_test::NistTest, MT19937SIPHASH>("MT19937SIPHASH", 1000, 32768, 12345);
-    // run_statistical_test<statistical_test::NistTest, MT19937Involution3>("MT19937Involution3", 1000, 32768, 12345);
+    // run_statistical_test<statistical_test::NistTest, MT19937Involution3>("MT19937Involution3", count_tests,
+    //                                                                      count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937Involution14>("MT19937Involution14", count_tests,
+    //                                                                       count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937Involution24>("MT19937Involution24", count_tests,
+    //                                                                       count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937Involution26>("MT19937Involution24", count_tests,
+    //                                                                       count_number, 5489u);
+    // run_benchmark<std::mt19937, MT19937>("std::mt19937", "MT19937", count_number * count_number, 12345, 5);
+    // run_benchmark<MT19937, MT19937Involution3>("MT19937", "MT19937Involution3", count_number * count_number, 12345,
+    // 5);
     return 0;
 }

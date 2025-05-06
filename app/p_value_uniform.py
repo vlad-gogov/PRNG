@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 
 from scipy.stats import chisquare
-from scipy.special import gammainc
+from scipy.special import gammaincc
 import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser(description='Generate charts for the PRNG')
@@ -12,11 +12,16 @@ parser.add_argument(
     type=str,
     help='The name of the folder with p values'
 )
+parser.add_argument(
+    '--test_count',
+    type=int,
+    help='The name of the folder with p values'
+)
 
 args = parser.parse_args()
 
 root_folder = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-path = root_folder + "/results/nist_test" + args.folder_name
+path = root_folder + "/results/nist_test/" + args.folder_name
 
 russian_names = {
     "Frequency_Test": "Частотный побитовый тест",
@@ -39,16 +44,17 @@ russian_names = {
 def uniform_p_values(p_values, test_name):
     # 1. Разбиваем на 10 интервалов
     hist, _ = np.histogram(p_values, bins=10, range=(0,1))
+    print(*hist, sep=", ")
 
     # 2. Ожидаемое количество в каждом интервале
-    expected = len(p_values) / 10
+    expected = args.test_count / 10
     # 3. Хи-квадрат тест
     chi2 = np.sum((hist - expected)**2) / expected
     print(f"Chi-square = {chi2:.4f}")
 
     # 4. Степени свободы
     # NIST uses: P = igamc(df / 2, chi2 / 2)
-    p_uniform = gammainc(9 / 2.0, chi2 / 2.0)
+    p_uniform = gammaincc(9 / 2.0, chi2 / 2.0)
 
     print(f"P-value of P-values = {p_uniform:.6f}")
 
@@ -73,4 +79,3 @@ for filename in os.listdir(path):
       print(f"File: {filename}")
       data = [float(line.strip()) for line in file]
       uniform_p_values(data, filename[:-4])
-      break

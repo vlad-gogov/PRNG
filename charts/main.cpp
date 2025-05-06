@@ -4,7 +4,7 @@
 
 #include "generators/linear_congruential_generator.hpp"
 #include "generators/mersenne_twister.hpp"
-#include "generators/mersenne_twister_involutio.hpp"
+#include "generators/mersenne_twister_involution.hpp"
 #include "generators/mersenne_twister_sbox.hpp"
 #include "generators/mersenne_twister_simd.hpp"
 #include "generators/mersenne_twister_siphash.hpp"
@@ -15,6 +15,7 @@ enum class GeneratorType {
     MINSTD_RAND0,
     LINE_LCG,
     MT19937,
+    MT19937_64,
     MT19937SBOX,
     MT19937Involution3,
     MT19937Involution14,
@@ -27,6 +28,7 @@ static std::unordered_map<std::string, GeneratorType> const table = {
     {"MINSTD_RAND0", GeneratorType::MINSTD_RAND0},
     {"LINE_LCG", GeneratorType::LINE_LCG},
     {"MT19937", GeneratorType::MT19937},
+    {"MT19937_64", GeneratorType::MT19937_64},
     {"MT19937SBOX", GeneratorType::MT19937SBOX},
     {"MT19937Involution3", GeneratorType::MT19937Involution3},
     {"MT19937Involution14", GeneratorType::MT19937Involution14},
@@ -65,6 +67,9 @@ int main(int argc, char *argv[]) {
         break;
     case GeneratorType::MT19937:
         save_numbers_to_file<MT19937>(path_to_file, data_size, seed);
+        break;
+    case GeneratorType::MT19937_64:
+        save_numbers_to_file<MT19937_64>(path_to_file, data_size, seed);
         break;
     case GeneratorType::MT19937SBOX:
         save_numbers_to_file<MT19937SBOX>(path_to_file, data_size, seed);

@@ -678,12 +678,17 @@ std::vector<bool> nist::check_random_excursions(const utils::seq_bytes &bytes) {
 
 std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_bytes &bytes) {
     std::vector<int> state_x = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    constexpr size_t count_state = 18;
+    size_t count_state = state_x.size();
     std::vector<short> x = normalized(bytes);
     std::vector<int> S = partial_sums(x);
     std::vector<int> S_ = S;
     S_.push_back(0);
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
+    int constraint = (int)std::max(0.005 * std::pow(bytes.size(), 0.5), 500.0);
+    if (J < constraint) {
+        std::cout << "Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES" << std::endl;
+        return std::vector<std::double_t>(count_state, 0.0);
+    }
 
     std::vector<std::double_t> p_values(count_state, 0);
     for (size_t i = 0; i < count_state; ++i) {
