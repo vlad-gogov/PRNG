@@ -93,6 +93,7 @@ std::vector<std::complex<std::double_t>> FFT(const std::vector<T> &x) {
     // 2. The basic FFT algorithm
     const std::double_t pi = std::numbers::pi;
     const size_t log2_size = static_cast<size_t>(std::log2(size));
+#pragma omp parallel for
     for (size_t s = 1; s <= log2_size; ++s) {
         // Block size
         const size_t m = 1 << s;

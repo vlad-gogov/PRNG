@@ -374,6 +374,7 @@ std::double_t nist::universal(const utils::seq_bytes &bytes) {
     }
     size_t K = n / L - Q;
     std::vector<size_t> T(p, 0);
+#pragma omp parallel for
     for (size_t i = 1; i <= Q; ++i) {
         size_t dec_rep = 0;
         for (size_t j = 0; j < L; ++j) {
@@ -488,6 +489,7 @@ std::double_t psi(const utils::seq_bytes &bytes, size_t m) {
     size_t n = bytes.size();
 
     std::vector<size_t> vi(std::pow(2, m + 1) - 1, 0);
+#pragma omp parallel for
     for (size_t i = 0; i < n; ++i) {
         size_t k = 1;
         for (size_t j = 0; j < m; ++j) {
@@ -652,6 +654,7 @@ std::vector<std::double_t> nist::random_excursions(const utils::seq_bytes &bytes
         }
     }
     std::vector<std::double_t> p_values(count_state, 0);
+#pragma omp parallel for
     for (size_t i = 0; i < count_state; ++i) {
         int x = state_x[i];
         std::double_t sum = 0;
@@ -682,6 +685,7 @@ std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_byte
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
 
     std::vector<std::double_t> p_values(count_state, 0);
+#pragma omp parallel for
     for (size_t i = 0; i < count_state; ++i) {
         int x = state_x[i];
         std::double_t count = std::count_if(S_.begin(), S_.end(), [&x](int element) { return element == x; });
