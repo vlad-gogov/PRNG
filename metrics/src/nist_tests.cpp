@@ -174,7 +174,7 @@ bool nist::check_binary_matrix_rank(const utils::seq_bytes &bytes, size_t M, siz
 std::vector<short> normalized(const utils::seq_bytes &bytes) {
     size_t size = bytes.size();
     std::vector<short> x(size);
-#pragma omp parallel for
+#pragma omp simd
     for (size_t i = 0; i < size; ++i) {
         x[i] = 2 * bytes[i] - 1;
     }
@@ -374,7 +374,6 @@ std::double_t nist::universal(const utils::seq_bytes &bytes) {
     }
     size_t K = n / L - Q;
     std::vector<size_t> T(p, 0);
-#pragma omp parallel for
     for (size_t i = 1; i <= Q; ++i) {
         size_t dec_rep = 0;
         for (size_t j = 0; j < L; ++j) {
@@ -406,6 +405,10 @@ std::double_t nist::linear_complexity(const utils::seq_bytes &bytes, size_t M) {
     size_t n = bytes.size();
     size_t K = 6;
     size_t N = n / M;
+    if (N < 200) {
+        std::cout << "LINEAR COMPLEXITY TEST: ERROR: N < 200." << std::endl;
+        return 0.0;
+    }
     std::vector<size_t> v(K + 1, 0);
     utils::seq_bytes B_(M, 0);
     utils::seq_bytes C(M, 0);
@@ -453,7 +456,7 @@ std::double_t nist::linear_complexity(const utils::seq_bytes &bytes, size_t M) {
             N_++;
         }
         int sign = (M + 1) % 2 == 0 ? -1 : 1;
-        std::double_t mean = M / 2.0 + (9.0 + sign) / 36.0 - (M / 3.0 + 2.0 / 9.0) / (1 << M);
+        std::double_t mean = M / 2.0 + (9.0 + sign) / 36.0 - (M / 3.0 + 2.0 / 9.0) / std::pow(2, M);
         std::double_t T_ = sign * (L - mean) + 2.0 / 9.0;
         if (T_ <= -2.5) {
             v[0]++;
@@ -489,7 +492,6 @@ std::double_t psi(const utils::seq_bytes &bytes, size_t m) {
     size_t n = bytes.size();
 
     std::vector<size_t> vi((1 << (m + 1)) - 1, 0);
-#pragma omp parallel for
     for (size_t i = 0; i < n; ++i) {
         size_t k = 1;
         for (size_t j = 0; j < m; ++j) {
@@ -654,7 +656,6 @@ std::vector<std::double_t> nist::random_excursions(const utils::seq_bytes &bytes
         }
     }
     std::vector<std::double_t> p_values(count_state, 0);
-#pragma omp parallel for
     for (size_t i = 0; i < count_state; ++i) {
         int x = state_x[i];
         std::double_t sum = 0;
@@ -685,7 +686,6 @@ std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_byte
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
 
     std::vector<std::double_t> p_values(count_state, 0);
-#pragma omp parallel for
     for (size_t i = 0; i < count_state; ++i) {
         int x = state_x[i];
         std::double_t count = std::count_if(S_.begin(), S_.end(), [&x](int element) { return element == x; });
