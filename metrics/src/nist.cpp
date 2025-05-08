@@ -132,24 +132,16 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
     {
         auto [p_value1, p_value2] = nist::serial_complexity(bytes, 16);
         if (print_p_values) {
-            std::cout << test_success[10] << ": " << p_value1 << " " << p_value2 << std::endl;
+            std::cout << test_names[10] << ": " << p_value1 << " " << test_names[11] << ": " << p_value2 << std::endl;
         }
         save_p_values[10].push_back(p_value1);
-        save_p_values[10].push_back(p_value2);
-        test_success[10] += compare_p_value(p_value1) && compare_p_value(p_value2);
+        test_success[10] += compare_p_value(p_value1);
+        save_p_values[11].push_back(p_value2);
+        test_success[11] += compare_p_value(p_value2);
     }
 
     {
         std::double_t p_value = nist::approximate_entropy(bytes, 10);
-        if (print_p_values) {
-            std::cout << test_names[11] << ": " << p_value << std::endl;
-        }
-        save_p_values[11].push_back(p_value);
-        test_success[11] += compare_p_value(p_value);
-    }
-
-    {
-        std::double_t p_value = nist::cumulative_sums(bytes, nist::CumulativeSumsMode::Forward);
         if (print_p_values) {
             std::cout << test_names[12] << ": " << p_value << std::endl;
         }
@@ -158,46 +150,49 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
     }
 
     {
-        std::vector<std::double_t> p_values = nist::random_excursions(bytes);
-        bool result = true;
-        for (const auto &p_value : p_values) {
-            result &= compare_p_value(p_value);
-        }
-        for (const auto &p_value : p_values) {
-            save_p_values[13].push_back(p_value);
-        }
+        std::double_t p_value = nist::cumulative_sums(bytes, nist::CumulativeSumsMode::Forward);
         if (print_p_values) {
-            std::cout << test_names[13] << ": ";
-            for (const auto &p_value : p_values) {
-                std::cout << p_value << " ";
-            }
-            std::cout << std::endl;
+            std::cout << test_names[13] << ": " << p_value << std::endl;
         }
-        test_success[13] += result;
+        save_p_values[13].push_back(p_value);
+        test_success[13] += compare_p_value(p_value);
+    }
+
+    {
+        std::vector<std::double_t> p_values = nist::random_excursions(bytes);
+        assert(p_values.size() == 8);
+        for (int s = -4, i = 0; s <= 4; ++s) {
+            if (s == 0) {
+                continue;
+            }
+            if (print_p_values) {
+                std::cout << test_names[14 + i] << ": p-value = " << p_values[i] << "\n";
+            }
+            save_p_values[14 + i].push_back(p_values[i]);
+            test_success[14 + i] += compare_p_value(p_values[i]);
+            i++;
+        }
     }
 
     {
         try {
             std::vector<std::double_t> p_values = nist::random_excursions_variant(bytes);
-            bool result = true;
-            for (const auto &p_value : p_values) {
-                result &= compare_p_value(p_value);
-            }
-            for (const auto &p_value : p_values) {
-                save_p_values[14].push_back(p_value);
-            }
-            if (print_p_values) {
-                std::cout << test_names[14] << ": ";
-                for (const auto &p_value : p_values) {
-                    std::cout << p_value << " ";
+            assert(p_values.size() == 18);
+            for (int s = -9, i = 0; s <= 9; ++s) {
+                if (s == 0) {
+                    continue;
                 }
-                std::cout << std::endl;
+                if (print_p_values) {
+                    std::cout << test_names[22 + i] << ": p-value = " << p_values[i] << "\n";
+                }
+                save_p_values[22 + i].push_back(p_values[i]);
+                test_success[22 + i] += compare_p_value(p_values[i]);
+                i++;
             }
-            test_success[14] += result;
         } catch (const std::runtime_error &e) {
             test_errors[14].push_back(num_test + e.what());
             for (size_t i = 0; i < 18; ++i) {
-                save_p_values[14].push_back(0.0);
+                save_p_values[22 + i].push_back(0.0);
             }
         }
     }
@@ -218,38 +213,40 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     std::filesystem::remove_all(path_directory.str());
     std::filesystem::create_directory(path_directory.str());
     std::stringstream result;
-    for (size_t i = 0; i < 15; ++i) {
+    for (size_t i = 0; i < 40; ++i) {
         // pass test
         std::double_t p = static_cast<std::double_t>(test_success[i]) / static_cast<std::double_t>(test_count);
         bool answer_test = pass_value_min <= p && p <= pass_value_max;
 
         // uniform p-values
-        auto copy_p_values = save_p_values[i];
-        std::sort(copy_p_values.begin(), copy_p_values.end());
-        std::vector<uint32_t> histogram(10, 0);
-        std::double_t bin = 0;
-        std::uint32_t bin_count = 0;
-        for (const auto &e : copy_p_values) {
-            e >= bin + bin_width ? bin += bin_width, ++bin_count : false;
-            ++histogram[bin_count];
+        bool answer_uniform = false;
+        std::double_t p_uniform = 0.0;
+        if (save_p_values[i].size() >= 55) {
+            auto copy_p_values = save_p_values[i];
+            std::sort(copy_p_values.begin(), copy_p_values.end());
+            std::vector<uint32_t> histogram(10, 0);
+            std::double_t bin = 0;
+            std::uint32_t bin_count = 0;
+            for (const auto &e : copy_p_values) {
+                e >= bin + bin_width ? bin += bin_width, ++bin_count : false;
+                ++histogram[bin_count];
+            }
+            std::cout << std::fixed << std::setprecision(6);
+            std::double_t expected_p_values = test_count * 1.0 / bins;
+            std::double_t chi = 0;
+            for (size_t i = 0; i < bins; ++i) {
+                chi += (histogram[i] * 1.0 - expected_p_values) * (histogram[i] * 1.0 - expected_p_values);
+            }
+            chi = chi / expected_p_values;
+            p_uniform = boost::math::gamma_q(9 / 2.0, chi / 2.0);
+            answer_uniform = p_uniform > 0.0001;
         }
-        std::cout << std::fixed << std::setprecision(6);
-        std::double_t expected_p_values = test_count * 1.0 / bins;
-        std::double_t chi = 0;
-        for (size_t i = 0; i < bins; ++i) {
-            chi += (histogram[i] * 1.0 - expected_p_values) * (histogram[i] * 1.0 - expected_p_values);
-        }
-        chi = chi / expected_p_values;
-        std::double_t p_uniform = boost::math::gamma_q(9 / 2.0, chi / 2.0);
-        bool answer_uniform = p_uniform > 0.0001;
 
-        // if (answer_uniform) {
         std::string copy_name = std::string(test_names[i]);
         std::replace(copy_name.begin(), copy_name.end(), ' ', '_');
         std::stringstream path;
         path << path_directory.str() << "/" << copy_name << ".txt";
-        utils::save_p_values_to_file(path.str(), copy_p_values);
-        // }
+        utils::save_p_values_to_file(path.str(), save_p_values[i]);
 
         result << test_names[i] << ": " << result_to_string(answer_test) << " (" << test_success[i] << " / "
                << test_count << ") && uniform p-values (" << p_uniform << ") " << result_to_string(answer_uniform)
@@ -262,7 +259,7 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     for (size_t i = 0; i < 15; ++i) {
         if (!test_errors[i].empty()) {
             std::stringstream path;
-            path << path_directory.str() << "/" << test_names[i] << "_errors.txt";
+            path << path_directory.str() << "/" << test_names_error[i] << "_errors.txt";
             for (const auto &e : test_errors[i]) {
                 utils::save_string_to_file(path.str(), e + '\n', true);
             }

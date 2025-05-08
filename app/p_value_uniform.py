@@ -34,12 +34,37 @@ russian_names = {
     "Overlapping_Template_Matching_Test": "Тест на совпадение перекрывающихся шаблонов",
     "Maurer’s_“Universal_Statistical”_Test": "Универсальный статистический тест Маурера",
     "Linear_Complexity_Test": "Тест на линейную сложность",
-    "Serial_Test": "Тест на переодичность",
+    "Serial_Test_16": "Тест на переодичность 16",
+    "Serial_Test_15": "Тест на переодичность 15",
     "Approximate_Entropy_Test": "Тест на приближенную энтропию",
     "Cumulative_Sums_Test": "Тест на кумулятивные суммы",
-    "Random_Excursions_Test": "Тест на произвольное отклонение",
-    "Random_Excursions_Variant_Test": "Другой тест на произвольное отклонение"
-}
+    "Random_Excursions_Test_-4": "Тест на произвольное отклонение -4",
+    "Random_Excursions_Test_-3": "Тест на произвольное отклонение -3",
+    "Random_Excursions_Test_-2": "Тест на произвольное отклонение -2",
+    "Random_Excursions_Test_-1": "Тест на произвольное отклонение -1",
+    "Random_Excursions_Test_1": "Тест на произвольное отклонение 4",
+    "Random_Excursions_Test_2": "Тест на произвольное отклонение 3",
+    "Random_Excursions_Test_3": "Тест на произвольное отклонение 2",
+    "Random_Excursions_Test_4": "Тест на произвольное отклонение 1",
+    "Random_Excursions_Variant_Test_-9": "Другой тест на произвольное отклонение -9",
+    "Random_Excursions_Variant_Test_-8": "Другой тест на произвольное отклонение -8",
+    "Random_Excursions_Variant_Test_-7": "Другой тест на произвольное отклонение -7",
+    "Random_Excursions_Variant_Test_-6": "Другой тест на произвольное отклонение -6",
+    "Random_Excursions_Variant_Test_-5": "Другой тест на произвольное отклонение -5",
+    "Random_Excursions_Variant_Test_-4": "Другой тест на произвольное отклонение -4",
+    "Random_Excursions_Variant_Test_-3": "Другой тест на произвольное отклонение -3",
+    "Random_Excursions_Variant_Test_-2": "Другой тест на произвольное отклонение -2",
+    "Random_Excursions_Variant_Test_-1": "Другой тест на произвольное отклонение -1",
+    "Random_Excursions_Variant_Test_1": "Другой тест на произвольное отклонение 1",
+    "Random_Excursions_Variant_Test_2": "Другой тест на произвольное отклонение 2",
+    "Random_Excursions_Variant_Test_3": "Другой тест на произвольное отклонение 3",
+    "Random_Excursions_Variant_Test_4": "Другой тест на произвольное отклонение 4",
+    "Random_Excursions_Variant_Test_5": "Другой тест на произвольное отклонение 5",
+    "Random_Excursions_Variant_Test_6": "Другой тест на произвольное отклонение 6",
+    "Random_Excursions_Variant_Test_7": "Другой тест на произвольное отклонение 7",
+    "Random_Excursions_Variant_Test_8": "Другой тест на произвольное отклонение 8",
+    "Random_Excursions_Variant_Test_9": "Другой тест на произвольное отклонение 9",
+} 
 
 def uniform_p_values(p_values, test_name):
     # 1. Разбиваем на 10 интервалов
@@ -75,6 +100,8 @@ def uniform_p_values(p_values, test_name):
 
 for filename in os.listdir(path):
    with open(os.path.join(path, filename), 'r') as file:
+      if russian_names.get(filename[:-4]) is None:
+          continue
       print(f"File: {filename}")
       data = [float(line.strip()) for line in file]
       uniform_p_values(data, filename[:-4])
