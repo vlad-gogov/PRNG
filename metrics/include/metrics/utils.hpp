@@ -129,6 +129,10 @@ std::vector<double> random_doubles(int num_doubles);
 double kstest(std::vector<double> p_values);
 int kperm(const std::vector<int> &v);
 
+uint64_t generate_seed_from_mouse();
+uint64_t generate_seed_from_time();
+uint64_t generate_seed_from_qrng();
+
 template <class UIntType>
 UIntType bits_to_uint(const seq_bytes &bytes, size_t offset) {
     static_assert(std::is_integral_v<UIntType> && std::is_unsigned_v<UIntType>);

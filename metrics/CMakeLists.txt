@@ -12,6 +12,9 @@ file(GLOB_RECURSE TARGET_SRC
 )
 
 find_package(OpenMP REQUIRED)
+find_package(CURL REQUIRED)
+find_package(nlohmann_json REQUIRED)
+
 if(NOT OpenMP_CXX_FOUND)
 	message(SEND_ERROR "Failed to find OpenMP.")
 	return()
@@ -34,6 +37,8 @@ target_link_libraries(${TARGET_NAME}
 PUBLIC
     Boost::math
     OpenMP::OpenMP_CXX
+    CURL::libcurl
+    nlohmann_json::nlohmann_json
 )
 
 add_compile_options("-O3 -march=native -ffast-math -fopenmp")

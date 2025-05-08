@@ -6,8 +6,27 @@
 #include <complex>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <cstdint>
+#include <cstring>
+#include <curl/curl.h>
+#include <nlohmann/json.hpp>
 
 namespace utils {
+
+// Global CURL initialization
+class CurlInitializer {
+public:
+    CurlInitializer() { curl_global_init(CURL_GLOBAL_ALL); }
+    ~CurlInitializer() { curl_global_cleanup(); }
+};
+
+static CurlInitializer curl_init;
 
 size_t get_max_run(const seq_bytes &seq, size_t left_border, size_t right_border) {
     if (right_border == 0U) {
@@ -140,6 +159,128 @@ int kperm(const std::vector<int> &v) {
     uret = pindex;
 
     return uret;
+}
+
+uint64_t generate_seed_from_mouse() {
+    // Set terminal to raw mode
+    termios oldt, newt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    // Set stdin to non-blocking
+    int oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    // Enable mouse tracking (1003: all motion)
+    std::cout << "\033[?1003h\033[?1006h" << std::flush;
+    std::cout << "\nMove your mouse in this terminal window...\n";
+
+    std::vector<uint8_t> entropy;
+    auto start = std::chrono::steady_clock::now();
+    const int min_events = 64;
+    int events = 0;
+    while (events < min_events) {
+        char buf[32];
+        ssize_t n = read(STDIN_FILENO, buf, sizeof(buf));
+        if (n > 0) {
+            for (ssize_t i = 0; i < n; ++i) {
+                // Look for SGR mouse event: ESC [ < b ; x ; y M
+                if (buf[i] == '\033' && i + 1 < n && buf[i+1] == '[') {
+                    ssize_t j = i + 2;
+                    if (j < n && buf[j] == '<') {
+                        // Try to parse the event
+                        int b = 0, x = 0, y = 0;
+                        char type = 0;
+                        int consumed = 0;
+                        if (sscanf(&buf[j], "<%d;%d;%d%c", &b, &x, &y, &type) == 4) {
+                            auto now = std::chrono::steady_clock::now();
+                            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
+                            entropy.push_back((uint8_t)(x ^ y ^ b ^ ms));
+                            events++;
+                            std::cout << "\rCollected " << events << "/" << min_events << " events..." << std::flush;
+                        }
+                    }
+                }
+            }
+        }
+        auto now = std::chrono::steady_clock::now();
+        if (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() > 10) break;
+        usleep(1000); // 1ms
+    }
+
+    // Disable mouse tracking
+    std::cout << "\033[?1003l\033[?1006l" << std::flush;
+    // Restore terminal
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+    // Simple hash: FNV-1a
+    uint64_t hash = 14695981039346656037ull;
+    for (uint8_t b : entropy) {
+        hash ^= b;
+        hash *= 1099511628211ull;
+    }
+    return hash;
+}
+
+uint64_t generate_seed_from_time() {
+    auto now = std::chrono::high_resolution_clock::now();
+    auto duration = now.time_since_epoch();
+    return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count());
+}
+
+uint64_t generate_seed_from_qrng() {
+    
+    // Create a temporary file for the response
+    std::string temp_file = "/tmp/qrng_response.json";
+    std::string curl_cmd = "curl -s -m 5 'https://lfdr.de/qrng_api/qrng?length=8&format=HEX' > " + temp_file;
+    
+    // Execute curl command
+    int result = system(curl_cmd.c_str());
+    if (result != 0) {
+        throw std::runtime_error("Failed to execute curl command");
+    }
+
+    // Read the response from the temporary file
+    std::ifstream file(temp_file);
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open response file");
+    }
+
+    std::string response;
+    std::getline(file, response);
+    file.close();
+
+    // Clean up the temporary file
+    std::remove(temp_file.c_str());
+
+    if (response.empty()) {
+        throw std::runtime_error("Empty response from QRNG API");
+    }
+
+    try {
+        auto json = nlohmann::json::parse(response);
+        
+        if (!json.contains("qrn")) {
+            throw std::runtime_error("QRNG response missing 'qrn' field");
+        }
+        
+        std::string hex = json["qrn"].get<std::string>();
+        
+        if (hex.empty()) {
+            throw std::runtime_error("Empty QRNG data received");
+        }
+        
+        uint64_t result = std::stoull(hex, nullptr, 16);
+        return result;
+        
+    } catch (const nlohmann::json::exception& e) {
+        throw std::runtime_error(std::string("JSON parse error: ") + e.what());
+    } catch (const std::exception& e) {
+        throw std::runtime_error(std::string("Processing error: ") + e.what());
+    }
 }
 
 } // namespace utils
