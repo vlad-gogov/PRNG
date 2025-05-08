@@ -23,7 +23,7 @@ class MersenneTwisterEngineSBOXInvolution : public Generator<uint32_t> {
         for (size_t i = 0; i < bytes; ++i) {
             result |= (AES_SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
         }
-        result = (result << shift) | (result >> (bytes - shift));
+        result = (result << shift) | (result >> (bytes * 8 - shift));
         return result;
     }
 
