@@ -9,6 +9,7 @@
 #include "generators/mersenne_twister.hpp"
 #include "generators/mersenne_twister_involution.hpp"
 #include "generators/mersenne_twister_sbox.hpp"
+#include "generators/mersenne_twister_sbox_and_involution.hpp"
 #include "generators/mersenne_twister_simd.hpp"
 #include "generators/mersenne_twister_siphash.hpp"
 #include "indicators.hpp"
@@ -220,8 +221,8 @@ int main() {
     //                                                                       count_number, 5489u);
     // run_statistical_test<statistical_test::NistTest, MT19937Involution15>("MT19937Involution15", count_tests,
     //                                                                       count_number, 5489u);
-    // run_statistical_test<statistical_test::NistTest, MT19937Involution16>("MT19937Involution16", count_tests,
-    //                                                                       count_number, 5489u);
+    run_statistical_test<statistical_test::NistTest, MT19937Involution16>("MT19937Involution16", count_tests,
+                                                                          count_number, 5489u);
     // run_statistical_test<statistical_test::NistTest, MT19937Involution17>("MT19937Involution17", count_tests,
     //                                                                       count_number, 5489u);
     // run_statistical_test<statistical_test::NistTest, MT19937Involution18>("MT19937Involution18", count_tests,
@@ -281,5 +282,68 @@ int main() {
     // run_benchmark<std::mt19937, MT19937>("std::mt19937", "MT19937", count_number * count_number, 12345, 5);
     // run_benchmark<MT19937, MT19937Involution3>("MT19937", "MT19937Involution3", count_number * count_number, 12345,
     // 5);
+
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution1>("MT19937SBOXInvolution1", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution2>("MT19937SBOXInvolution2", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution3>("MT19937SBOXInvolution3", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution4>("MT19937SBOXInvolution4", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution5>("MT19937SBOXInvolution5", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution6>("MT19937SBOXInvolution6", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution7>("MT19937SBOXInvolution7", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution8>("MT19937SBOXInvolution8", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution9>("MT19937SBOXInvolution9", count_tests,
+    //                                                                          count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution10>("MT19937SBOXInvolution10", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution11>("MT19937SBOXInvolution11", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution12>("MT19937SBOXInvolution12", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution13>("MT19937SBOXInvolution13", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution14>("MT19937SBOXInvolution14", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution15>("MT19937SBOXInvolution15", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution16>("MT19937SBOXInvolution16", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution17>("MT19937SBOXInvolution17", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution18>("MT19937SBOXInvolution18", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution19>("MT19937SBOXInvolution19", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution20>("MT19937SBOXInvolution20", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution21>("MT19937SBOXInvolution21", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution22>("MT19937SBOXInvolution22", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution23>("MT19937SBOXInvolution23", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution24>("MT19937SBOXInvolution24", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution25>("MT19937SBOXInvolution25", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution26>("MT19937SBOXInvolution26", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution27>("MT19937SBOXInvolution27", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution28>("MT19937SBOXInvolution28", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution29>("MT19937SBOXInvolution29", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution30>("MT19937SBOXInvolution30", count_tests,
+    //                                                                           count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXInvolution31>("MT19937SBOXInvolution31", count_tests,
+    //                                                                           count_number, 5489u);
     return 0;
 }

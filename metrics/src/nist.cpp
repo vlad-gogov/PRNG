@@ -205,7 +205,12 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
 void NistTest::print_statistics(const std::string &generator_name) const {
     constexpr std::size_t bins = 10;
     constexpr std::double_t bin_width = 0.1; // Choose your bin interval
-    auto root_folder = std::filesystem::current_path().parent_path().parent_path();
+    std::filesystem::path root_folder;
+    try {
+        root_folder = std::filesystem::current_path().parent_path().parent_path();
+    } catch (const std::filesystem::filesystem_error &err) {
+        std::cout << err.what() << std::endl;
+    }
     std::double_t temp = 3 * std::sqrt(alpha * (1 - alpha) / test_count * 1.0);
     std::double_t pass_value_max = 1 - alpha + temp;
     std::double_t pass_value_min = 1 - alpha - temp;
