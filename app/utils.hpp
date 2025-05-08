@@ -40,6 +40,26 @@ void run_statistical_test(const std::string &generator_name, const size_t count_
     test.print_statistics(generator_name);
 }
 
+template <typename StatisticalTest, typename Generator>
+void run_statistical_test_without_progress_bar(const std::string &generator_name, const size_t count_tests,
+                                               const size_t count_number, const uint32_t start_seed = 0u) {
+    StatisticalTest test;
+    for (size_t i = 0; i < count_tests; ++i) {
+        Generator generator(start_seed + i);
+        std::vector<typename Generator::result_type> numbers(count_number);
+        for (size_t j = 0; j < count_number; ++j) {
+            numbers[j] = generator();
+        }
+        utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
+        assert(bytes.size() == count_number * std::numeric_limits<typename Generator::result_type>::digits);
+        test.test(bytes);
+        if ((i + 1) % 100 == 0) {
+            std::cout << "Test " << i + 1 << " of " << count_tests << " completed." << std::endl;
+        }
+    }
+    test.print_statistics(generator_name);
+}
+
 template <typename Generator>
 void print_gen_value(const size_t count_number, const typename Generator::result_type seed = 0u) {
     Generator generator(seed);

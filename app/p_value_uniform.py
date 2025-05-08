@@ -62,7 +62,7 @@ def uniform_p_values(p_values, test_name):
 
     if p_uniform > 0.0001:
         title = "✓" + title
-        print(f"✅ P-values распределены равномерно (тест `{russian_names[test_name]}` пройден)")\
+        print(f"✅ P-values распределены равномерно (тест `{russian_names[test_name]}` пройден)")
         plt.hist(p_values, bins=20, density=True, edgecolor='black')
         plt.title(title)
         plt.xlabel('Значение')

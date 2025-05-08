@@ -686,7 +686,7 @@ std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_byte
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
     int constraint = (int)std::max(0.005 * std::pow(bytes.size(), 0.5), 500.0);
     if (J < constraint) {
-        std::cout << "Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES" << std::endl;
+        // std::cout << "Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES" << std::endl;
         return std::vector<std::double_t>(count_state, 0.0);
     }
 
