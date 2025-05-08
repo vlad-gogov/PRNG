@@ -1,7 +1,9 @@
 #pragma once
 
 #include <array>
+#include <string>
 #include <string_view>
+#include <vector>
 
 #include "metrics/nist_tests.hpp"
 #include "statistical_test/statistical_test.hpp"
@@ -31,6 +33,7 @@ class NistTest : private StatisticalTest {
 
     std::array<size_t, 15> test_success;
     std::array<std::vector<std::double_t>, 15> save_p_values;
+    std::array<std::vector<std::string>, 15> test_errors;
 
   public:
     NistTest(const double &alpha = 0.01f);

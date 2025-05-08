@@ -3,6 +3,7 @@
 #include <complex>
 #include <iostream>
 #include <map>
+#include <stdexcept>
 #include <unordered_map>
 #include <utility>
 
@@ -135,7 +136,7 @@ bool nist::check_longest_run_of_ones(const utils::seq_bytes &bytes) {
 
 std::double_t nist::binary_matrix_rank(const utils::seq_bytes &bytes, size_t M, size_t Q) {
     if (M != Q) {
-        throw std::runtime_error("Binary matrix rank test: M != Q\n");
+        throw std::runtime_error("BINARY MATRIX RANK TEST: M != Q");
     }
     size_t N = bytes.size() / (M * Q);
     std::vector<BinaryMatrix> binary_matrixes(N);
@@ -369,8 +370,7 @@ std::double_t nist::universal(const utils::seq_bytes &bytes) {
     size_t p = 1 << L;
     size_t Q = 10 * p;
     if ((L < 6) || (L > 16)) {
-        std::cout << "UNIVERSAL STATISTICAL TEST: ERROR : L IS OUT OF RANGE." << std::endl;
-        return 0.0;
+        throw std::runtime_error("UNIVERSAL STATISTICAL TEST: L IS OUT OF RANGE");
     }
     size_t K = n / L - Q;
     std::vector<size_t> T(p, 0);
@@ -406,8 +406,7 @@ std::double_t nist::linear_complexity(const utils::seq_bytes &bytes, size_t M) {
     size_t K = 6;
     size_t N = n / M;
     if (N < 200) {
-        std::cout << "LINEAR COMPLEXITY TEST: ERROR: N < 200." << std::endl;
-        return 0.0;
+        throw std::runtime_error("LINEAR COMPLEXITY TEST: ERROR: N < 200");
     }
     std::vector<size_t> v(K + 1, 0);
     utils::seq_bytes B_(M, 0);
@@ -686,8 +685,7 @@ std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_byte
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
     int constraint = (int)std::max(0.005 * std::pow(bytes.size(), 0.5), 500.0);
     if (J < constraint) {
-        // std::cout << "Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES" << std::endl;
-        return std::vector<std::double_t>(count_state, 0.0);
+        throw std::runtime_error("Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES");
     }
 
     std::vector<std::double_t> p_values(count_state, 0);
