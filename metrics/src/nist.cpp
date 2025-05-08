@@ -215,7 +215,9 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     size_t pass_count = 0;
     std::stringstream path_directory;
     path_directory << root_folder.c_str() << "/results/nist_test/" << generator_name;
+    std::filesystem::remove_all(path_directory.str());
     std::filesystem::create_directory(path_directory.str());
+    std::stringstream result;
     for (size_t i = 0; i < 15; ++i) {
         // pass test
         std::double_t p = static_cast<std::double_t>(test_success[i]) / static_cast<std::double_t>(test_count);
@@ -249,12 +251,23 @@ void NistTest::print_statistics(const std::string &generator_name) const {
         utils::save_p_values_to_file(path.str(), copy_p_values);
         // }
 
-        std::cout << test_names[i] << ": " << result_to_string(answer_test) << " (" << test_success[i] << " / "
-                  << test_count << ") && uniform p-values (" << p_uniform << ") " << result_to_string(answer_uniform)
-                  << " = " << result_to_string(answer_test & answer_uniform) << std::endl;
+        result << test_names[i] << ": " << result_to_string(answer_test) << " (" << test_success[i] << " / "
+               << test_count << ") && uniform p-values (" << p_uniform << ") " << result_to_string(answer_uniform)
+               << " = " << result_to_string(answer_test & answer_uniform) << std::endl;
         pass_count += answer_test & answer_uniform;
     }
-    std::cout << "Pass test count: " << pass_count << std::endl;
+    result << "Pass test count: " << pass_count << std::endl;
+    std::cout << result.str();
+    utils::save_string_to_file(path_directory.str() + "/result.txt", result.str());
+    for (size_t i = 0; i < 15; ++i) {
+        if (!test_errors[i].empty()) {
+            std::stringstream path;
+            path << path_directory.str() << "/" << test_names[i] << "_errors.txt";
+            for (const auto &e : test_errors[i]) {
+                utils::save_string_to_file(path.str(), e + '\n', true);
+            }
+        }
+    }
 }
 
 }; // namespace statistical_test
