@@ -259,8 +259,19 @@ bool nist::check_non_overlapping_template_matching(const utils::seq_bytes &bytes
     return nist::non_overlapping_template_matching(bytes, template_, N) >= alpha;
 }
 
+std::double_t compute_pi(int u, std::double_t lambda) {
+    std::double_t theta = lambda / 2.0;
+    if (u == 0) {
+        return std::exp(-theta);
+    }
+    if (u == 1) {
+        return (theta / 2.0) * std::exp(-theta);
+    }
+    return theta * std::exp(-theta * 2) * boost::math::hypergeometric_1F1(u + 1, 2, theta) / std::pow(2, u);
+}
+
 std::double_t nist::overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
-                                                  size_t M, size_t N, size_t K) {
+                                                  size_t M, size_t N, size_t K, bool test) {
     size_t n = bytes.size();
     size_t m = template_.size();
     std::vector<utils::seq_bytes> blocks(N);
@@ -269,34 +280,34 @@ std::double_t nist::overlapping_template_matching(const utils::seq_bytes &bytes,
             blocks[i].push_back(bytes[j]);
         }
     }
-    std::vector<size_t> W(N, 0);
     std::vector<size_t> v(6, 0);
     for (size_t i = 0; i < N; ++i) {
-        size_t index = 0;
+        size_t W = 0;
         auto &current_block = blocks[i];
-        for (size_t index = 0; index <= M - m; index++) {
+        for (size_t index = 0; index < M; index++) {
+            if (index + m > M) {
+                break;
+            }
             bool match = true;
             size_t temp = index;
-            for (size_t j = 0; j < m; ++j, temp++) {
+            for (size_t j = 0; j < m; ++j, ++temp) {
                 if (current_block[temp] != template_[j]) {
                     match = false;
                     break;
                 }
             }
             if (match) {
-                W[i]++;
+                W++;
             }
         }
-        if (W[i] <= 4) {
-            v[W[i]]++;
+        if (W <= 4) {
+            v[W]++;
         } else {
             v[K]++;
         }
     }
-    std::double_t lambda = (M - m + 1) / (1 << m);
-    std::double_t theta = lambda / 2;
-    std::vector<std::double_t> pi(K + 1);
-    if (K == 5) {
+    std::vector<std::double_t> pi(K + 1, 0);
+    if (test) {
         pi[0] = 0.324652;
         pi[1] = 0.182617;
         pi[2] = 0.142670;
@@ -304,13 +315,11 @@ std::double_t nist::overlapping_template_matching(const utils::seq_bytes &bytes,
         pi[4] = 0.077147;
         pi[5] = 0.166269;
     } else {
-        pi[0] = std::exp(-theta);
-        std::double_t a = std::exp(-2 * theta) * theta;
-        std::double_t sum = pi[0];
-        for (size_t i = 1; i < K; ++i) {
-            std::double_t b = 1 << i;
-            pi[i] = a * boost::math::hypergeometric_1F1(std::double_t(i + 1), std::double_t(2), theta) / b;
-            sum += pi[i];
+        std::double_t lambda = (M - m + 1) / (1 << m);
+        std::double_t sum = 0;
+        for (size_t u = 0; u < K; ++u) {
+            pi[u] = compute_pi(u, lambda);
+            sum += pi[u];
         }
         pi[K] = 1 - sum;
     }
@@ -322,8 +331,8 @@ std::double_t nist::overlapping_template_matching(const utils::seq_bytes &bytes,
 }
 
 bool nist::check_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
-                                               size_t M, size_t N, size_t K) {
-    return nist::overlapping_template_matching(bytes, template_, M, N, K) >= alpha;
+                                               size_t M, size_t N, size_t K, bool test) {
+    return nist::overlapping_template_matching(bytes, template_, M, N, K, test) >= alpha;
 }
 
 std::double_t nist::universal(const utils::seq_bytes &bytes) {
@@ -675,16 +684,16 @@ std::vector<bool> nist::check_random_excursions(const utils::seq_bytes &bytes) {
     return results;
 }
 
-std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_bytes &bytes) {
+std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_bytes &bytes, bool check) {
     std::vector<int> state_x = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    size_t count_state = state_x.size();
+    size_t count_state = 18;
     std::vector<short> x = normalized(bytes);
     std::vector<int> S = partial_sums(x);
     std::vector<int> S_ = S;
     S_.push_back(0);
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
     int constraint = (int)std::max(0.005 * std::pow(bytes.size(), 0.5), 500.0);
-    if (J < constraint) {
+    if (check && J < constraint) {
         throw std::runtime_error("Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES");
     }
 
@@ -698,8 +707,8 @@ std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_byte
     return p_values;
 }
 
-std::vector<bool> nist::check_random_excursions_variant(const utils::seq_bytes &bytes) {
-    std::vector<std::double_t> p_values = nist::random_excursions_variant(bytes);
+std::vector<bool> nist::check_random_excursions_variant(const utils::seq_bytes &bytes, bool check) {
+    std::vector<std::double_t> p_values = nist::random_excursions_variant(bytes, check);
     std::vector<bool> results(p_values.size(), false);
     for (size_t i = 0; i < p_values.size(); ++i) {
         results[i] = p_values[i] >= alpha;

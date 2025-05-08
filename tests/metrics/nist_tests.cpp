@@ -117,7 +117,7 @@ TEST(Nist, overlapping_template_matching_1) {
     utils::seq_bytes bytes = {1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0,
                               0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1};
     utils::seq_bytes template_ = {1, 1};
-    double p = nist::overlapping_template_matching(bytes, template_, 10, 5);
+    double p = nist::overlapping_template_matching(bytes, template_, 10, 5, 5, true);
     double answer = 0.409632;
     ASSERT_NEAR(p, answer, abs_error);
 }
@@ -125,7 +125,7 @@ TEST(Nist, overlapping_template_matching_1) {
 TEST(Nist, overlapping_template_matching_2) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent(1'000'000);
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-    double p = nist::overlapping_template_matching(bytes, template_);
+    double p = nist::overlapping_template_matching(bytes, template_, 1032, 968, 5);
     double answer = 0.110434;
     ASSERT_NEAR(p, answer, abs_error);
 }
@@ -301,7 +301,7 @@ TEST(Nist, non_overlapping_template_matching_digit_e) {
 TEST(Nist, overlapping_template_matching_digit_e) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent();
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-    double p = nist::overlapping_template_matching(bytes, template_);
+    double p = nist::overlapping_template_matching(bytes, template_, 1032, 968, 5);
     double answer = 0.110433;
     ASSERT_NEAR(p, answer, abs_error);
 }

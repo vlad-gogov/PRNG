@@ -28,9 +28,9 @@ bool check_non_overlapping_template_matching(const utils::seq_bytes &bytes, cons
                                              size_t N = 8);
 
 double overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_, size_t M = 1032,
-                                     size_t N = 968, size_t K = 5);
+                                     size_t N = 968, size_t K = 5, bool test = false);
 bool check_overlapping_template_matching(const utils::seq_bytes &bytes, const utils::seq_bytes &template_,
-                                         size_t M = 1032, size_t N = 968, size_t K = 5);
+                                         size_t M = 1032, size_t N = 968, size_t K = 5, bool test = false);
 
 double universal(const utils::seq_bytes &bytes);
 bool check_universal(const utils::seq_bytes &bytes);
@@ -55,7 +55,7 @@ bool check_cumulative_sums(const utils::seq_bytes &bytes, CumulativeSumsMode mod
 std::vector<double> random_excursions(const utils::seq_bytes &bytes);
 std::vector<bool> check_random_excursions(const utils::seq_bytes &bytes);
 
-std::vector<double> random_excursions_variant(const utils::seq_bytes &bytes);
-std::vector<bool> check_random_excursions_variant(const utils::seq_bytes &bytes);
+std::vector<double> random_excursions_variant(const utils::seq_bytes &bytes, bool check = false);
+std::vector<bool> check_random_excursions_variant(const utils::seq_bytes &bytes, bool check = false);
 
 } // namespace nist

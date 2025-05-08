@@ -380,13 +380,13 @@ TEST(Lcg, random_excursions_variant_lcg) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions_variant(bytes);
+    std::vector<bool> answers = nist::check_random_excursions_variant(bytes, false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }
