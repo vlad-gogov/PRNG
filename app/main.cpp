@@ -179,16 +179,19 @@ int main() {
     const size_t count_tests = 1000;
 
     // ratio_one_zero<MINSTD_RAND0>(count_number, 23482349);
-    run_statistical_test<statistical_test::NistTest, MINSTD_RAND>("MINSTD_RAND", count_tests, count_number, 23482349);
-    run_statistical_test<statistical_test::NistTest, MINSTD_RAND0>("MINSTD_RAND", count_tests, count_number, 23482349);
-    run_statistical_test<statistical_test::NistTest, MT19937>("MT19937", count_tests, count_number, 5489u);
-    run_statistical_test<statistical_test::NistTest, MT19937_64>("MT19937_64", count_tests, count_number, 5489u);
-    run_statistical_test<statistical_test::NistTest, MT19937SBOX>("MT19937SBOX", count_tests, count_number, 5489u);
-    run_statistical_test<statistical_test::NistTest, MT19937SBOXEnd>("MT19937SBOXEnd", count_tests, count_number,
-                                                                     5489u);
-    // run_statistical_test_without_progress_bar<statistical_test::NistTest, MT19937Involution1>("MT19937Involution1",
-    // 1,
-    //                                                                                           count_number, 5489u);
+    // run_statistical_test_without_progress_bar<statistical_test::NistTest, MINSTD_RAND>("MINSTD_RAND", count_tests,
+    //                                                                                    count_number, 23482349);
+    // run_statistical_test_without_progress_bar<statistical_test::NistTest, MINSTD_RAND0>("MINSTD_RAND0", count_tests,
+    //                                                                                     count_number, 23482349);
+    // run_statistical_test_without_progress_bar<statistical_test::NistTest, MT19937>("MT19937", count_tests,
+    // count_number,
+    //                                                                                5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937_64>("MT19937_64", count_tests, count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOX>("MT19937SBOX", count_tests, count_number, 5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOXEnd>("MT19937SBOXEnd", count_tests, count_number,
+    //                                                                  5489u);
+    // run_statistical_test<statistical_test::NistTest, MT19937Involution1>("MT19937Involution1", count_tests,
+    //                                                                      count_number, 5489u);
     // run_statistical_test<statistical_test::NistTest, MT19937Involution2>("MT19937Involution2", count_tests,
     //                                                                      count_number, 5489u);
     // run_statistical_test<statistical_test::NistTest, MT19937Involution3>("MT19937Involution3", count_tests,

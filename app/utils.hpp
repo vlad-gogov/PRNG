@@ -53,9 +53,7 @@ void run_statistical_test_without_progress_bar(const std::string &generator_name
         utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
         assert(bytes.size() == count_number * std::numeric_limits<typename Generator::result_type>::digits);
         test.test(bytes);
-        if ((i + 1) % 100 == 0) {
-            std::cout << "Test " << i + 1 << " of " << count_tests << " completed." << std::endl;
-        }
+        std::cout << "Test " << i + 1 << " of " << count_tests << " completed." << std::endl;
     }
     test.print_statistics(generator_name);
 }

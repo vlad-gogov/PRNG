@@ -11,8 +11,8 @@
 
 namespace statistical_test {
 
-NistTest::NistTest(const double &alpha) : StatisticalTest(alpha) {
-    test_success.fill(0);
+NistTest::NistTest(const double &alpha)
+    : StatisticalTest(alpha), test_success(40, 0), save_p_values(40), test_errors(15) {
 }
 
 void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
@@ -23,12 +23,16 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
         if (print_p_values) {
             std::cout << test_names[0] << ": " << p_value << std::endl;
         }
+        save_p_values[0].push_back(p_value);
         bool res = compare_p_value(p_value);
+        test_success[0] += res;
         if (!res) {
+            for (size_t i = 1; i < 40; i++) {
+                save_p_values[i].push_back(0.0);
+                test_success[i] += false;
+            }
             return;
         }
-        save_p_values[0].push_back(p_value);
-        test_success[0] += res;
     }
 
     {
@@ -205,14 +209,18 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     std::double_t temp = 3 * std::sqrt(alpha * (1 - alpha) / test_count * 1.0);
     std::double_t pass_value_max = 1 - alpha + temp;
     std::double_t pass_value_min = 1 - alpha - temp;
-    std::cout << "Nist test for " << generator_name << " pass value: [" << pass_value_min << ";" << pass_value_max
-              << "]" << std::endl;
     size_t pass_count = 0;
     std::stringstream path_directory;
     path_directory << root_folder.c_str() << "/results/nist_test/" << generator_name;
-    std::filesystem::remove_all(path_directory.str());
-    std::filesystem::create_directory(path_directory.str());
+    try {
+        std::filesystem::remove_all(path_directory.str());
+        std::filesystem::create_directory(path_directory.str());
+    } catch (const std::filesystem::filesystem_error &error) {
+        std::cout << error.what() << std::endl;
+    }
     std::stringstream result;
+    result << "Nist test for " << generator_name << " pass value: [" << pass_value_min << ";" << pass_value_max << "]"
+           << std::endl;
     for (size_t i = 0; i < 40; ++i) {
         // pass test
         std::double_t p = static_cast<std::double_t>(test_success[i]) / static_cast<std::double_t>(test_count);

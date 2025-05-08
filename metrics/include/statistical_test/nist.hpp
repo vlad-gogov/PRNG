@@ -74,9 +74,9 @@ class NistTest : private StatisticalTest {
         "Random Excursions Variant Test",
     };
 
-    std::array<size_t, 40> test_success;
-    std::array<std::vector<std::double_t>, 40> save_p_values;
-    std::array<std::vector<std::string>, 15> test_errors;
+    std::vector<size_t> test_success;
+    std::vector<std::vector<std::double_t>> save_p_values;
+    std::vector<std::vector<std::string>> test_errors;
 
   public:
     NistTest(const double &alpha = 0.01f);
