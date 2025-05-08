@@ -231,6 +231,15 @@ int main() {
     // benchmark_generate_avx2_vs_avx512(count_number);
     // benchmark_generate_array_avx2_vs_avx512(count_number);
 #endif
+    // std::cout << "Testing mouse seed generation...\n";
+    // uint64_t mouse_seed = utils::generate_seed_from_mouse();
+    // std::cout << "Generated seed from mouse movement: " << mouse_seed << std::endl;
+    // std::cout << "Testing time seed generation...\n";
+    // uint64_t time_seed = std::chrono::steady_clock::now().time_since_epoch().count();
+    // std::cout << "Generated seed from time: " << time_seed << std::endl;
+    // std::cout << "Testing QRNG seed generation...\n";
+    // uint64_t qrng_seed = utils::generate_seed_from_qrng();
+    // std::cout << "Generated seed from QRNG: " << qrng_seed << std::endl;
 
     // run_test<statistical_test::NistTest, MT19937>("MT19937", 100, 16384, 12345);
     // run_test<statistical_test::DiehardTest, MT19937>("MT19937", 100, 16384, 12345);
