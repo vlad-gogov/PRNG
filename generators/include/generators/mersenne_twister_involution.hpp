@@ -8,7 +8,7 @@ class MersenneTwisterEngineInvolution : public Generator<UIntType> {
     static constexpr UIntType default_seed = 5489u;
 
   public:
-    MersenneTwisterEngineInvolution(const UIntType seed = default_seed) : mt_gen(default_seed) {
+    MersenneTwisterEngineInvolution(const UIntType seed = default_seed) : mt_gen(seed) {
     }
 
     UIntType operator()() noexcept override {

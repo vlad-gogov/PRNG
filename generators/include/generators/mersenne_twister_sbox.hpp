@@ -6,7 +6,7 @@
 #include "generators/generator.hpp"
 #include "generators/mersenne_twister.hpp"
 
-constexpr std::array<uint8_t, 256> SBOX = {
+constexpr std::array<uint8_t, 256> AES_SBOX = {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76, 0xca, 0x82, 0xc9,
     0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0, 0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f,
     0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15, 0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07,
@@ -29,7 +29,7 @@ class MersenneTwisterEngineSBox : public Generator<UIntType> {
     static constexpr UIntType default_seed = 5489u;
 
   public:
-    MersenneTwisterEngineSBox(const UIntType seed = default_seed) : mt_gen(default_seed) {
+    MersenneTwisterEngineSBox(const UIntType seed = default_seed) : mt_gen(seed) {
     }
 
     UIntType operator()() noexcept override {
@@ -37,7 +37,7 @@ class MersenneTwisterEngineSBox : public Generator<UIntType> {
         UIntType raw_val = mt_gen.random_raw();
         UIntType result = 0u;
         for (size_t i = 0; i < bytes; ++i) {
-            result |= (SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
+            result |= (AES_SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
         }
         return mt_gen.tempering(result);
     }
@@ -67,11 +67,11 @@ using MT19937SBOX = MersenneTwisterEngineSBox<uint32_t, 32, 624, 397, 31, 0x9908
 template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
           UIntType B, size_t T, UIntType C, size_t L, UIntType F>
 class MersenneTwisterEngineSBoxEnd : public Generator<uint32_t> {
-    MersenneTwisterEngine<uint32_t, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
+    MersenneTwisterEngine<UIntType, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
     static constexpr UIntType default_seed = 5489u;
 
   public:
-    MersenneTwisterEngineSBoxEnd(const UIntType seed = default_seed) : mt_gen(default_seed) {
+    MersenneTwisterEngineSBoxEnd(const UIntType seed = default_seed) : mt_gen(seed) {
     }
 
     UIntType operator()() noexcept override {
@@ -79,7 +79,7 @@ class MersenneTwisterEngineSBoxEnd : public Generator<uint32_t> {
         UIntType raw_val = mt_gen();
         UIntType result = 0u;
         for (size_t i = 0; i < bytes; ++i) {
-            result |= (SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
+            result |= (AES_SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
         }
         return result;
     }
