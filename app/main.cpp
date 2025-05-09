@@ -178,7 +178,7 @@ int main() {
 
     const size_t count_number = 32768;
     const size_t count_tests = 1000;
-    const std::double_t alpha = 0.001;
+    const std::double_t alpha = 1.0 / count_tests;
 
     // ratio_one_zero<MINSTD_RAND0>(count_number, 23482349);
     // run_statistical_test_without_progress_bar<statistical_test::NistTest, MINSTD_RAND>("MINSTD_RAND", count_tests,
