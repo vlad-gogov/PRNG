@@ -9,8 +9,10 @@ target_link_libraries(${TARGET_NAME} PUBLIC
     generators
 )
 
-option(BUILD_WITH_ASAN "Enable AddressSanitizer" ON)
-option(BUILD_WITH_UBSAN "Enable UndefinedBehaviorSanitizer" ON)
+set_property(TARGET ${testcase} PROPERTY CXX_STANDARD 20)
+
+option(BUILD_WITH_ASAN "Enable AddressSanitizer" OFF)
+option(BUILD_WITH_UBSAN "Enable UndefinedBehaviorSanitizer" OFF)
 
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
@@ -43,6 +45,7 @@ if(COMPILER_SUPPORTS_AVX512)
     endif()
 endif()
 
+target_link_libraries(${TARGET_NAME} PRIVATE stdc++fs)
 target_compile_options(${TARGET_NAME} PRIVATE -O3 -funroll-loops -ftree-vectorize)
 
 if(BUILD_WITH_ASAN)
