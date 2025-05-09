@@ -163,18 +163,25 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
     }
 
     {
-        std::vector<std::double_t> p_values = nist::random_excursions(bytes);
-        assert(p_values.size() == 8);
-        for (int s = -4, i = 0; s <= 4; ++s) {
-            if (s == 0) {
-                continue;
+        try {
+            std::vector<std::double_t> p_values = nist::random_excursions(bytes);
+            assert(p_values.size() == 8);
+            for (int s = -4, i = 0; s <= 4; ++s) {
+                if (s == 0) {
+                    continue;
+                }
+                if (print_p_values) {
+                    std::cout << test_names[14 + i] << ": p-value = " << p_values[i] << "\n";
+                }
+                save_p_values[14 + i].push_back(p_values[i]);
+                test_success[14 + i] += compare_p_value(p_values[i]);
+                i++;
             }
-            if (print_p_values) {
-                std::cout << test_names[14 + i] << ": p-value = " << p_values[i] << "\n";
+        } catch (const std::runtime_error &e) {
+            test_errors[13].push_back(num_test + e.what());
+            for (size_t i = 0; i < 18; ++i) {
+                save_p_values[14 + i].push_back(0.0);
             }
-            save_p_values[14 + i].push_back(p_values[i]);
-            test_success[14 + i] += compare_p_value(p_values[i]);
-            i++;
         }
     }
 
