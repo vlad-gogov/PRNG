@@ -616,7 +616,7 @@ bool nist::check_cumulative_sums(const utils::seq_bytes &bytes, nist::Cumulative
     return nist::cumulative_sums(bytes, mode) >= alpha;
 }
 
-std::vector<std::double_t> nist::random_excursions(const utils::seq_bytes &bytes) {
+std::vector<std::double_t> nist::random_excursions(const utils::seq_bytes &bytes, bool check) {
     std::vector<int> state_x = {-4, -3, -2, -1, 1, 2, 3, 4};
     constexpr size_t count_state = 8;
     std::vector<std::vector<std::double_t>> pi = {
@@ -630,6 +630,10 @@ std::vector<std::double_t> nist::random_excursions(const utils::seq_bytes &bytes
     std::vector<int> S_ = S;
     S_.push_back(0);
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
+    int constraint = (int)std::max(0.005 * std::pow(bytes.size(), 0.5), 500.0);
+    if (check && J < constraint) {
+        throw std::runtime_error("Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES");
+    }
     std::vector<std::vector<int>> cycles(J);
     size_t index = 0;
     cycles[index].push_back(0);
@@ -672,8 +676,8 @@ std::vector<std::double_t> nist::random_excursions(const utils::seq_bytes &bytes
     return p_values;
 }
 
-std::vector<bool> nist::check_random_excursions(const utils::seq_bytes &bytes) {
-    std::vector<std::double_t> p_values = nist::random_excursions(bytes);
+std::vector<bool> nist::check_random_excursions(const utils::seq_bytes &bytes, bool check) {
+    std::vector<std::double_t> p_values = nist::random_excursions(bytes, check);
     std::vector<bool> results(p_values.size(), false);
     for (size_t i = 0; i < p_values.size(); ++i) {
         results[i] = p_values[i] >= alpha;

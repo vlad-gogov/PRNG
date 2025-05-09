@@ -208,7 +208,7 @@ TEST(Nist, cumulative_sums_2_reverse) {
 
 TEST(Nist, random_excursions_1) {
     utils::seq_bytes bytes = {0, 1, 1, 0, 1, 1, 0, 1, 0, 1};
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::vector<double> answers = {0.994506, 0.988003, 0.962566, 0.962566, 0.502488, 0.142514, 0.988003, 0.994506};
     for (size_t i = 0; i < answers.size(); i++) {
         ASSERT_NEAR(p_values[i], answers[i], abs_error);
@@ -217,7 +217,7 @@ TEST(Nist, random_excursions_1) {
 
 TEST(Nist, random_excursions_2) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent(1'000'000);
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::vector<double> answers = {0.573306, 0.197996, 0.164011, 0.007779, 0.786868, 0.440912, 0.797854, 0.778186};
     for (size_t i = 0; i < answers.size(); i++) {
         ASSERT_NEAR(p_values[i], answers[i], abs_error);
@@ -345,7 +345,7 @@ TEST(Nist, cumulative_sums_digit_e_reverse) {
 
 TEST(Nist, random_excursions_digit_e) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent();
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::vector<double> answers = {
         0.573306, 0.197996, 0.164011, 0.007779, 0.786868, 0.440912, 0.797854, 0.778186,
     };

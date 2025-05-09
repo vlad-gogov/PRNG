@@ -52,8 +52,8 @@ enum CumulativeSumsMode {
 double cumulative_sums(const utils::seq_bytes &bytes, CumulativeSumsMode mode);
 bool check_cumulative_sums(const utils::seq_bytes &bytes, CumulativeSumsMode mode);
 
-std::vector<double> random_excursions(const utils::seq_bytes &bytes);
-std::vector<bool> check_random_excursions(const utils::seq_bytes &bytes);
+std::vector<double> random_excursions(const utils::seq_bytes &bytes, bool check = true);
+std::vector<bool> check_random_excursions(const utils::seq_bytes &bytes, bool check = true);
 
 std::vector<double> random_excursions_variant(const utils::seq_bytes &bytes, bool check = true);
 std::vector<bool> check_random_excursions_variant(const utils::seq_bytes &bytes, bool check = true);

@@ -366,7 +366,7 @@ TEST(Lcg, random_excursions_lcg) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions(bytes);
+    std::vector<bool> answers = nist::check_random_excursions(bytes, false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }
