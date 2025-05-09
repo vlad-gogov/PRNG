@@ -62,9 +62,6 @@ bool nist::check_frequency_block_test(const utils::seq_bytes &bytes, size_t m) {
 }
 
 std::double_t nist::runs_test(const utils::seq_bytes &bytes) {
-    if (!nist::check_frequency_test(bytes)) {
-        return 0.0;
-    }
     size_t length_bytes = bytes.size();
     std::double_t pi = 0;
     for (const auto &byte : bytes) {
