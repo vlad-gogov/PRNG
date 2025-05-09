@@ -71,13 +71,45 @@ class DrawChart:
         steps = np.where(indices == 0, -1, 1)
         return steps
 
+    def uint32_to_bits(uint_list):
+        bits = []
+        for number in uint_list:
+            bin_str = format(number, '032b')  # Преобразуем в 32-битное двоичное представление
+            bits.extend([int(bit) for bit in bin_str])
+        return np.array(bits)
+
     def random_walk(self):
         data = self.generate_data(self.data_size, self.seed)
-        steps = self.rng_choise(data)
+        steps = DrawChart.uint32_to_bits(data)
+        print(f"Шаги: {len(steps)}")
+        # Преобразование 0 → -1, 1 → +1
+        steps = np.where(steps == 0, -1, 1)
         position = np.cumsum(steps)
+
+        for i in [-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
+            visits = np.count_nonzero(position == i)
+            print(f"Точка {i} была посещена {visits} раз(а).")
 
         # 1. График траектории
         plt.figure(figsize=(12, 5))
+        plt.axhline(-9, color='darkred', linestyle='--', label='Уровень -9')
+        plt.axhline(-8, color='darkred', linestyle='--', label='Уровень -8')
+        plt.axhline(-7, color='darkred', linestyle='--', label='Уровень -7')
+        plt.axhline(-6, color='darkred', linestyle='--', label='Уровень -6')
+        plt.axhline(-5, color='darkred', linestyle='--', label='Уровень -5')
+        plt.axhline(-4, color='darkred', linestyle='--', label='Уровень -4')
+        plt.axhline(-3, color='darkred', linestyle='--', label='Уровень -3')
+        plt.axhline(-2, color='darkred', linestyle='--', label='Уровень -2')
+        plt.axhline(-1, color='darkred', linestyle='--', label='Уровень -1')
+        plt.axhline(1, color='darkred', linestyle='--', label='Уровень 1')
+        plt.axhline(2, color='darkred', linestyle='--', label='Уровень 2')
+        plt.axhline(3, color='darkred', linestyle='--', label='Уровень 3')
+        plt.axhline(4, color='darkred', linestyle='--', label='Уровень 4')
+        plt.axhline(5, color='darkred', linestyle='--', label='Уровень 5')
+        plt.axhline(6, color='darkred', linestyle='--', label='Уровень 6')
+        plt.axhline(7, color='darkred', linestyle='--', label='Уровень 7')
+        plt.axhline(8, color='darkred', linestyle='--', label='Уровень 8')
+        plt.axhline(9, color='darkred', linestyle='--', label='Уровень 9')
         plt.plot(position)
         plt.title(f"Случайное блуждание для {self.generator_name}")
         plt.xlabel("Номер шага")

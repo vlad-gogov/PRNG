@@ -37,7 +37,7 @@ class NistTest : private StatisticalTest {
         "Random Excursions Test 3",
         "Random Excursions Test 4",
         "Random Excursions Variant Test -9",
-        "Random Excursions Variant Test -9",
+        "Random Excursions Variant Test -8",
         "Random Excursions Variant Test -7",
         "Random Excursions Variant Test -6",
         "Random Excursions Variant Test -5",

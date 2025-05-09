@@ -226,7 +226,7 @@ TEST(Nist, random_excursions_2) {
 
 TEST(Nist, random_excursions_variant_1) {
     utils::seq_bytes bytes = {0, 1, 1, 0, 1, 1, 0, 1, 0, 1};
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::vector<double> answers = {0.766433, 0.751830, 0.734095, 0.711923, 0.683091, 0.643429,
                                    0.583882, 0.479500, 0.414216, 0.683091, 1.000000, 0.583882,
                                    0.643429, 0.683091, 0.711923, 0.734095, 0.751830, 0.766433};
@@ -237,7 +237,7 @@ TEST(Nist, random_excursions_variant_1) {
 
 TEST(Nist, random_excursions_variant_2) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent(1'000'000);
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::vector<double> answers = {0.858946, 0.794755, 0.576249, 0.493417, 0.633873, 0.917283,
                                    0.934708, 0.816012, 0.826009, 0.137861, 0.200642, 0.441254,
                                    0.939291, 0.505683, 0.445935, 0.512207, 0.538635, 0.593930};
@@ -356,7 +356,7 @@ TEST(Nist, random_excursions_digit_e) {
 
 TEST(Nist, random_excursions_variant_digit_e) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent();
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::vector<double> answers = {
         0.858946, 0.794755, 0.576249, 0.493417, 0.633873, 0.917283, 0.934708, 0.816012, 0.826009,
         0.137861, 0.200642, 0.441254, 0.939291, 0.505683, 0.445935, 0.512207, 0.538635, 0.593930,

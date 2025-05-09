@@ -55,7 +55,7 @@ bool check_cumulative_sums(const utils::seq_bytes &bytes, CumulativeSumsMode mod
 std::vector<double> random_excursions(const utils::seq_bytes &bytes);
 std::vector<bool> check_random_excursions(const utils::seq_bytes &bytes);
 
-std::vector<double> random_excursions_variant(const utils::seq_bytes &bytes, bool check = false);
-std::vector<bool> check_random_excursions_variant(const utils::seq_bytes &bytes, bool check = false);
+std::vector<double> random_excursions_variant(const utils::seq_bytes &bytes, bool check = true);
+std::vector<bool> check_random_excursions_variant(const utils::seq_bytes &bytes, bool check = true);
 
 } // namespace nist
