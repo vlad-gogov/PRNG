@@ -181,21 +181,23 @@ int main() {
     const std::double_t alpha = 1.0 / count_tests;
 
     // ratio_one_zero<MINSTD_RAND0>(count_number, 23482349);
-    // run_statistical_test_without_progress_bar<statistical_test::NistTest, MINSTD_RAND>("MINSTD_RAND", count_tests,
-    //                                                                                    count_number, 23482349);
-    // run_statistical_test_without_progress_bar<statistical_test::NistTest, MINSTD_RAND0>("MINSTD_RAND0", count_tests,
-    //                                                                                     count_number, 23482349);
-
-    // run_statistical_test<statistical_test::NistTest, MINSTD_RAND_IMPROVE>("MINSTD_RAND_IMPROVE", count_tests,
-    // count_number, 23482349);
+    // run_statistical_test<statistical_test::NistTest, MINSTD_RAND>("MINSTD_RAND", count_tests, count_number, 23482349,
+    //                                                               alpha);
+    // run_statistical_test<statistical_test::NistTest, MINSTD_RAND0>("MINSTD_RAND0", count_tests, count_number,
+    // 23482349,
+    //                                                                alpha);
 
     // run_statistical_test<statistical_test::NistTest, std::minstd_rand0>("lib_minstd_rand0", count_tests,
-    // count_number, 23482349);
-    // run_statistical_test<statistical_test::NistTest, LCG_GLIBC>("LCG_GLIBC", count_tests, count_number, 23482349);
+    // count_number,
+    //                                                                     23482349, alpha);
+    // run_statistical_test<statistical_test::NistTest, LCG_GLIBC>("LCG_GLIBC", count_tests, count_number, 23482349,
+    //                                                             alpha);
     // run_statistical_test<statistical_test::NistTest, LCG_Numerical_Recipes>("LCG_Numerical_Recipes", count_tests,
-    // count_number, 23482349); run_statistical_test<statistical_test::NistTest, LCG_Borland>("LCG_Borland",
-    // count_tests, count_number, 23482349);
-    // run_statistical_test<statistical_test::NistTest, LCG_ANSI_C>("LCG_ANSI_C", count_tests, count_number, 23482349);
+    //                                                                         count_number, 23482349, alpha);
+    // run_statistical_test<statistical_test::NistTest, LCG_Borland>("LCG_Borland", count_tests, count_number, 23482349,
+    //                                                               alpha);
+    // run_statistical_test<statistical_test::NistTest, LCG_ANSI_C>("LCG_ANSI_C", count_tests, count_number, 23482349,
+    //                                                              alpha);
 
     // run_statistical_test_without_progress_bar<statistical_test::NistTest, MT19937>("MT19937", count_tests,
     // count_number,
