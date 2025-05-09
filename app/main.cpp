@@ -201,12 +201,11 @@ int main() {
     //                                                                                5489u);
     // run_statistical_test<statistical_test::NistTest, MT19937_64>("MT19937_64", count_tests, count_number, 5489u);
 
-    // run_statistical_test<statistical_test::NistTest, MT19937>("MT19937", count_tests, count_number, 12345);
+    // run_statistical_test<statistical_test::NistTest, MT19937>("MT19937", count_tests, count_number, 5489u);
 
-    // run_statistical_test<statistical_test::NistTest, MT19937SBOX>("MT19937SBOX", count_tests, count_number, 12345);
-    // print_gen_value<MT19937SBOX>(10);
+    // run_statistical_test<statistical_test::NistTest, MT19937SBOX>("MT19937SBOX", count_tests, count_number, 5489u);
     // run_statistical_test<statistical_test::NistTest, MT19937SBOXEnd>("MT19937SBOXEnd", count_tests, count_number,
-    // 12345);
+    //                                                                  5489u);
 
     // run_statistical_test<statistical_test::NistTest, MT19937Involution1>("MT19937Involution1", count_tests,
     //                                                                      count_number, 5489u);
@@ -339,8 +338,9 @@ int main() {
     // run_statistical_test<statistical_test::NistTest, MT19937SIPHASH_64>("MT19937SIPHASH_64", count_tests,
     //                                                                     count_number / 2, 5489u);
 
-    // run_benchmark<std::mt19937, MT19937>("std::mt19937", "MT19937", count_number * count_number, 12345, 5);
-    // run_benchmark<MT19937, MT19937Involution3>("MT19937", "MT19937Involution3", count_number * count_number, 12345,
+    // run_benchmark<std::mt19937, MT19937>("std::mt19937", "MT19937", count_number * count_number, 5489u, 5);
+    // run_benchmark<MT19937, MT19937Involution3>("MT19937", "MT19937Involution3", count_number * count_number, 5489u,
     // 5);
+    // print_gen_value<MT19937SBOX>(10);
     return 0;
 }
