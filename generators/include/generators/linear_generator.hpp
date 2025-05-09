@@ -5,7 +5,7 @@
 #include <cstdint>
 
 template <typename Type>
-class LinearGenerator : Generator<Type> {
+class LinearGenerator : public Generator<Type> {
 
     Type _seed;
 

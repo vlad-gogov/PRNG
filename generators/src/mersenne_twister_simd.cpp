@@ -144,6 +144,17 @@ uint32_t MersenneTwister32AVX2::min() const {
 uint32_t MersenneTwister32AVX2::max() const {
     return std::numeric_limits<uint32_t>::max();
 }
+
+void MersenneTwister32AVX2::seed(const uint32_t new_seed) {
+    *this = MersenneTwister32AVX2(new_seed);
+}
+
+void MersenneTwister32AVX2::discard(const std::uint64_t z) {
+    for (size_t i = 0; i < z; ++i) {
+        this->operator()();
+    }
+}
+
 #endif
 
 #ifdef __AVX512F__
@@ -268,4 +279,15 @@ uint32_t MersenneTwister32AVX512::min() const {
 uint32_t MersenneTwister32AVX512::max() const {
     return std::numeric_limits<uint32_t>::max();
 }
+
+void MersenneTwister32AVX512::seed(const uint32_t new_seed) {
+    *this = MersenneTwister32AVX512(new_seed);
+}
+
+void MersenneTwister32AVX512::discard(const std::uint64_t z) {
+    for (size_t i = 0; i < z; ++i) {
+        this->operator()();
+    }
+}
+
 #endif

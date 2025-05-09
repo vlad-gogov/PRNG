@@ -3,6 +3,7 @@
 #include "generator.hpp"
 
 #include <cstdint>
+#include <limits>
 
 /*&
  * @tparam W  Word size, the number of bits in each element of
@@ -92,7 +93,11 @@ class MersenneTwisterEngine : public Generator<UIntType> {
         return tempering(random_raw());
     }
 
-    void discard(uint64_t z) {
+    void seed(const UIntType seed) override {
+        *this = MersenneTwisterEngine(seed);
+    }
+
+    void discard(uint64_t z) override {
         for (; 0 < z; --z) {
             this->operator()();
         }
@@ -205,8 +210,12 @@ class MersenneTwisterEngine64 : public Generator<UIntType> {
         return tempering(random_raw());
     }
 
-    void discard(uint64_t z) {
-        for (; 0 < z; --z) {
+    void seed(const UIntType seed) override {
+        *this = MersenneTwisterEngine64(seed);
+    }
+
+    void discard(const std::uint64_t z) override {
+        for (size_t i = 0; i < z; ++i) {
             this->operator()();
         }
     }

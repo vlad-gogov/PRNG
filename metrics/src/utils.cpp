@@ -142,4 +142,24 @@ int kperm(const std::vector<int> &v) {
     return uret;
 }
 
+void save_p_values_to_file(const std::string &path, const std::vector<std::double_t> &p_values) {
+    std::ofstream file;
+    file.open(path, std::ios::out);
+    for (const auto &p_value : p_values) {
+        file << p_value << "\n";
+    }
+    file.close();
+}
+
+void save_string_to_file(const std::string &path, const std::string &str, bool append) {
+    std::ofstream file;
+    if (append) {
+        file.open(path, std::ios::app);
+    } else {
+        file.open(path, std::ios::out);
+    }
+    file << str;
+    file.close();
+}
+
 } // namespace utils

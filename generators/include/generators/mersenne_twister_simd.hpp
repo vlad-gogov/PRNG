@@ -52,6 +52,10 @@ class MersenneTwister32AVX2 : public Generator<uint32_t> {
     virtual uint32_t max() const override;
 
     void generate_bulk(uint32_t *output, size_t len);
+
+    void seed(const uint32_t new_seed) override;
+
+    void discard(const std::uint64_t z) override;
 };
 
 using MT32AVX2 = MersenneTwister32AVX2;
@@ -96,6 +100,10 @@ class MersenneTwister32AVX512 : public Generator<uint32_t> {
     virtual uint32_t max() const override;
 
     void generate_bulk(uint32_t *output, size_t len);
+
+    void seed(const uint32_t new_seed) override;
+
+    void discard(const std::uint64_t z) override;
 };
 
 using MT32AVX512 = MersenneTwister32AVX512;

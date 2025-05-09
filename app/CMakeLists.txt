@@ -9,6 +9,11 @@ target_link_libraries(${TARGET_NAME} PUBLIC
     generators
 )
 
+set_property(TARGET ${testcase} PROPERTY CXX_STANDARD 20)
+
+option(BUILD_WITH_ASAN "Enable AddressSanitizer" ON)
+option(BUILD_WITH_UBSAN "Enable UndefinedBehaviorSanitizer" ON)
+
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
 
@@ -40,4 +45,30 @@ if(COMPILER_SUPPORTS_AVX512)
     endif()
 endif()
 
-target_compile_options("APP" PRIVATE -O3)
+target_link_libraries(${TARGET_NAME} PRIVATE stdc++fs)
+target_compile_options(${TARGET_NAME} PRIVATE -O3 -funroll-loops -ftree-vectorize)
+
+if(BUILD_WITH_ASAN)
+    message(STATUS "AddressSanitizer ENABLED")
+    add_compile_options(${TARGET_NAME} PRIVATE
+        -O1
+        -fsanitize=address
+        -fno-omit-frame-pointer
+    )
+    target_link_options(${TARGET_NAME} PRIVATE
+        -fsanitize=address
+    )
+endif()
+
+if(BUILD_WITH_UBSAN)
+    message(STATUS "UndefinedBehaviorSanitizer ENABLED")
+    add_compile_options(${TARGET_NAME} PRIVATE
+        -O1
+        -fsanitize=undefined
+        -fno-omit-frame-pointer
+    )
+    target_link_options(${TARGET_NAME} PRIVATE
+        -fsanitize=undefined
+    )
+endif()
+

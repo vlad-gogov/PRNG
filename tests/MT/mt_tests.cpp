@@ -1296,7 +1296,7 @@ TEST(MTSBOX, cumulative_sums_mt_reverse) {
 }
 
 TEST(MTSBOX, random_excursions_mt) {
-    MT19937SBOX generator(12345);
+    MT19937SBOX generator(5489u);
     std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
@@ -1316,7 +1316,7 @@ TEST(MTSBOX, random_excursions_mt) {
 }
 
 TEST(MTSBOX, random_excursions_variant_mt) {
-    MT19937SBOX generator;
+    MT19937SBOX generator(5489u);
     std::uint32_t count_number = 16384u;
     std::vector<std::uint32_t> numbers(count_number);
     for (std::uint32_t i = 0; i < count_number; ++i) {
