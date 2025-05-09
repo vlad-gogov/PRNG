@@ -4,7 +4,7 @@
 
 template <typename StatisticalTest, typename Generator>
 void run_statistical_test(const std::string &generator_name, const size_t count_tests, const size_t count_number,
-                          const uint32_t start_seed = 0u) {
+                          const uint32_t start_seed = 0u, const std::double_t alpha = 0.01) {
     std::float_t progress = 0.0f;
     const std::float_t step_size = 100.0f / count_tests;
 
@@ -21,7 +21,7 @@ void run_statistical_test(const std::string &generator_name, const size_t count_
         indicators::option::ShowElapsedTime{true},
         indicators::option::FontStyles{std::vector<indicators::FontStyle>{indicators::FontStyle::bold}}};
 
-    StatisticalTest test;
+    StatisticalTest test(alpha);
     for (size_t i = 0; i < count_tests; ++i) {
         Generator generator(start_seed + i);
         std::vector<typename Generator::result_type> numbers(count_number);
