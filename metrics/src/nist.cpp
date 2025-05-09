@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
+#include <system_error>
 
 #include <boost/math/special_functions/gamma.hpp>
 
@@ -214,7 +215,9 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     constexpr std::double_t bin_width = 0.1; // Choose your bin interval
     std::filesystem::path root_folder;
     try {
-        root_folder = std::filesystem::current_path().parent_path().parent_path();
+        std::error_code code;
+        root_folder = std::filesystem::current_path(code).parent_path().parent_path();
+        assert(!code);
     } catch (const std::filesystem::filesystem_error &err) {
         std::cout << err.what() << std::endl;
     }
@@ -225,8 +228,16 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     std::stringstream path_directory;
     path_directory << root_folder.c_str() << "/results/nist_test/" << generator_name << "_" << alpha;
     try {
-        std::filesystem::remove_all(path_directory.str());
-        std::filesystem::create_directory(path_directory.str());
+        std::error_code code;
+        std::filesystem::remove_all(path_directory.str(), code);
+        assert(!code);
+    } catch (const std::filesystem::filesystem_error &error) {
+        std::cout << error.what() << std::endl;
+    }
+    try {
+        std::error_code code;
+        std::filesystem::create_directory(path_directory.str(), code);
+        assert(!code);
     } catch (const std::filesystem::filesystem_error &error) {
         std::cout << error.what() << std::endl;
     }

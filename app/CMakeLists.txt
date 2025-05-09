@@ -11,8 +11,8 @@ target_link_libraries(${TARGET_NAME} PUBLIC
 
 set_property(TARGET ${testcase} PROPERTY CXX_STANDARD 20)
 
-option(BUILD_WITH_ASAN "Enable AddressSanitizer" OFF)
-option(BUILD_WITH_UBSAN "Enable UndefinedBehaviorSanitizer" OFF)
+option(BUILD_WITH_ASAN "Enable AddressSanitizer" ON)
+option(BUILD_WITH_UBSAN "Enable UndefinedBehaviorSanitizer" ON)
 
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
