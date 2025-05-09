@@ -216,7 +216,7 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     std::double_t pass_value_min = 1 - alpha - temp;
     size_t pass_count = 0;
     std::stringstream path_directory;
-    path_directory << root_folder.c_str() << "/results/nist_test/" << generator_name;
+    path_directory << root_folder.c_str() << "/results/nist_test/" << generator_name << "_" << alpha;
     try {
         std::filesystem::remove_all(path_directory.str());
         std::filesystem::create_directory(path_directory.str());
