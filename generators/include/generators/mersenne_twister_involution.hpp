@@ -1,6 +1,8 @@
 #include "generators/mersenne_twister.hpp"
 #include "generators/mersenne_twister_sbox.hpp"
 
+#include <bit>
+
 template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
           UIntType B, size_t T, UIntType C, size_t L, UIntType F, UIntType shift>
 class MersenneTwisterEngineInvolution : public Generator<UIntType> {
@@ -14,7 +16,7 @@ class MersenneTwisterEngineInvolution : public Generator<UIntType> {
     UIntType operator()() noexcept override {
         constexpr size_t bytes = sizeof(UIntType) * 8;
         UIntType value = mt_gen();
-        UIntType result = (value << shift) | (value >> (bytes - shift));
+        UIntType result = std::rotr(value, shift);
         return result;
     }
 
