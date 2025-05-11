@@ -234,7 +234,7 @@ TEST(MT, random_excursions_variant_mt) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions_variant(bytes false);
+    std::vector<bool> answers = nist::check_random_excursions_variant(bytes, false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }
