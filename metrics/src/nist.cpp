@@ -165,7 +165,7 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
 
     {
         try {
-            std::vector<std::double_t> p_values = nist::random_excursions(bytes);
+        std::vector<std::double_t> p_values = nist::random_excursions(bytes);
             assert(p_values.size() == 8);
             for (int s = -4, i = 0; s <= 4; ++s) {
                 if (s == 0) {
@@ -217,7 +217,9 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     try {
         std::error_code code;
         root_folder = std::filesystem::current_path(code).parent_path().parent_path();
-        assert(!code);
+        if (code) {
+            std::cout << "Get current path with error: " << code.message() << std::endl;
+        }
     } catch (const std::filesystem::filesystem_error &err) {
         std::cout << err.what() << std::endl;
     }
@@ -230,14 +232,18 @@ void NistTest::print_statistics(const std::string &generator_name) const {
     try {
         std::error_code code;
         std::filesystem::remove_all(path_directory.str(), code);
-        assert(!code);
+        if (code) {
+            std::cout << "Remove folder " << path_directory.str() << " with error: " << code.message() << std::endl;
+        }
     } catch (const std::filesystem::filesystem_error &error) {
         std::cout << error.what() << std::endl;
     }
     try {
         std::error_code code;
-        std::filesystem::create_directory(path_directory.str(), code);
-        assert(!code);
+        std::filesystem::create_directory(std::filesystem::path(path_directory.str()), code);
+        if (code) {
+            std::cout << "Create folder " << path_directory.str() << " with error: " << code.message() << std::endl;
+        }
     } catch (const std::filesystem::filesystem_error &error) {
         std::cout << error.what() << std::endl;
     }
@@ -277,7 +283,7 @@ void NistTest::print_statistics(const std::string &generator_name) const {
         std::replace(copy_name.begin(), copy_name.end(), ' ', '_');
         std::stringstream path;
         path << path_directory.str() << "/" << copy_name << ".txt";
-        utils::save_p_values_to_file(path.str(), save_p_values[i]);
+        utils::save_values_to_file(path.str(), save_p_values[i]);
 
         result << test_names[i] << ": " << result_to_string(answer_test) << " (" << test_success[i] << " / "
                << test_count << ") && uniform p-values (" << p_uniform << ") " << result_to_string(answer_uniform)

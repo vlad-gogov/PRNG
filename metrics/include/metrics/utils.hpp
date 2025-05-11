@@ -2,6 +2,7 @@
 
 #include <bitset>
 #include <complex>
+#include <fstream>
 #include <iostream>
 #include <limits>
 #include <numbers>
@@ -156,7 +157,16 @@ std::vector<UIntType> bits_to_vector_uint(const seq_bytes &bytes, int size) {
     return result;
 }
 
-void save_p_values_to_file(const std::string &path, const std::vector<std::double_t> &p_values);
+template <class T>
+void save_values_to_file(const std::string &path, const std::vector<T> &values) {
+    std::ofstream file;
+    file.open(path, std::ios::out);
+    for (const auto &value : values) {
+        file << value << "\n";
+    }
+    file.close();
+}
+
 void save_string_to_file(const std::string &path, const std::string &str, bool append = false);
 
 } // namespace utils
