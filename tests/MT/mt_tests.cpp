@@ -228,13 +228,13 @@ TEST(MT, random_excursions_variant_mt) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions_variant(bytes);
+    std::vector<bool> answers = nist::check_random_excursions_variant(bytes false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }
@@ -442,13 +442,13 @@ TEST(MT, random_excursions_variant_mt_64) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions_variant(bytes);
+    std::vector<bool> answers = nist::check_random_excursions_variant(bytes, false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }
@@ -636,13 +636,13 @@ TEST(MT, random_excursions_mt_64_1) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions(bytes);
+    std::vector<bool> answers = nist::check_random_excursions(bytes, false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }
@@ -656,7 +656,7 @@ TEST(MT, random_excursions_variant_mt_64_1) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
@@ -1064,13 +1064,13 @@ TEST(MT, random_excursions_mt_64_3) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions(bytes);
+    std::vector<bool> answers = nist::check_random_excursions(bytes, false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }
@@ -1084,7 +1084,7 @@ TEST(MT, random_excursions_variant_mt_64_3) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
@@ -1303,13 +1303,13 @@ TEST(MTSBOX, random_excursions_mt) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions(bytes);
+    std::vector<bool> answers = nist::check_random_excursions(bytes, false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }
@@ -1323,13 +1323,13 @@ TEST(MTSBOX, random_excursions_variant_mt) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
     }
     std::cout << std::endl;
-    std::vector<bool> answers = nist::check_random_excursions_variant(bytes);
+    std::vector<bool> answers = nist::check_random_excursions_variant(bytes, false);
     for (const auto &answer : answers) {
         ASSERT_TRUE(answer);
     }

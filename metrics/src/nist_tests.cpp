@@ -632,7 +632,7 @@ std::vector<std::double_t> nist::random_excursions(const utils::seq_bytes &bytes
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
     int constraint = (int)std::max(0.005 * std::pow(bytes.size(), 0.5), 500.0);
     if (check && J < constraint) {
-        throw std::runtime_error("Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES");
+        throw std::runtime_error("Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES " + std::to_string(J));
     }
     std::vector<std::vector<int>> cycles(J);
     size_t index = 0;
@@ -695,7 +695,7 @@ std::vector<std::double_t> nist::random_excursions_variant(const utils::seq_byte
     size_t J = std::count_if(std::next(S_.begin()), S_.end(), [](int element) { return element == 0; });
     int constraint = (int)std::max(0.005 * std::pow(bytes.size(), 0.5), 500.0);
     if (check && J < constraint) {
-        throw std::runtime_error("Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES");
+        throw std::runtime_error("Random Excursions Variant: INSUFFICIENT NUMBER OF CYCLES " + std::to_string(J));
     }
 
     std::vector<std::double_t> p_values(count_state, 0);
