@@ -3,6 +3,7 @@ import subprocess
 import os
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import seaborn as sns
 import plotly.express as px
 import numpy as np
@@ -77,44 +78,63 @@ class DrawChart:
             bin_str = format(number, '032b')  # Преобразуем в 32-битное двоичное представление
             bits.extend([int(bit) for bit in bin_str])
         return np.array(bits)
+    
+    def uint64_to_bits(uint_list):
+        bits = []
+        for number in uint_list:
+            bin_str = format(number, '064b')  # Преобразуем в 32-битное двоичное представление
+            bits.extend([int(bit) for bit in bin_str])
+        return np.array(bits)
 
     def random_walk(self):
-        data = self.generate_data(self.data_size, self.seed)
+        data = np.array(self.generate_data(self.data_size, self.seed)).astype(np.uint64)
         steps = DrawChart.uint32_to_bits(data)
+        # steps = DrawChart.uint64_to_bits(data)
         print(f"Шаги: {len(steps)}")
         # Преобразование 0 → -1, 1 → +1
         steps = np.where(steps == 0, -1, 1)
         position = np.cumsum(steps)
 
-        for i in [-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
-            visits = np.count_nonzero(position == i)
-            print(f"Точка {i} была посещена {visits} раз(а).")
+        # Подсчёт визитов
+        levels = list(range(-9, 10))
+        visits = [np.count_nonzero(position == i) for i in levels]
+        for i, count in zip(levels, visits):
+            print(f"Точка {i} была посещена {count} раз(а).")
 
-        # 1. График траектории
-        plt.figure(figsize=(12, 5))
-        plt.axhline(-9, color='darkred', linestyle='--', label='Уровень -9')
-        plt.axhline(-8, color='darkred', linestyle='--', label='Уровень -8')
-        plt.axhline(-7, color='darkred', linestyle='--', label='Уровень -7')
-        plt.axhline(-6, color='darkred', linestyle='--', label='Уровень -6')
-        plt.axhline(-5, color='darkred', linestyle='--', label='Уровень -5')
-        plt.axhline(-4, color='darkred', linestyle='--', label='Уровень -4')
-        plt.axhline(-3, color='darkred', linestyle='--', label='Уровень -3')
-        plt.axhline(-2, color='darkred', linestyle='--', label='Уровень -2')
-        plt.axhline(-1, color='darkred', linestyle='--', label='Уровень -1')
-        plt.axhline(1, color='darkred', linestyle='--', label='Уровень 1')
-        plt.axhline(2, color='darkred', linestyle='--', label='Уровень 2')
-        plt.axhline(3, color='darkred', linestyle='--', label='Уровень 3')
-        plt.axhline(4, color='darkred', linestyle='--', label='Уровень 4')
-        plt.axhline(5, color='darkred', linestyle='--', label='Уровень 5')
-        plt.axhline(6, color='darkred', linestyle='--', label='Уровень 6')
-        plt.axhline(7, color='darkred', linestyle='--', label='Уровень 7')
-        plt.axhline(8, color='darkred', linestyle='--', label='Уровень 8')
-        plt.axhline(9, color='darkred', linestyle='--', label='Уровень 9')
-        plt.plot(position)
-        plt.title(f"Случайное блуждание для {self.generator_name}")
-        plt.xlabel("Номер шага")
-        plt.ylabel("Позиция")
-        plt.grid()
+        # Построение графика + таблицы
+        fig, ax = plt.subplots(figsize=(14, 5))
+        fig.subplots_adjust(right=0.74)  # место под таблицу
+
+        # Горизонтальные уровни
+        for level in levels:
+            if level != 0:
+                ax.axhline(level, color='darkred', linestyle='--')
+
+        # Линия блуждания
+        ax.plot(position)
+
+        # Оформление
+        ax.set_title(f"Случайное блуждание для {self.generator_name}")
+        ax.set_xlabel("Номер шага")
+        ax.set_ylabel("Позиция")
+        ax.grid(True)
+
+        # Отключение научной нотации
+        ax.xaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=False))
+        ax.ticklabel_format(style='plain', axis='x')
+
+        # Таблица посещений
+        table_ax = fig.add_axes([0.77, 0.1, 0.2, 0.8])  # [left, bottom, width, height]
+        table_ax.axis('off')
+        table_data = [[str(lvl), str(cnt)] for lvl, cnt in zip(levels, visits)]
+        table = table_ax.table(cellText=table_data,
+                            colLabels=["Состояние", "Посещений"],
+                            loc='center',
+                            cellLoc='center')
+        table.auto_set_font_size(False)
+        table.set_fontsize(9)
+        table.scale(1.2, 1.2)
+
         plt.show()
 
         # 2. Проверка среднего и дисперсии
@@ -192,11 +212,27 @@ class DrawChart:
         if alpha:
             a = (data >> 24) & 0xFF
 
+        print(len(r), len(g), len(b), len(a))
+
+        # Строим гистограммы
+        plt.figure(figsize=(12, 8))
+        channels = {'Red': r, 'Green': g, 'Blue': b, 'Alpha': a}
+        colors = {'Red': 'red', 'Green': 'green', 'Blue': 'blue', 'Alpha': 'gray'}
+
+        for i, (name, channel) in enumerate(channels.items(), 1):
+            plt.subplot(2, 2, i)
+            plt.hist(channel, bins=256, range=(0, 255), color=colors[name], alpha=0.8)
+            plt.title(f'{name} Channel')
+            plt.xlabel('Value')
+            plt.ylabel('Frequency')
+
         colors = None
         if alpha:
             colors = np.stack((r, g, b, a), axis=1)
         else:
             colors = np.stack((r, g, b), axis=1)
+
+        print(colors.shape)
 
         # Если размер не указан, делаем квадрат
         if width is None or height is None:
@@ -209,49 +245,57 @@ class DrawChart:
     
     def uint64_to_rgb_image(self, width=None, height=None, alpha=False):
         """
-        Преобразует массив uint64 в RGB-изображение.
+        Преобразует массив uint64 в RGB(A)-изображение.
 
         Args:
             width: ширина изображения (опционально)
             height: высота изображения (опционально)
+            alpha: использовать альфа-канал (по умолчанию False)
 
         Returns:
-            image: np.ndarray с формой (H, W, 3)
+            image: np.ndarray с формой (H, W, 3) или (H, W, 4)
         """
+        num_channels = 4 if alpha else 3
+        bytes_per_pixel = num_channels
 
-        data = np.array(self.generate_data(width * height, self.seed), dtype=np.uint64).astype(np.uint64)
-        r = np.ndarray(shape=(len(data) * 2, 4), dtype=np.uint8)
-        g = np.ndarray(shape=(len(data) * 2, 4), dtype=np.uint8)
-        b = np.ndarray(shape=(len(data) * 2, 4), dtype=np.uint8)
-        a = np.ndarray(shape=(len(data) * 2, 4), dtype=np.uint8)
-        print(data.dtype)
-        for i in range(len(data)):
-            r[i] = data[i] & np.uint64(0xFF)
-            r[i + 1] = (data[i] >> np.uint64(32)) & np.uint64(0xFF)
-
-            g[i] = (data[i] >> np.uint64(48)) & np.uint64(0xFF)
-            g[i + 1] = (data[i] >> np.uint64(40)) & np.uint64(0xFF)
-
-            b[i] = (data[i] >> np.uint64(16)) & np.uint64(0xFF)
-            b[i + 1] = (data[i] >> np.uint64(48)) & np.uint64(0xFF)
-
-            if alpha:
-                a[i] = (data[i] >> np.uint64(24)) & np.uint64(0xFF)
-                a[i + 1] = (data[i] >> np.uint64(56)) & np.uint64(0xFF)
-
-        colors = None
-        if alpha:
-            colors = np.stack((r, g, b, a), axis=1)
-        else:
-            colors = np.stack((r, g, b), axis=1)
-
-        # Если размер не указан, делаем квадрат
         if width is None or height is None:
-            size = int(np.ceil(np.sqrt(len(colors))))
-            width = height = size
+            total_pixels = 1024 * 1024  # по умолчанию квадрат 1024x1024
+            width = height = int(np.sqrt(total_pixels))
+        else:
+            total_pixels = width * height
 
-        image = colors.reshape((height, width, 3 + int(alpha)))
+        total_bytes_needed = total_pixels * bytes_per_pixel
+        total_uint64 = (total_bytes_needed + 7) // 8  # округление вверх
 
+        # Генерация данных
+        raw_data = self.generate_data(total_uint64, self.seed)
+        byte_array = np.frombuffer(np.array(raw_data, dtype=np.uint64).tobytes(), dtype=np.uint8)
+
+        # Обрезаем по нужному количеству байт
+        byte_array = byte_array[:total_bytes_needed]
+        pixels = byte_array.reshape(-1, 4)  # каждая строка — один пиксель [R, G, B, A]
+        r = pixels[:, 0]
+        g = pixels[:, 1]
+        b = pixels[:, 2]
+        a = pixels[:, 3]
+
+        # Строим гистограммы
+        plt.figure(figsize=(12, 8))
+        channels = {'Red': r, 'Green': g, 'Blue': b, 'Alpha': a}
+        colors = {'Red': 'red', 'Green': 'green', 'Blue': 'blue', 'Alpha': 'gray'}
+
+        for i, (name, channel) in enumerate(channels.items(), 1):
+            plt.subplot(2, 2, i)
+            plt.hist(channel, bins=256, range=(0, 255), color=colors[name], alpha=0.8)
+            plt.title(f'{name} Channel')
+            plt.xlabel('Value')
+            plt.ylabel('Frequency')
+
+        plt.tight_layout()
+        plt.show()
+
+        # Преобразуем в изображение
+        image = byte_array.reshape((height, width, bytes_per_pixel))
         return image
     
     def rgb(self):
@@ -266,7 +310,7 @@ class DrawChart:
         plt.figure(figsize=(6, 6))
         plt.imshow(img)
         plt.axis('off')
-        plt.title(f'Визуализация uint32 последовательности, размер {width}*{height}: {self.generator_name}')
+        plt.title(f'Визуализация uint64 последовательности, размер {width}*{height}: {self.generator_name}')
         plt.show()
 
 def main():
