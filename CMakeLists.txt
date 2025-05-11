@@ -21,6 +21,7 @@ if(WIN32)
 endif()
 
 add_subdirectory(app)
+add_subdirectory(charts)
 add_subdirectory(metrics)
 add_subdirectory(generators)
 add_subdirectory(thirdparty)

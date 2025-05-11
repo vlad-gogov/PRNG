@@ -5,7 +5,6 @@
 #include <cmath>
 #include <complex>
 #include <filesystem>
-#include <fstream>
 
 namespace utils {
 
@@ -140,6 +139,17 @@ int kperm(const std::vector<int> &v) {
     uret = pindex;
 
     return uret;
+}
+
+void save_string_to_file(const std::string &path, const std::string &str, bool append) {
+    std::ofstream file;
+    if (append) {
+        file.open(path, std::ios::app);
+    } else {
+        file.open(path, std::ios::out);
+    }
+    file << str;
+    file.close();
 }
 
 } // namespace utils
