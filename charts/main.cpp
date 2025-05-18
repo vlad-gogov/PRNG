@@ -4,8 +4,9 @@
 
 #include "generators/linear_congruential_generator.hpp"
 #include "generators/mersenne_twister.hpp"
-#include "generators/mersenne_twister_involution.hpp"
+#include "generators/mersenne_twister_rotr.hpp"
 #include "generators/mersenne_twister_sbox.hpp"
+#include "generators/mersenne_twister_sbox_and_rotr.hpp"
 #include "generators/mersenne_twister_simd.hpp"
 #include "generators/mersenne_twister_siphash.hpp"
 
@@ -17,10 +18,12 @@ enum class GeneratorType {
     MT19937,
     MT19937_64,
     MT19937SBOX,
-    MT19937Involution3,
-    MT19937Involution14,
-    MT19937Involution24,
-    MT19937Involution26,
+    MT19937Rotr3,
+    MT19937Rotr14,
+    MT19937Rotr24,
+    MT19937Rotr26,
+    MT19937Rotr31,
+    MT19937SBOXRotr31,
     MT19937SIPHASH
 };
 
@@ -30,10 +33,12 @@ static std::unordered_map<std::string, GeneratorType> const table = {
     {"MT19937", GeneratorType::MT19937},
     {"MT19937_64", GeneratorType::MT19937_64},
     {"MT19937SBOX", GeneratorType::MT19937SBOX},
-    {"MT19937Involution3", GeneratorType::MT19937Involution3},
-    {"MT19937Involution14", GeneratorType::MT19937Involution14},
-    {"MT19937Involution24", GeneratorType::MT19937Involution24},
-    {"MT19937Involution26", GeneratorType::MT19937Involution26},
+    {"MT19937Rotr3", GeneratorType::MT19937Rotr3},
+    {"MT19937Rotr14", GeneratorType::MT19937Rotr14},
+    {"MT19937Rotr24", GeneratorType::MT19937Rotr24},
+    {"MT19937Rotr26", GeneratorType::MT19937Rotr26},
+    {"MT19937Rotr31", GeneratorType::MT19937Rotr31},
+    {"MT19937SBOXRotr31", GeneratorType::MT19937SBOXRotr31},
     {"MT19937SIPHASH", GeneratorType::MT19937SIPHASH}};
 
 int main(int argc, char *argv[]) {
@@ -74,17 +79,23 @@ int main(int argc, char *argv[]) {
     case GeneratorType::MT19937SBOX:
         save_numbers_to_file<MT19937SBOX>(path_to_file, data_size, seed);
         break;
-    case GeneratorType::MT19937Involution3:
-        save_numbers_to_file<MT19937Involution3>(path_to_file, data_size, seed);
+    case GeneratorType::MT19937Rotr3:
+        save_numbers_to_file<MT19937Rotr3>(path_to_file, data_size, seed);
         break;
-    case GeneratorType::MT19937Involution14:
-        save_numbers_to_file<MT19937Involution14>(path_to_file, data_size, seed);
+    case GeneratorType::MT19937Rotr14:
+        save_numbers_to_file<MT19937Rotr14>(path_to_file, data_size, seed);
         break;
-    case GeneratorType::MT19937Involution24:
-        save_numbers_to_file<MT19937Involution24>(path_to_file, data_size, seed);
+    case GeneratorType::MT19937Rotr24:
+        save_numbers_to_file<MT19937Rotr24>(path_to_file, data_size, seed);
         break;
-    case GeneratorType::MT19937Involution26:
-        save_numbers_to_file<MT19937Involution26>(path_to_file, data_size, seed);
+    case GeneratorType::MT19937Rotr26:
+        save_numbers_to_file<MT19937Rotr26>(path_to_file, data_size, seed);
+        break;
+    case GeneratorType::MT19937Rotr31:
+        save_numbers_to_file<MT19937Rotr31>(path_to_file, data_size, seed);
+        break;
+    case GeneratorType::MT19937SBOXRotr31:
+        save_numbers_to_file<MT19937SBOXRotr31>(path_to_file, data_size, seed);
         break;
     case GeneratorType::MT19937SIPHASH:
         save_numbers_to_file<MT19937SIPHASH>(path_to_file, data_size, seed);

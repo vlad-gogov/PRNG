@@ -86,6 +86,22 @@ class DrawChart:
             bits.extend([int(bit) for bit in bin_str])
         return np.array(bits)
 
+    def read_integers_from_file(filepath, start_line=1, end_line=None):
+        integers = []
+        with open(filepath, 'r') as file:
+            for idx, line in enumerate(file, start=1):
+                if start_line <= idx and (end_line is None or idx <= end_line):
+                    line = line.strip()
+                    if line:
+                        try:
+                            number = int(line)
+                            integers.append(number)
+                        except ValueError:
+                            print(f"Пропущено: не целое число → '{line}' (строка {idx})")
+                if end_line is not None and idx > end_line:
+                    break
+        return integers
+
     def random_walk(self):
         data = np.array(self.generate_data(self.data_size, self.seed)).astype(np.uint64)
         steps = DrawChart.uint32_to_bits(data)
@@ -142,16 +158,16 @@ class DrawChart:
         var_position = np.var(position)
 
         print(f"Среднее положения: {mean_position:.4f}")
-        print(f"Дисперсия положения: {var_position:.4f} (ожидается ~ {self.data_size})")
+        print(f"Дисперсия положения: {var_position:.4f} (ожидается ~ {len(position)})")
 
         # 3. Гистограмма конечных положений по многим экспериментам
         n_experiments = 5000
         final_positions = []
 
-        data = self.generate_data((self.data_size + 1) * n_experiments, self.seed)
         for i in range(n_experiments):
-            indices = np.array(data[(i + 1) * self.data_size:(i + 2) * self.data_size]) % 2
-            steps = self.rng_choise(indices)
+            print(f"Experiment {i + 1}/{n_experiments}")
+            indices = DrawChart.uint32_to_bits(self.generate_data(self.data_size, self.seed + i))
+            steps = np.where(indices == 0, -1, 1)
             position = np.cumsum(steps)
             final_positions.append(position[-1])
 
@@ -168,13 +184,13 @@ class DrawChart:
         p = norm.pdf(x, mu, std)
         plt.plot(x, p, 'k', linewidth=2)
         plt.title(f"Гистограмма конечных положений\n(Random Walk, {self.generator_name})")
-        plt.xlabel(f"Конечная позиция после {self.data_size} шагов")
+        plt.xlabel(f"Конечная позиция после {self.data_size * 32} шагов")
         plt.ylabel("Плотность вероятности")
         plt.grid()
         plt.show()
 
         print(f"Среднее конечное положение: {mu:.4f}")
-        print(f"Стандартное отклонение: {std:.4f} (ожидается ~ sqrt({self.data_size}) = {np.sqrt(self.data_size):.2f})")
+        print(f"Стандартное отклонение: {std:.4f} (ожидается ~ sqrt({self.data_size * 32}) = {np.sqrt(self.data_size * 32):.2f})")
 
         # 4. Расчет автокорреляции шагов
         lags = 50  # количество лагов для автокорреляции
