@@ -189,16 +189,15 @@ __m256i MersenneTwister32SboxRotr31AVX2::tempering_simd(__m256i y) const {
     y = _mm256_xor_si256(y, _mm256_srli_epi32(y, L));
 
     // Apply AES S-box transformation
-    alignas(32) uint32_t temp[8];
+    alignas(32) uint8_t temp[32];
+    alignas(32) uint8_t out[32];
     _mm256_store_si256((__m256i *)temp, y);
-    for (int i = 0; i < 8; ++i) {
-        uint32_t result = 0;
-        for (size_t j = 0; j < bytes; ++j) {
-            result |= (AES_SBOX[(temp[i] >> (j * 8)) & 0xFF]) << ((bytes - j - 1) * 8);
+    for (size_t i = 0; i < 32; i += 4) {
+        for (size_t j = 0; j < 4; ++j) {
+            out[i + j] = AES_SBOX[temp[i + 3 - j]];
         }
-        temp[i] = result;
     }
-    y = _mm256_load_si256((__m256i *)temp);
+    y = _mm256_load_si256((__m256i *)out);
 
     // Apply rotation
     y = _mm256_xor_epi32(_mm256_srli_epi32(y, shift), _mm256_slli_epi32(y, (sizeof(uint32_t) * 8 - shift)));
