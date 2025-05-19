@@ -360,7 +360,7 @@ TEST(Lcg, random_excursions_lcg) {
         numbers[i] = generator();
     }
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::cout << "P-values: ";
     for (size_t i = 0; i < p_values.size(); i++) {
         std::cout << p_values[i] << " ";
