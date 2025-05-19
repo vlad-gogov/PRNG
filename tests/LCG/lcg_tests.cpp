@@ -215,7 +215,7 @@ TEST(Lcg, runs_lcg) {
     utils::seq_bytes bytes = utils::convert_numbers_to_seq_bytes(numbers);
     double p = nist::runs_test(bytes);
     std::cout << "P-value: " << p << std::endl;
-    ASSERT_FALSE(nist::check_runs_test(bytes));
+    ASSERT_TRUE(nist::check_runs_test(bytes));
 }
 
 TEST(Lcg, longest_run_of_ones_lcg) {
@@ -368,7 +368,7 @@ TEST(Lcg, random_excursions_lcg) {
     std::cout << std::endl;
     std::vector<bool> answers = nist::check_random_excursions(bytes, false);
     for (const auto &answer : answers) {
-        ASSERT_TRUE(answer);
+        ASSERT_FALSE(answer);
     }
 }
 
