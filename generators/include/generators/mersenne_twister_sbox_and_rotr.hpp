@@ -8,42 +8,113 @@
 #include "generators/mersenne_twister_sbox.hpp"
 
 template <typename UIntType, size_t W, size_t N, size_t M, size_t R, UIntType A, size_t U, UIntType D, size_t S,
-          UIntType B, size_t T, UIntType C, size_t L, UIntType F, UIntType shift>
-class MersenneTwisterEngineSBOXRotr : public Generator<uint32_t> {
-    MersenneTwisterEngine<UIntType, W, N, M, R, A, U, D, S, B, T, C, L, F> mt_gen;
-    static constexpr UIntType default_seed = 5489u;
+          UIntType B, size_t T, UIntType C, size_t L, UIntType F, size_t shift>
+class MersenneTwisterEngineSBOXRotr : public Generator<UIntType> {
 
-  public:
-    MersenneTwisterEngineSBOXRotr(const UIntType seed = default_seed) : mt_gen(seed) {
+    static_assert(std::is_unsigned<UIntType>::value, "result_type must be an unsigned integral type");
+    static_assert(1u <= M && M <= N, "template argument substituting M out of bounds");
+    static_assert(W <= std::numeric_limits<UIntType>::digits, "template argument substituting __w out of bound");
+    static_assert(R <= W, "template argument substituting "
+                          "R out of bound");
+    static_assert(U <= W, "template argument substituting "
+                          "U out of bound");
+    static_assert(S <= W, "template argument substituting "
+                          "S out of bound");
+    static_assert(T <= W, "template argument substituting "
+                          "T out of bound");
+    static_assert(L <= W, "template argument substituting "
+                          "L out of bound");
+    static_assert(A <= (UIntType(-1)), "template argument substituting A out of bound");
+    static_assert(B <= (UIntType(-1)), "template argument substituting B out of bound");
+    static_assert(C <= (UIntType(-1)), "template argument substituting C out of bound");
+    static_assert(D <= (UIntType(-1)), "template argument substituting D out of bound");
+    static_assert(F <= (UIntType(-1)), "template argument substituting F out of bound");
+
+    void twist() {
+        const UIntType UPPER_MASK = (~UIntType()) << R;
+        const UIntType LOWER_MASK = ~UPPER_MASK;
+        for (size_t i = 0; i < N; ++i) {
+            size_t x = (mt[i] & UPPER_MASK) | (mt[(i + 1) % N] & LOWER_MASK);
+            size_t xA = x >> 1;
+            if (x % 2 != 0) {
+                xA ^= A;
+            }
+            mt[i] = mt[(i + M) % N] ^ xA;
+        }
+        index_state = 0;
     }
 
-    UIntType operator()() noexcept override {
+    static constexpr UIntType default_seed = 5489u;
+
+    UIntType mt[N];
+    size_t index_state;
+
+  public:
+    MersenneTwisterEngineSBOXRotr(const UIntType seed = default_seed) {
+        mt[0] = seed;
+        for (size_t i = 1; i < N; i++) {
+            mt[i] = (F * (mt[i - 1] ^ (mt[i - 1] >> (W - 2))) + i);
+        }
+        index_state = N;
+    }
+
+    UIntType min() const override {
+        return static_cast<UIntType>(0);
+    }
+
+    UIntType max() const override {
+        return static_cast<UIntType>(1) << W - 1;
+    }
+
+    UIntType tempering(UIntType y) noexcept {
         constexpr size_t bytes = sizeof(UIntType);
-        UIntType raw_val = mt_gen();
+        y ^= (y >> U) & D;
+        y ^= (y << S) & B;
+        y ^= (y << T) & C;
+        y ^= (y >> L);
         UIntType result = 0u;
         for (size_t i = 0; i < bytes; ++i) {
-            result |= (AES_SBOX[(raw_val >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
+            result |= (AES_SBOX[(y >> (i * 8)) & 0xFF]) << ((bytes - i - 1) * 8);
         }
         result = std::rotr(result, shift);
         return result;
     }
 
-    UIntType min() const override {
-        return mt_gen.min();
-    }
-
-    UIntType max() const override {
-        return mt_gen.max();
+    UIntType operator()() noexcept override {
+        constexpr size_t bytes = sizeof(UIntType);
+        if (index_state >= N) {
+            twist();
+        }
+        UIntType y = mt[index_state++];
+        y ^= (y >> U) & D;
+        y ^= (y << S) & B;
+        y ^= (y << T) & C;
+        y ^= (y >> L);
+        UIntType result = 0u;
+        uint8_t *y_ptr = reinterpret_cast<uint8_t *>(&y);
+        uint8_t *res_ptr = reinterpret_cast<uint8_t *>(&result);
+        for (size_t i = 0; i < bytes; ++i) {
+            res_ptr[bytes - i - 1] = AES_SBOX[y_ptr[i]];
+        }
+        result = std::rotr(result, shift);
+        return result;
     }
 
     void seed(const UIntType seed) override {
-        mt_gen = MersenneTwisterEngine<uint32_t, W, N, M, R, A, U, D, S, B, T, C, L, F>(seed);
+        *this = MersenneTwisterEngineSBOXRotr(seed);
     }
 
-    void discard(const std::uint64_t z) override {
-        for (size_t i = 0; i < z; ++i) {
+    void discard(uint64_t z) override {
+        for (; 0 < z; --z) {
             this->operator()();
         }
+    }
+
+    UIntType random_raw() noexcept {
+        if (index_state >= N) {
+            twist();
+        }
+        return mt[index_state++];
     }
 };
 
