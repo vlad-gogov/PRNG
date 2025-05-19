@@ -165,7 +165,7 @@ void NistTest::test(const utils::seq_bytes &bytes, const bool &print_p_values) {
 
     {
         try {
-        std::vector<std::double_t> p_values = nist::random_excursions(bytes);
+            std::vector<std::double_t> p_values = nist::random_excursions(bytes);
             assert(p_values.size() == 8);
             for (int s = -4, i = 0; s <= 4; ++s) {
                 if (s == 0) {
