@@ -117,7 +117,7 @@ TEST(Nist, overlapping_template_matching_1) {
     utils::seq_bytes bytes = {1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0,
                               0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1};
     utils::seq_bytes template_ = {1, 1};
-    double p = nist::overlapping_template_matching(bytes, template_, 10, 5);
+    double p = nist::overlapping_template_matching(bytes, template_, 10, 5, 5, true);
     double answer = 0.409632;
     ASSERT_NEAR(p, answer, abs_error);
 }
@@ -125,7 +125,7 @@ TEST(Nist, overlapping_template_matching_1) {
 TEST(Nist, overlapping_template_matching_2) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent(1'000'000);
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-    double p = nist::overlapping_template_matching(bytes, template_);
+    double p = nist::overlapping_template_matching(bytes, template_, 1032, 968, 5);
     double answer = 0.110434;
     ASSERT_NEAR(p, answer, abs_error);
 }
@@ -208,7 +208,7 @@ TEST(Nist, cumulative_sums_2_reverse) {
 
 TEST(Nist, random_excursions_1) {
     utils::seq_bytes bytes = {0, 1, 1, 0, 1, 1, 0, 1, 0, 1};
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::vector<double> answers = {0.994506, 0.988003, 0.962566, 0.962566, 0.502488, 0.142514, 0.988003, 0.994506};
     for (size_t i = 0; i < answers.size(); i++) {
         ASSERT_NEAR(p_values[i], answers[i], abs_error);
@@ -217,7 +217,7 @@ TEST(Nist, random_excursions_1) {
 
 TEST(Nist, random_excursions_2) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent(1'000'000);
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::vector<double> answers = {0.573306, 0.197996, 0.164011, 0.007779, 0.786868, 0.440912, 0.797854, 0.778186};
     for (size_t i = 0; i < answers.size(); i++) {
         ASSERT_NEAR(p_values[i], answers[i], abs_error);
@@ -226,7 +226,7 @@ TEST(Nist, random_excursions_2) {
 
 TEST(Nist, random_excursions_variant_1) {
     utils::seq_bytes bytes = {0, 1, 1, 0, 1, 1, 0, 1, 0, 1};
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::vector<double> answers = {0.766433, 0.751830, 0.734095, 0.711923, 0.683091, 0.643429,
                                    0.583882, 0.479500, 0.414216, 0.683091, 1.000000, 0.583882,
                                    0.643429, 0.683091, 0.711923, 0.734095, 0.751830, 0.766433};
@@ -237,7 +237,7 @@ TEST(Nist, random_excursions_variant_1) {
 
 TEST(Nist, random_excursions_variant_2) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent(1'000'000);
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::vector<double> answers = {0.858946, 0.794755, 0.576249, 0.493417, 0.633873, 0.917283,
                                    0.934708, 0.816012, 0.826009, 0.137861, 0.200642, 0.441254,
                                    0.939291, 0.505683, 0.445935, 0.512207, 0.538635, 0.593930};
@@ -301,7 +301,7 @@ TEST(Nist, non_overlapping_template_matching_digit_e) {
 TEST(Nist, overlapping_template_matching_digit_e) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent();
     utils::seq_bytes template_ = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-    double p = nist::overlapping_template_matching(bytes, template_);
+    double p = nist::overlapping_template_matching(bytes, template_, 1032, 968, 5);
     double answer = 0.110433;
     ASSERT_NEAR(p, answer, abs_error);
 }
@@ -345,7 +345,7 @@ TEST(Nist, cumulative_sums_digit_e_reverse) {
 
 TEST(Nist, random_excursions_digit_e) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent();
-    std::vector<double> p_values = nist::random_excursions(bytes);
+    std::vector<double> p_values = nist::random_excursions(bytes, false);
     std::vector<double> answers = {
         0.573306, 0.197996, 0.164011, 0.007779, 0.786868, 0.440912, 0.797854, 0.778186,
     };
@@ -356,7 +356,7 @@ TEST(Nist, random_excursions_digit_e) {
 
 TEST(Nist, random_excursions_variant_digit_e) {
     utils::seq_bytes bytes = utils::read_bits_from_exponent();
-    std::vector<double> p_values = nist::random_excursions_variant(bytes);
+    std::vector<double> p_values = nist::random_excursions_variant(bytes, false);
     std::vector<double> answers = {
         0.858946, 0.794755, 0.576249, 0.493417, 0.633873, 0.917283, 0.934708, 0.816012, 0.826009,
         0.137861, 0.200642, 0.441254, 0.939291, 0.505683, 0.445935, 0.512207, 0.538635, 0.593930,
